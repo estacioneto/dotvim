@@ -12,6 +12,7 @@ let g:coc_global_extensions = [
 
 """ Section: Packages {{{1
 
+<<<<<<< HEAD
 call plug#begin('~/.vim/plugged')
 
 Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile' }
@@ -27,6 +28,18 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'jparise/vim-graphql'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'rust-lang/rust.vim'
+=======
+call minpac#add('w0rp/ale')
+call minpac#add('tpope/vim-surround')
+call minpac#add('junegunn/fzf.vim')
+call minpac#add('tpope/vim-fugitive')
+call minpac#add('jiangmiao/auto-pairs')
+call minpac#add('lucasecdb/vim-codedark')
+call minpac#add('kaicataldo/material.vim')
+call minpac#add('vim-airline/vim-airline')
+call minpac#add('vim-airline/vim-airline-themes')
+call minpac#add('jparise/vim-graphql')
+>>>>>>> Material theme configuration
 
 " Javascript
 Plug 'pangloss/vim-javascript'
