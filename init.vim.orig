@@ -25,8 +25,13 @@ Plug 'vim-airline/vim-airline'
 Plug 'udalov/kotlin-vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'jparise/vim-graphql'
+<<<<<<< HEAD
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'rust-lang/rust.vim'
+=======
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+Plug 'Quramy/tsuquyomi'
+>>>>>>> Add Tsuquyomi
 
 " Javascript
 Plug 'pangloss/vim-javascript'
