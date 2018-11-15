@@ -177,7 +177,11 @@ let g:ale_linters = {
 
 let g:material_theme_style = 'dark'
 let g:material_terminal_italics = 1
+
 let g:tsuquyomi_single_quote_import=1
+let g:tsuquyomi_shortest_import_path = 1
+let g:tsuquyomi_use_vimproc=1
+let g:tsuquyomi_disable_quickfix=1
 
 """}}}
 """ Section: Functions {{{1
