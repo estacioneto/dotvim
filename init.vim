@@ -97,7 +97,6 @@ nnoremap <silent> <s-h> :bprevious<cr>
 
 " Misc
 nnoremap <silent> <leader>q :q<cr>
-<<<<<<< HEAD
 """ Section: CoC {{{2
 
 " Remap keys for gotos
@@ -109,10 +108,6 @@ nmap <silent> gr <Plug>(coc-references)
 " Use `[c` and `]c` to navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
-=======
-nnoremap <silent> <leader>e :ALEFix prettier<cr>
-nnoremap <silent> <leader>i :TsuImport<cr>
->>>>>>> Add Tsuquyomi
 
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 

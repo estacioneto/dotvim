@@ -25,13 +25,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'udalov/kotlin-vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'jparise/vim-graphql'
-<<<<<<< HEAD
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'rust-lang/rust.vim'
-=======
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'Quramy/tsuquyomi'
->>>>>>> Add Tsuquyomi
 
 " Javascript
 Plug 'pangloss/vim-javascript'
@@ -182,7 +177,11 @@ let g:ale_linters = {
 
 let g:material_theme_style = 'dark'
 let g:material_terminal_italics = 1
+
 let g:tsuquyomi_single_quote_import=1
+let g:tsuquyomi_shortest_import_path = 1
+let g:tsuquyomi_use_vimproc=1
+let g:tsuquyomi_disable_quickfix=1
 
 """}}}
 """ Section: Functions {{{1
@@ -203,7 +202,12 @@ if has('autocmd')
     autocmd!
     autocmd FileType gitcommit setlocal spell
     autocmd FileType python let b:ale_fixers=['autopep8']
+<<<<<<< HEAD
     autocmd FileType javascript,typescript let b:ale_fixers=['eslint', 'prettier']
+=======
+    autocmd FileType javascript let b:ale_fixers=['eslint']
+    autocmd FileType typescript let b:ale_fixers=['tslint']
+>>>>>>> Remove auto prettier
     autocmd FileType nginx setlocal indentexpr= |
           \ setlocal cindent |
           \ setlocal cinkeys-=0#
