@@ -125,10 +125,11 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 """}}}2
 =======
-nnoremap <silent> <leader>e :ALEFix<cr>
+nnoremap <silent> <leader>e :ALEFix prettier<cr>
+nnoremap <silent> <leader>f :ALEFix<cr>
 nnoremap <silent> <leader>i :TsuImport<cr>
 nnoremap <silent> <leader>h :set hidden <bar> close<cr>
->>>>>>> Remove specific ALEFix
+>>>>>>> Fix mappin
 
 " Fugitive
 nnoremap <silent> <leader>c :Gcommit<cr>
