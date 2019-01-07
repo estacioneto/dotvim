@@ -109,10 +109,6 @@ nmap <silent> gr <Plug>(coc-references)
 " Use `[c` and `]c` to navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
-=======
-nnoremap <silent> <leader>e :ALEFix prettier<cr>
-nnoremap <silent> <leader>i :TsuImport<cr>
->>>>>>> Add Tsuquyomi
 
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
@@ -128,6 +124,11 @@ endfunction
 inoremap <silent><expr> <c-space> coc#refresh()
 
 """}}}2
+=======
+nnoremap <silent> <leader>e :ALEFix<cr>
+nnoremap <silent> <leader>i :TsuImport<cr>
+nnoremap <silent> <leader>h :set hidden <bar> close<cr>
+>>>>>>> Remove specific ALEFix
 
 " Fugitive
 nnoremap <silent> <leader>c :Gcommit<cr>
@@ -202,12 +203,7 @@ if has('autocmd')
     autocmd!
     autocmd FileType gitcommit setlocal spell
     autocmd FileType python let b:ale_fixers=['autopep8']
-<<<<<<< HEAD
     autocmd FileType javascript,typescript let b:ale_fixers=['eslint', 'prettier']
-=======
-    autocmd FileType javascript let b:ale_fixers=['eslint']
-    autocmd FileType typescript let b:ale_fixers=['tslint']
->>>>>>> Remove auto prettier
     autocmd FileType nginx setlocal indentexpr= |
           \ setlocal cindent |
           \ setlocal cinkeys-=0#
