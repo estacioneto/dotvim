@@ -21,12 +21,21 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'jiangmiao/auto-pairs'
 Plug 'lucasecdb/vim-codedark'
+<<<<<<< HEAD
+=======
+Plug 'kaicataldo/material.vim'
+Plug 'altercation/vim-colors-solarized'
+>>>>>>> Add the markdown preview plugin
 Plug 'vim-airline/vim-airline'
 Plug 'udalov/kotlin-vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'jparise/vim-graphql'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+<<<<<<< HEAD
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+=======
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+>>>>>>> Add the markdown preview plugin
 
 " Javascript
 Plug 'pangloss/vim-javascript'
@@ -97,7 +106,6 @@ nnoremap <silent> <s-h> :bprevious<cr>
 
 " Misc
 nnoremap <silent> <leader>q :q<cr>
-<<<<<<< HEAD
 """ Section: CoC {{{2
 
 " Remap keys for gotos
@@ -124,12 +132,6 @@ endfunction
 inoremap <silent><expr> <c-space> coc#refresh()
 
 """}}}2
-=======
-nnoremap <silent> <leader>e :ALEFix prettier<cr>
-nnoremap <silent> <leader>f :ALEFix<cr>
-nnoremap <silent> <leader>i :TsuImport<cr>
-nnoremap <silent> <leader>h :set hidden <bar> close<cr>
->>>>>>> Fix mappin
 
 " Fugitive
 nnoremap <silent> <leader>c :Gcommit<cr>
