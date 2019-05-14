@@ -160,6 +160,7 @@ let g:airline_left_sep=''
 let g:airline_right_sep=''
 
 let g:ale_completion_enabled=1
+let g:ale_virtualtext_cursor=1
 
 let g:javascript_plugin_jsdoc = 1
 
