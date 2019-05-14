@@ -27,6 +27,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'udalov/kotlin-vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'jparise/vim-graphql'
+Plug 'chrisbra/vim-commentary'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }

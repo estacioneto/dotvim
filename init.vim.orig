@@ -21,21 +21,21 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'jiangmiao/auto-pairs'
 Plug 'lucasecdb/vim-codedark'
-<<<<<<< HEAD
-=======
 Plug 'kaicataldo/material.vim'
 Plug 'altercation/vim-colors-solarized'
->>>>>>> Add the markdown preview plugin
 Plug 'vim-airline/vim-airline'
 Plug 'udalov/kotlin-vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'jparise/vim-graphql'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 <<<<<<< HEAD
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 =======
+Plug 'chrisbra/vim-commentary'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+Plug 'Quramy/tsuquyomi'
+>>>>>>> Add vim-commentary plugin
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
->>>>>>> Add the markdown preview plugin
 
 " Javascript
 Plug 'pangloss/vim-javascript'
@@ -166,6 +166,7 @@ let g:airline_left_sep=''
 let g:airline_right_sep=''
 
 let g:ale_completion_enabled=1
+let g:ale_virtualtext_cursor=1
 
 let g:javascript_plugin_jsdoc = 1
 
