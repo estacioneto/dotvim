@@ -32,6 +32,7 @@ Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'itchyny/lightline.vim'
 
 " Javascript
 Plug 'pangloss/vim-javascript'
@@ -242,9 +243,9 @@ if has('syntax')
   endif
 
   set termguicolors
-  set background=dark
+  let g:material_theme_style = 'ocean'
   colorscheme material
-
+  let g:lightline = { 'colorscheme': 'material_vim' }
 endif
 
 """}}}1
