@@ -149,6 +149,9 @@ vnoremap <leader>fg :!prettier --stdin --stdin-filepath query.gql<cr>
 vnoremap <leader>fj :!prettier --stdin --stdin-filepath module.js<cr>
 vnoremap <leader>ft :!fmt -80 -s<cr>
 
+" Insert mode
+inoremap jk <esc>
+
 command! WQ wq
 command! Wq wq
 command! W w
