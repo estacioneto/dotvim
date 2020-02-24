@@ -4,6 +4,10 @@ if [ ! -f ~/.vimrc ]; then
   ln -s $PWD/init.vim ~/.vimrc
 fi
 
+if [ ! -f ~/.ideavimrc ]; then
+  ln -s $PWD/.ideavimrc ~/.ideavimrc
+fi
+
 if [[ ! -d ~/.config/nvim ]]; then
   mkdir -p ~/.config
   ln -s $PWD ~/.config/nvim
