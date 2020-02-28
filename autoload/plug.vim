@@ -1218,11 +1218,7 @@ function! s:job_abort()
       silent! call job_stop(j.jobid)
     endif
     if j.new
-<<<<<<< HEAD
       call s:rm_rf(g:plugs[name].dir)
-=======
-      call s:system('rm -rf ' . plug#shellescape(g:plugs[name].dir))
->>>>>>> Some updates
     endif
   endfor
   let s:jobs = {}

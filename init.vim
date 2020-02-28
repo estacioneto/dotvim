@@ -21,18 +21,14 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'jiangmiao/auto-pairs'
 Plug 'lucasecdb/vim-codedark'
-Plug 'kaicataldo/material.vim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline'
+Plug 'kaicataldo/material.vim'
 Plug 'udalov/kotlin-vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'jparise/vim-graphql'
 Plug 'chrisbra/vim-commentary'
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
-Plug 'itchyny/lightline.vim'
 
 " Javascript
 Plug 'pangloss/vim-javascript'
@@ -87,7 +83,7 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 """ }}}1
 """ Section: Mappings {{{1
 
-let mapleader=' '
+let mapleader=','
 
 inoremap jk <esc>
 
@@ -161,7 +157,6 @@ command! Q q
 """ Section: Plugins options {{{1
 
 let g:airline_powerline_fonts=1
-let g:airline_theme = 'material'
 let g:airline_left_sep=''
 let g:airline_right_sep=''
 
