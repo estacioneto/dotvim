@@ -124,6 +124,8 @@ endfunction
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
+nnoremap <silent> <leader>e :CocCommand eslint.executeAutofix<cr>
+
 """}}}2
 
 " Fugitive
