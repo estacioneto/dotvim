@@ -3,6 +3,7 @@
 let g:coc_global_extensions = [
   \'coc-tsserver',
   \'coc-eslint',
+  \'coc-tslint',
   \'coc-css',
   \'coc-json',
   \'coc-texlab',
@@ -29,6 +30,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'jparise/vim-graphql'
 Plug 'chrisbra/vim-commentary'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 " Javascript
 Plug 'pangloss/vim-javascript'
@@ -124,14 +126,19 @@ endfunction
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
-nnoremap <silent> <leader>e :CocCommand eslint.executeAutofix<cr>
+nnoremap <silent> <leader>ee :CocCommand eslint.executeAutofix<cr>
+nnoremap <silent> <leader>et :CocCommand tslint.fixAllProblems<cr>
 
 """}}}2
 
 " Fugitive
 nnoremap <silent> <leader>c :Gcommit<cr>
 nnoremap <silent> <leader>s :Gstatus<cr>
-nnoremap <leader>p :Gpush<cr>
+
+nnoremap <leader>r :arg 
+cnoremap <leader>r :arg 
+nnoremap <leader>R :argdo 
+cnoremap <leader>R :argdo 
 
 command! -bang -nargs=? -complete=dir GFiles
   \ call fzf#vim#gitfiles(<q-args>, {'options': ['--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']})
@@ -146,6 +153,8 @@ tnoremap jk <c-\><c-n>
 vnoremap <leader>fg :!prettier --stdin --stdin-filepath query.gql<cr>
 vnoremap <leader>fj :!prettier --stdin --stdin-filepath module.js<cr>
 vnoremap <leader>ft :!fmt -80 -s<cr>
+
+nnoremap <leader>p :Prettier<cr>
 
 " Insert mode
 inoremap jk <esc>
@@ -173,7 +182,7 @@ let g:ale_lint_on_insert_leave = 1
 let g:ale_virtualtext_cursor = 1
 let g:ale_linters = {
 \  'python': ['flake8'],
-\  'typescript': ['eslint', 'tsserver'],
+\  'typescript': ['eslint', 'tsserver', 'tslint'],
 \  'javascript': ['eslint', 'flow', 'flow-language-server'],
 \  'graphql': ['gqlint']
 \}
@@ -204,8 +213,6 @@ if has('autocmd')
   augroup FTOptions
     autocmd!
     autocmd FileType gitcommit setlocal spell
-    autocmd FileType python let b:ale_fixers=['autopep8']
-    autocmd FileType javascript,typescript let b:ale_fixers=['eslint', 'prettier']
     autocmd FileType nginx setlocal indentexpr= |
           \ setlocal cindent |
           \ setlocal cinkeys-=0#
