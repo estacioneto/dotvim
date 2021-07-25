@@ -5,10 +5,8 @@
     "javascript",
     "javascriptreact",
     "typescript",
-    "typescriptreact"
+    "typescriptreact",
+    "html"
   ],
-  "eslint.autoFixOnSave": true,
-  "java.errors.incompleteClasspath.severity": "ignore",
-  "python.formatting.provider": "black",
-  "python.linting.lintOnSave": true
+  "eslint.autoFixOnSave": true
 }

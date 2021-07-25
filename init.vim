@@ -8,7 +8,8 @@ let g:coc_global_extensions = [
   \'coc-json',
   \'coc-texlab',
   \'coc-vimtex',
-  \'coc-go'
+  \'coc-go',
+  \'coc-angular'
   \]
 
 """ Section: Packages {{{1
@@ -18,6 +19,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile' }
 Plug 'neoclide/jsonc.vim'
 Plug 'tpope/vim-surround'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'jiangmiao/auto-pairs'
@@ -182,6 +184,7 @@ let g:ale_lint_on_insert_leave = 1
 let g:ale_virtualtext_cursor = 1
 let g:ale_linters = {
 \  'python': ['flake8'],
+\  'html': ['eslint'],
 \  'typescript': ['eslint', 'tsserver', 'tslint'],
 \  'javascript': ['eslint', 'flow', 'flow-language-server'],
 \  'graphql': ['gqlint']
