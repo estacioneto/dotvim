@@ -3,7 +3,6 @@
 let g:coc_global_extensions = [
   \'coc-tsserver',
   \'coc-eslint',
-  \'coc-tslint',
   \'coc-css',
   \'coc-json',
   \'coc-texlab',
@@ -129,7 +128,6 @@ endfunction
 inoremap <silent><expr> <c-space> coc#refresh()
 
 nnoremap <silent> <leader>ee :CocCommand eslint.executeAutofix<cr>
-nnoremap <silent> <leader>et :CocCommand tslint.fixAllProblems<cr>
 
 """}}}2
 
@@ -185,7 +183,7 @@ let g:ale_virtualtext_cursor = 1
 let g:ale_linters = {
 \  'python': ['flake8'],
 \  'html': ['eslint'],
-\  'typescript': ['eslint', 'tsserver', 'tslint'],
+\  'typescript': ['eslint', 'tsserver'],
 \  'javascript': ['eslint', 'flow', 'flow-language-server'],
 \  'graphql': ['gqlint']
 \}

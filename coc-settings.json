@@ -1,4 +1,5 @@
 {
+  "angular.experimental-ivy": true,
   "tsserver.npm": "yarn",
   "eslint.packageManager": "yarn",
   "eslint.filetypes": [
