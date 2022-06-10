@@ -143,8 +143,17 @@ cnoremap <leader>R :argdo
 command! -bang -nargs=? -complete=dir GFiles
   \ call fzf#vim#gitfiles(<q-args>, {'options': ['--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']})
 
+command! -bang -nargs=? -complete=dir GFilesPwd
+  \ call fzf#vim#gitfiles(<q-args>, {'options': ['--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}'], 'dir': getcwd()})
+
+command! -bang -nargs=? GGrep
+  \ call fzf#vim#grep(
+  \   'git grep --line-number -- '.shellescape(<q-args>), 0,
+  \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
+
 " Fuzzy finder
 nnoremap <leader>t :GFiles && git ls-files -o --exclude-standard<cr>
+nnoremap <leader>d :GFilesPwd<cr>
 
 " Terminal
 tnoremap jk <c-\><c-n>
@@ -155,6 +164,7 @@ vnoremap <leader>fj :!prettier --stdin --stdin-filepath module.js<cr>
 vnoremap <leader>ft :!fmt -80 -s<cr>
 
 nnoremap <leader>p :Prettier<cr>
+nnoremap <leader>s :Rg<cr>
 
 " Insert mode
 inoremap jk <esc>
