@@ -36,8 +36,12 @@ Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 " Javascript
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
-Plug 'leafgarland/typescript-vim'
+" Plug 'HerringtonDarkholme/yats.vim'
+" Plug 'leafgarland/typescript-vim'
 Plug 'MaxMEllon/vim-jsx-pretty'
+
+" Treesitter
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 call plug#end()
 
@@ -198,13 +202,35 @@ let g:ale_linters = {
 \  'graphql': ['gqlint']
 \}
 
-let g:material_theme_style = 'dark'
-let g:material_terminal_italics = 1
+lua << EOLUA
+require'nvim-treesitter.configs'.setup {
+  -- A list of parser names, or "all"
+  ensure_installed = { "typescript", "tsx", "javascript" },
 
-let g:tsuquyomi_single_quote_import=1
-let g:tsuquyomi_shortest_import_path = 1
-let g:tsuquyomi_use_vimproc=1
-let g:tsuquyomi_disable_quickfix=1
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- List of parsers to ignore installing (for "all")
+  ignore_install = {},
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+    -- list of language that will be disabled
+    disable = {},
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+EOLUA
 
 """}}}
 """ Section: Functions {{{1
@@ -263,8 +289,15 @@ if has('syntax')
 
   set termguicolors
   let g:material_theme_style = 'ocean'
+  let g:material_terminal_italics = 1
   colorscheme material
   let g:lightline = { 'colorscheme': 'material_vim' }
+
+  " Fix italics in Vim
+  if !has('nvim')
+    let &t_ZH="\e[3m"
+    let &t_ZR="\e[23m"
+  endif
 endif
 
 """}}}1
