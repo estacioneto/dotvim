@@ -232,6 +232,10 @@ require'nvim-treesitter.configs'.setup {
 }
 EOLUA
 
+if executable("rg") 
+    set grepprg=rg\ --vimgrep 
+endif
+
 """}}}
 """ Section: Functions {{{1
 
