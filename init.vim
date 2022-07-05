@@ -157,7 +157,7 @@ command! -bang -nargs=? GGrep
 
 " Fuzzy finder
 nnoremap <leader>t :GFiles && git ls-files -o --exclude-standard<cr>
-nnoremap <leader>d :GFilesPwd<cr>
+nnoremap <leader>d :GFilesPwd && git ls-files -o --exclude-standard<cr>
 
 " Terminal
 tnoremap jk <c-\><c-n>
