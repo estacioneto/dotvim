@@ -88,6 +88,7 @@ set laststatus=2
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 """ }}}1
+
 """ Section: Mappings {{{1
 
 let mapleader=','
@@ -110,7 +111,7 @@ nnoremap <silent> <leader>q :q<cr>
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gt <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
@@ -144,6 +145,12 @@ cnoremap <leader>r :arg
 nnoremap <leader>R :argdo 
 cnoremap <leader>R :argdo 
 
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, {'options': ['--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']})
+
+command! -bang -nargs=? -complete=dir FilesPwd
+  \ call fzf#vim#files(<q-args>, {'options': ['--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}'], 'dir': getcwd()})
+
 command! -bang -nargs=? -complete=dir GFiles
   \ call fzf#vim#gitfiles(<q-args>, {'options': ['--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']})
 
@@ -159,13 +166,16 @@ command! -bang -nargs=? GGrep
 nnoremap <leader>t :GFiles && git ls-files -o --exclude-standard<cr>
 nnoremap <leader>d :GFilesPwd && git ls-files -o --exclude-standard<cr>
 
+nnoremap <leader>ft :Files<cr>
+nnoremap <leader>fd :FilesPwd<cr>
+
 " Terminal
 tnoremap jk <c-\><c-n>
 
 " Formatters
 vnoremap <leader>fg :!prettier --stdin --stdin-filepath query.gql<cr>
 vnoremap <leader>fj :!prettier --stdin --stdin-filepath module.js<cr>
-vnoremap <leader>ft :!fmt -80 -s<cr>
+vnoremap <leader>fm :!fmt -80 -s<cr>
 
 nnoremap <leader>p :Prettier<cr>
 nnoremap <leader>s :Rg<cr>
