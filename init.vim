@@ -93,8 +93,6 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 let mapleader=','
 
-inoremap jk <esc>
-
 " Window switching
 nnoremap <silent> <c-h> <c-w>h
 nnoremap <silent> <c-j> <c-w>j
@@ -179,9 +177,14 @@ vnoremap <leader>fm :!fmt -80 -s<cr>
 
 nnoremap <leader>p :Prettier<cr>
 nnoremap <leader>s :Rg<cr>
+nnoremap <leader>g :GGrep<cr>
 
 " Insert mode
 inoremap jk <esc>
+
+" Copy file path
+nmap cpr :let @+ = expand("%")<cr>
+nmap cpf :let @+ = expand("%:p")<cr>
 
 command! WQ wq
 command! Wq wq
