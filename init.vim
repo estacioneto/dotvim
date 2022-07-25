@@ -87,8 +87,21 @@ set laststatus=2
 
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-""" }}}1
+" Netrw options
 
+" Hit enter in the file browser to open the selected
+" file with :vsplit to the right of the browser.
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+" Default to tree mode
+let g:netrw_liststyle=3
+
+" Hide netrw banner
+" let g:netrw_banner = 0
+let g:netrw_winsize = 20
+let g:netrw_localcopydircmd = 'cp -r'
+
+""" }}}1
 """ Section: Mappings {{{1
 
 let mapleader=','
@@ -185,6 +198,15 @@ inoremap jk <esc>
 " Copy file path
 nmap cpr :let @+ = expand("%")<cr>
 nmap cpf :let @+ = expand("%:p")<cr>
+
+" Netrw
+" Avoid ctrl-l to refresh netrw
+if !hasmapto('<Plug>NetrwRefresh')
+  nmap <unique> <c-r> <Plug>NetrwRefresh
+endif
+" Open sidebar
+nnoremap <leader>ef :Lexplore %:p:h<CR>
+nnoremap <Leader>ed :Lexplore<CR>
 
 command! WQ wq
 command! Wq wq

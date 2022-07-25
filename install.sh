@@ -13,6 +13,17 @@ if [[ ! -d ~/.config/nvim ]]; then
   ln -s $PWD ~/.config/nvim
 fi
 
+if which brew &> /dev/null; then
+  echo ">>> Installing dependencies..."
+  if ! which rg &> /dev/null; then
+    echo ">>> Installing ripgrep..."
+    brew install ripgrep
+    echo ">>> Done"
+  fi
+else
+  echo ">>> You should have brew to install the dependencies."
+fi
+
 if which nvim &> /dev/null; then
   nvim -c "PlugInstall"
 else
