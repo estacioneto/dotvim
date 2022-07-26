@@ -202,7 +202,7 @@ nmap cpf :let @+ = expand("%:p")<cr>
 " Netrw
 " Avoid ctrl-l to refresh netrw
 if !hasmapto('<Plug>NetrwRefresh')
-  nmap <unique> <c-r> <Plug>NetrwRefresh
+  nmap <unique> <c-n> <Plug>NetrwRefresh
 endif
 " Open sidebar
 nnoremap <leader>ef :Lexplore %:p:h<CR>
