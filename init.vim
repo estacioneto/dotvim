@@ -32,6 +32,7 @@ Plug 'jparise/vim-graphql'
 Plug 'chrisbra/vim-commentary'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+"Plug 'tpope/vim-vinegar'
 
 " Javascript
 Plug 'pangloss/vim-javascript'
@@ -89,16 +90,14 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Netrw options
 
-" Hit enter in the file browser to open the selected
-" file with :vsplit to the right of the browser.
-let g:netrw_browse_split = 4
+let g:netrw_preview = 1
 let g:netrw_altv = 1
 " Default to tree mode
 let g:netrw_liststyle=3
 
 " Hide netrw banner
 " let g:netrw_banner = 0
-let g:netrw_winsize = 20
+let g:netrw_winsize = 30
 let g:netrw_localcopydircmd = 'cp -r'
 
 """ }}}1
@@ -173,6 +172,9 @@ command! -bang -nargs=? GGrep
   \   'git grep --line-number -- '.shellescape(<q-args>), 0,
   \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
 
+" Close all buffers except current one
+command! BufCurOnly execute '%bdelete|edit#|bdelete#'
+
 " Fuzzy finder
 nnoremap <leader>t :GFiles && git ls-files -o --exclude-standard<cr>
 nnoremap <leader>d :GFilesPwd && git ls-files -o --exclude-standard<cr>
@@ -205,13 +207,14 @@ if !hasmapto('<Plug>NetrwRefresh')
   nmap <unique> <c-n> <Plug>NetrwRefresh
 endif
 " Open sidebar
-nnoremap <leader>ef :Lexplore %:p:h<CR>
-nnoremap <Leader>ed :Lexplore<CR>
+nnoremap <leader>ef :call MyExplore("Lexplore %:p:h")<CR>
+nnoremap <leader>ed :call MyExplore("Lexplore")<CR>
+nnoremap <leader>E :call MyExplore("Explore")<CR>
 
 command! WQ wq
 command! Wq wq
 command! W w
-command! Q q
+command! Q BufCurOnly
 
 """ }}}1
 """ Section: Plugins options {{{1
@@ -278,7 +281,17 @@ function! CheckTermAndDisableNumber()
   if &buftype ==# "terminal"
     setlocal nonumber norelativenumber
   endif
-endfunc
+endfunction
+
+function MyExplore(command)
+  if winnr('$') == 1
+    let g:netrw_browse_split = 0
+    :execute a:command
+  else
+    let g:netrw_browse_split = 4
+    :execute a:command
+  endif
+endfunction
 
 """}}}1
 """ Section: Autocommands {{{1
