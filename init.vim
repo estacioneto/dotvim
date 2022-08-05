@@ -100,6 +100,9 @@ let g:netrw_liststyle=3
 let g:netrw_winsize = 30
 let g:netrw_localcopydircmd = 'cp -r'
 
+" CoC option
+let g:coc_disable_transparent_cursor = 1
+
 """ }}}1
 """ Section: Mappings {{{1
 
@@ -128,6 +131,7 @@ nmap <silent> gr <Plug>(coc-references)
 " Use `[c` and `]c` to navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
+nnoremap <silent><leader>D :copen<cr>
 
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
@@ -174,6 +178,10 @@ command! -bang -nargs=? GGrep
 
 " Close all buffers except current one
 command! BufCurOnly execute '%bdelete|edit#|bdelete#'
+nnoremap <leader>qo :BufCurOnly<cr>
+
+command! -nargs=0 Tsc :call CocAction('runCommand', 'tsserver.watchBuild')
+nnoremap <leader>T :Tsc<cr>
 
 " Fuzzy finder
 nnoremap <leader>t :GFiles && git ls-files -o --exclude-standard<cr>
