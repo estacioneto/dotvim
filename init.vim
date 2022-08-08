@@ -15,13 +15,13 @@ let g:coc_global_extensions = [
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile' }
+Plug 'neoclide/coc.nvim', {'tag': 'v0.0.81'}
+Plug 'jiangmiao/auto-pairs'
 Plug 'neoclide/jsonc.vim'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf.vim', { 'commit': 'dff3ad4b62b9173a740c24833f425d2ef209dc80' }
 Plug 'tpope/vim-fugitive'
-Plug 'jiangmiao/auto-pairs'
 Plug 'lucasecdb/vim-codedark'
 Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline'
@@ -143,8 +143,21 @@ function! s:show_documentation()
   endif
 endfunction
 
-" Use <c-space> to trigger completion.
+ 
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+                             
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1):
+      \ <SID>check_back_space() ? “\<Tab>” :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : “\<C-h>”
+" remap for complete to use tab and <cr>
 inoremap <silent><expr> <c-space> coc#refresh()
+
+" hi CocSearch ctermfg=12 guifg=#18A3FF
+" hi CocMenuSel ctermbg=109 guibg=#13354A
 
 nnoremap <silent> <leader>ee :CocCommand eslint.executeAutofix<cr>
 
@@ -160,16 +173,19 @@ nnoremap <leader>R :argdo
 cnoremap <leader>R :argdo 
 
 command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, {'options': ['--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']})
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}))
 
 command! -bang -nargs=? -complete=dir FilesPwd
-  \ call fzf#vim#files(<q-args>, {'options': ['--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}'], 'dir': getcwd()})
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'dir': getcwd()}))
 
 command! -bang -nargs=? -complete=dir GFiles
-  \ call fzf#vim#gitfiles(<q-args>, {'options': ['--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']})
+  \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}))
 
 command! -bang -nargs=? -complete=dir GFilesPwd
-  \ call fzf#vim#gitfiles(<q-args>, {'options': ['--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}'], 'dir': getcwd()})
+  \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview({'dir': getcwd()}))
+
+command! -bang -nargs=? -complete=dir GFilesPwdT
+  \ call fzf#vim#gitfiles(<q-args>, {'dir': getcwd()})
 
 command! -bang -nargs=? GGrep
   \ call fzf#vim#grep(

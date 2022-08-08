@@ -20,6 +20,11 @@ if which brew &> /dev/null; then
     brew install ripgrep
     echo ">>> Done"
   fi
+  if ! which bat &> /dev/null; then
+    echo ">>> Installing bat..."
+    brew install bat
+    echo ">>> Done"
+  fi
 else
   echo ">>> You should have brew to install the dependencies."
 fi
