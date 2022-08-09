@@ -20,7 +20,7 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'neoclide/jsonc.vim'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim', { 'commit': 'dff3ad4b62b9173a740c24833f425d2ef209dc80' }
+Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'lucasecdb/vim-codedark'
 Plug 'altercation/vim-colors-solarized'
