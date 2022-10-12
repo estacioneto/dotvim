@@ -15,7 +15,7 @@ let g:coc_global_extensions = [
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'neoclide/coc.nvim', {'tag': 'v0.0.81'}
+Plug 'neoclide/coc.nvim', { 'branch': 'release', 'do': 'yarn install' }
 Plug 'jiangmiao/auto-pairs'
 Plug 'neoclide/jsonc.vim'
 Plug 'tpope/vim-surround'
@@ -79,7 +79,7 @@ set cursorline
 set mouse=a
 set rtp+=/usr/local/opt/fzf
 set rtp+=~/.fzf
-set completeopt+=noinsert
+" set completeopt+=noinsert
 set nohls
 set ignorecase
 set updatetime=300
@@ -155,18 +155,25 @@ endfunction
  
 " Make <CR> to accept selected completion item or notify coc.nvim to format
 " <C-g>u breaks current undo, please make your own choice.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-                             
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
 inoremap <silent><expr> <TAB>
       \ coc#pum#visible() ? coc#pum#next(1):
-      \ <SID>check_back_space() ? “\<Tab>” :
+      \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : “\<C-h>”
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 " remap for complete to use tab and <cr>
 inoremap <silent><expr> <c-space> coc#refresh()
 
-" hi CocSearch ctermfg=12 guifg=#18A3FF
-" hi CocMenuSel ctermbg=109 guibg=#13354A
+hi CocSearch ctermfg=12 guifg=#18A3FF
+hi CocMenuSel ctermbg=109 guibg=#13354A
 
 nnoremap <silent> <leader>ee :CocCommand eslint.executeAutofix<cr>
 
@@ -302,7 +309,7 @@ lua << EOLUA
 -- nvim-treesitter
 require'nvim-treesitter.configs'.setup {
   -- A list of parser names, or "all"
-  ensure_installed = { "typescript", "tsx", "javascript" },
+  ensure_installed = { "typescript", "tsx", "javascript", "graphql" },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
