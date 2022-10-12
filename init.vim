@@ -32,6 +32,15 @@ Plug 'jparise/vim-graphql'
 Plug 'chrisbra/vim-commentary'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+" Dap
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'mfussenegger/nvim-dap'
+Plug 'nvim-telescope/telescope-dap.nvim'
+Plug 'theHamsta/nvim-dap-virtual-text'
+Plug 'rcarriga/nvim-dap-ui'
 "Plug 'tpope/vim-vinegar'
 
 " Javascript
@@ -167,11 +176,6 @@ nnoremap <silent> <leader>ee :CocCommand eslint.executeAutofix<cr>
 nnoremap <silent> <leader>c :Gcommit<cr>
 nnoremap <silent> <leader>s :Gstatus<cr>
 
-nnoremap <leader>r :arg 
-cnoremap <leader>r :arg 
-nnoremap <leader>R :argdo 
-cnoremap <leader>R :argdo 
-
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}))
 
@@ -200,10 +204,10 @@ command! -nargs=0 Tsc :call CocAction('runCommand', 'tsserver.watchBuild')
 nnoremap <leader>T :Tsc<cr>
 
 " Fuzzy finder
-nnoremap <leader>t :GFiles && git ls-files -o --exclude-standard<cr>
-nnoremap <leader>d :GFilesPwd && git ls-files -o --exclude-standard<cr>
+nnoremap <leader>gr :GFiles && git ls-files -o --exclude-standard<cr>
+nnoremap <leader>gd :GFilesPwd && git ls-files -o --exclude-standard<cr>
 
-nnoremap <leader>ft :Files<cr>
+nnoremap <leader>fr :Files<cr>
 nnoremap <leader>fd :FilesPwd<cr>
 
 " Terminal
@@ -216,7 +220,7 @@ vnoremap <leader>fm :!fmt -80 -s<cr>
 
 nnoremap <leader>p :Prettier<cr>
 nnoremap <leader>s :Rg<cr>
-nnoremap <leader>g :GGrep<cr>
+nnoremap <leader>gg :GGrep<cr>
 
 " Insert mode
 inoremap jk <esc>
@@ -234,6 +238,33 @@ endif
 nnoremap <leader>ef :call MyExplore("Lexplore %:p:h")<CR>
 nnoremap <leader>ed :call MyExplore("Lexplore")<CR>
 nnoremap <leader>E :call MyExplore("Explore")<CR>
+
+" Dap (Debugging)
+nnoremap <leader>db :lua require'dap'.toggle_breakpoint()<CR>
+nnoremap <leader>do :lua require'dap'.step_out()<CR>
+nnoremap <leader>di :lua require'dap'.step_into()<CR>
+nnoremap <leader>dn :lua require'dap'.step_over()<CR>
+nnoremap <leader>ds :lua require'dap'.stop()<CR>
+nnoremap <leader>dc :lua require'dap'.continue()<CR>
+nnoremap <leader>du :lua require'dap'.up()<CR>
+nnoremap <leader>dj :lua require'dap'.down()<CR>
+nnoremap <leader>d_ :lua require'dap'.disconnect();require'dap'.stop();require'dap'.run_last()<CR>
+nnoremap <leader>dr :lua require'dap'.repl.open({}, 'vsplit')<CR><C-w>l
+nnoremap <leader>di :lua require'dap.ui.variables'.hover()<CR>
+vnoremap <leader>dvi :lua require'dap.ui.variables'.visual_hover()<CR>
+nnoremap <leader>d? :lua require'dap.ui.variables'.scopes()<CR>
+nnoremap <leader>de :lua require'dap'.set_exception_breakpoints({"all"})<CR>
+nnoremap <leader>da :lua require'debugHelper'.attach()<CR>
+nnoremap <leader>dA :lua require'debugHelper'.attachToRemote()<CR>
+nnoremap <leader>dk :lua require'dap.ui.widgets'.hover()<CR>
+nnoremap <leader>d? :lua local widgets=require'dap.ui.widgets';widgets.centered_float(widgets.scopes)<CR>
+" Telescope dap
+nnoremap <leader>dtf :Telescope dap frames<CR>
+nnoremap <leader>dtc :Telescope dap commands<CR>
+nnoremap <leader>dtlb :Telescope dap list_breakpoints<CR>
+" Dap UI
+" Plug 'rcarriga/nvim-dap-ui'
+nnoremap <leader>dui :lua require("dapui").toggle()<CR>
 
 command! WQ wq
 command! Wq wq
@@ -264,7 +295,11 @@ let g:ale_linters = {
 \  'graphql': ['gqlint']
 \}
 
+" theHamsta/nvim-dap-virtual-text and mfussenegger/nvim-dap
+let g:dap_virtual_text = v:true
+
 lua << EOLUA
+-- nvim-treesitter
 require'nvim-treesitter.configs'.setup {
   -- A list of parser names, or "all"
   ensure_installed = { "typescript", "tsx", "javascript" },
@@ -292,6 +327,55 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 }
+
+-- nvim-dap
+local dap = require('dap')
+dap.adapters.node2 = {
+  type = 'executable',
+  command = 'node',
+  args = {os.getenv('HOME') .. '/.nvim/dev/microsoft/vscode-node-debug2/out/src/nodeDebug.js'},
+}
+dap.configurations.javascript = {
+  {
+    name = 'Launch',
+    type = 'node2',
+    request = 'launch',
+    program = '${file}',
+    cwd = vim.fn.getcwd(),
+    sourceMaps = true,
+    protocol = 'inspector',
+    console = 'integratedTerminal',
+  },
+  {
+    -- For this to work you need to make sure the node process is started with the `--inspect` flag.
+    name = 'Attach to remote',
+    type = 'node2',
+    request = 'attach',
+    processId = require'dap.utils'.pick_process,
+    address = "127.0.0.1",
+    port = 9229,
+    protocol = 'inspector'
+  },
+  {
+    -- For this to work you need to make sure the node process is started with the `--inspect` flag.
+    name = 'Attach to process',
+    type = 'node2',
+    request = 'attach',
+    processId = require'dap.utils'.pick_process,
+  },
+}
+
+vim.fn.sign_define('DapBreakpoint', {text='✋', texthl='', linehl='', numhl=''})
+vim.fn.sign_define('DapStopped', {text='👉', texthl='', linehl='', numhl=''})
+
+-- Telescope
+require('telescope').setup()
+require('telescope').load_extension('dap')
+
+-- Dap UI
+
+require("dapui").setup()
+
 EOLUA
 
 if executable("rg") 

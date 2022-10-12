@@ -25,12 +25,35 @@ if which brew &> /dev/null; then
     brew install bat
     echo ">>> Done"
   fi
+  if ! which python &> /dev/null; then
+    echo ">>> Installing python..."
+    brew install python
+    echo ">>> Done"
+  fi
 else
   echo ">>> You should have brew to install the dependencies."
+  exit 1
 fi
 
-if which nvim &> /dev/null; then
-  nvim -c "PlugInstall"
-else
-  vim -c "PlugInstall"
+# vscode-node-debug2 installation
+if [[ ! -d ~/.nvim/dev/microsoft ]]; then
+  echo ">>> Adding vscode-node-debug2"
+  mkdir -p ~/.nvim/dev/microsoft
+  git clone https://github.com/microsoft/vscode-node-debug2.git ~/.nvim/dev/microsoft/vscode-node-debug2
+  
+  prev_pwd=$PWD
+  cd ~/.nvim/dev/microsoft/vscode-node-debug2
+  npm install
+  NODE_OPTIONS=--no-experimental-fetch npm run build
+
+  cd $prev_pwd
+
+  echo ">>> Done"
 fi
+
+if ! which nvim &> /dev/null; then
+  echo ">>> Installing neovim..."
+  brew install neovim
+fi
+
+nvim -c "PlugInstall"

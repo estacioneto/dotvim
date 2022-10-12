@@ -2,6 +2,8 @@
   "angular.experimental-ivy": true,
   "tsserver.npm": "yarn",
   "eslint.packageManager": "yarn",
+  "diagnostic.virtualText": true,
+  "diagnostic.virtualTextCurrentLineOnly": false,
   "eslint.filetypes": [
     "javascript",
     "javascriptreact",
