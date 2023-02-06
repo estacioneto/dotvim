@@ -96,6 +96,7 @@ set signcolumn=yes
 set laststatus=2
 
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+set sessionoptions+=globals
 
 " Netrw options
 
@@ -136,6 +137,8 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gt <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> rn <Plug>(coc-rename)
+nmap <silent><leader>re <Plug>(coc-refactor)
 
 " Use `[c` and `]c` to navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
@@ -453,6 +456,11 @@ if has('syntax')
     set guioptions-=r
     set guioptions-=L
   endif
+  if has('gui_running')
+    set background=light
+  else
+    set background=dark
+  endif
 
   set termguicolors
   let g:material_theme_style = 'ocean'
@@ -467,4 +475,22 @@ if has('syntax')
   endif
 endif
 
+let g:solarized_termcolors=256
+
+" See https://gist.github.com/ryanflorence/1381526
+function RandomColorSchemeMyPicks()
+  let mypicks = ['codedark', 'material']
+  let mypick = mypicks[localtime() % len(mypicks)]
+  let my_material_themes = ['defautl', 'ocean', 'palenight', 'darker']
+
+  let g:material_theme_style = my_material_themes[localtime() % len(my_material_themes)]
+
+  echom mypick
+  execute 'colo' mypick
+endfunction
+
+command NewColor call RandomColorSchemeMyPicks()
+call RandomColorSchemeMyPicks()
+
 """}}}1
+

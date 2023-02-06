@@ -1,9 +1,11 @@
 {
   "angular.experimental-ivy": true,
   "tsserver.npm": "yarn",
+  "workspace.workspaceFolderCheckCwd": true,
   "eslint.packageManager": "yarn",
   "diagnostic.virtualText": true,
   "diagnostic.virtualTextCurrentLineOnly": false,
+  "workspace.workspaceFolderFallbackCwd": false,
   "eslint.filetypes": [
     "javascript",
     "javascriptreact",
@@ -11,5 +13,6 @@
     "typescriptreact",
     "html"
   ],
-  "eslint.autoFixOnSave": true
+  "eslint.autoFixOnSave": true,
+  "suggest.virtualText": true
 }
