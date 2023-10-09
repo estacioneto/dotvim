@@ -8,7 +8,9 @@ let g:coc_global_extensions = [
   \'coc-texlab',
   \'coc-vimtex',
   \'coc-go',
-  \'coc-angular'
+  \'coc-angular',
+  \'coc-highlight',
+  \'coc-lua'
   \]
 
 """ Section: Packages {{{1
@@ -22,10 +24,16 @@ Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'lucasecdb/vim-codedark'
+Plug 'mbbill/undotree'
+
+" Colorschemes
+" Plug 'lucasecdb/vim-codedark'
+Plug 'tomasiser/vim-code-dark'
 Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline'
 Plug 'kaicataldo/material.vim'
+Plug 'rose-pine/vim'
+
 Plug 'udalov/kotlin-vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'jparise/vim-graphql'
@@ -52,6 +60,8 @@ Plug 'MaxMEllon/vim-jsx-pretty'
 
 " Treesitter
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+" Copilot
+Plug 'github/copilot.vim'
 
 call plug#end()
 
@@ -72,7 +82,7 @@ set foldlevel=99
 set number relativenumber
 set backspace=indent,eol,start
 set clipboard=unnamedplus
-set scrolloff=3
+set scrolloff=8
 set splitbelow
 set splitright
 set cursorline
@@ -95,6 +105,7 @@ set signcolumn=yes
 
 set laststatus=2
 
+autocmd User CocStatusChange redrawstatus
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 set sessionoptions+=globals
 
@@ -112,6 +123,9 @@ let g:netrw_localcopydircmd = 'cp -r'
 
 " CoC option
 let g:coc_disable_transparent_cursor = 1
+
+" fzf options https://github.com/junegunn/fzf.vim
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
 
 """ }}}1
 """ Section: Mappings {{{1
@@ -137,12 +151,12 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gt <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-nmap <silent> rn <Plug>(coc-rename)
+nmap <silent><leader>rn <Plug>(coc-rename)
 nmap <silent><leader>re <Plug>(coc-refactor)
 
 " Use `[c` and `]c` to navigate diagnostics
-nmap <silent> [c <Plug>(coc-diagnostic-prev)
-nmap <silent> ]c <Plug>(coc-diagnostic-next)
+nmap <silent> [c <Plug>(coc-diagnostic-prev)<CR>zz
+nmap <silent> ]c <Plug>(coc-diagnostic-next)<CR>zz
 nnoremap <silent><leader>D :copen<cr>
 
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -178,13 +192,22 @@ inoremap <silent><expr> <c-space> coc#refresh()
 hi CocSearch ctermfg=12 guifg=#18A3FF
 hi CocMenuSel ctermbg=109 guibg=#13354A
 
+command! -nargs=0 Tsc :call CocAction('runCommand', 'tsserver.watchBuild')
+nnoremap <leader>T :Tsc<cr>
+
+command! -nargs=0 OrgImports :call CocAction('organizeImport')
+nnoremap <leader>oi :OrgImports<cr>
+
 nnoremap <silent> <leader>ee :CocCommand eslint.executeAutofix<cr>
+nnoremap <silent> <leader>ea :OrgImports<cr> <bar> :CocCommand eslint.executeAutofix<cr>
+nnoremap <silent> <leader>cs :CocSearch
+
+
 
 """}}}2
 
 " Fugitive
-nnoremap <silent> <leader>c :Gcommit<cr>
-nnoremap <silent> <leader>s :Gstatus<cr>
+nnoremap <silent> <leader>gs :Git<cr>
 
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}))
@@ -210,9 +233,6 @@ command! -bang -nargs=? GGrep
 command! BufCurOnly execute '%bdelete|edit#|bdelete#'
 nnoremap <leader>qo :BufCurOnly<cr>
 
-command! -nargs=0 Tsc :call CocAction('runCommand', 'tsserver.watchBuild')
-nnoremap <leader>T :Tsc<cr>
-
 " Fuzzy finder
 nnoremap <leader>gr :GFiles && git ls-files -o --exclude-standard<cr>
 nnoremap <leader>gd :GFilesPwd && git ls-files -o --exclude-standard<cr>
@@ -234,10 +254,26 @@ nnoremap <leader>gg :GGrep<cr>
 
 " Insert mode
 inoremap jk <esc>
+" Movement
+vnoremap J :m '>+1<cr>gv=gv
+vnoremap K :m '<-2<cr>gv=gv
+nnoremap J mzJ`z
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+nnoremap Q <nop>
 
 " Copy file path
 nmap cpr :let @+ = expand("%")<cr>
 nmap cpf :let @+ = expand("%:p")<cr>
+" Copy file directory
+nmap cdr :let @+ = expand("%:h")<cr>
+nmap cdf :let @+ = expand("%:p:h")<cr>
+
+" Undo tree
+nnoremap <leader>ut :UndotreeToggle<cr>
 
 " Netrw
 " Avoid ctrl-l to refresh netrw
@@ -281,6 +317,9 @@ command! Wq wq
 command! W w
 command! Q BufCurOnly
 
+" Open URL
+nnoremap gx :call OpenURLUnderCursor()<CR>
+
 """ }}}1
 """ Section: Plugins options {{{1
 
@@ -307,6 +346,30 @@ let g:ale_linters = {
 
 " theHamsta/nvim-dap-virtual-text and mfussenegger/nvim-dap
 let g:dap_virtual_text = v:true
+
+" Github copilot
+let g:copilot_enabled = v:false
+let g:copilot_node_command = "/usr/local/bin/node"
+let g:copilot_filetypes = {
+\ '*': v:false,
+\ 'typescript': v:true,
+\ 'javascript': v:true,
+\}
+
+
+" Undotree
+if has("persistent_undo")
+   let target_path = expand('~/.undodir')
+
+    " create the directory and any parent directories
+    " if the location does not exist.
+    if !isdirectory(target_path)
+        call mkdir(target_path, "p", 0700)
+    endif
+
+    let &undodir=target_path
+    set undofile
+endif
 
 lua << EOLUA
 -- nvim-treesitter
@@ -386,6 +449,10 @@ require('telescope').load_extension('dap')
 
 require("dapui").setup()
 
+local git_ui = require("git_ui")
+
+vim.keymap.set("n", "<leader>sturl", git_ui.sturl) -- Copy stash url to clipboard
+
 EOLUA
 
 if executable("rg") 
@@ -408,6 +475,16 @@ function MyExplore(command)
   else
     let g:netrw_browse_split = 4
     :execute a:command
+  endif
+endfunction
+
+function! OpenURLUnderCursor()
+  let s:uri = expand('<cWORD>')
+  let s:uri = substitute(s:uri, '?', '\\?', '')
+  let s:uri = shellescape(s:uri, 1)
+  if s:uri != ''
+    silent exec "!open '".s:uri."'"
+    :redraw!
   endif
 endfunction
 
@@ -479,7 +556,7 @@ let g:solarized_termcolors=256
 
 " See https://gist.github.com/ryanflorence/1381526
 function RandomColorSchemeMyPicks()
-  let mypicks = ['codedark', 'material']
+  let mypicks = ['codedark', 'material', 'rosepine', 'rosepine_moon']
   let mypick = mypicks[localtime() % len(mypicks)]
   let my_material_themes = ['defautl', 'ocean', 'palenight', 'darker']
 
