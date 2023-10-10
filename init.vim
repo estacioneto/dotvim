@@ -130,20 +130,11 @@ let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %
 """ }}}1
 """ Section: Mappings {{{1
 
-let mapleader=','
+" -- The future
+lua << EOLUA
+require('keymaps')
+EOLUA
 
-" Window switching
-nnoremap <silent> <c-h> <c-w>h
-nnoremap <silent> <c-j> <c-w>j
-nnoremap <silent> <c-k> <c-w>k
-nnoremap <silent> <c-l> <c-w>l
-
-" Buffer switching
-nnoremap <silent> <s-l> :bnext<cr>
-nnoremap <silent> <s-h> :bprevious<cr>
-
-" Misc
-nnoremap <silent> <leader>q :q<cr>
 """ Section: CoC {{{2
 
 " Remap keys for gotos
@@ -249,31 +240,6 @@ vnoremap <leader>fj :!prettier --stdin --stdin-filepath module.js<cr>
 vnoremap <leader>fm :!fmt -80 -s<cr>
 
 nnoremap <leader>p :Prettier<cr>
-nnoremap <leader>s :Rg<cr>
-nnoremap <leader>gg :GGrep<cr>
-
-" Insert mode
-inoremap jk <esc>
-" Movement
-vnoremap J :m '>+1<cr>gv=gv
-vnoremap K :m '<-2<cr>gv=gv
-nnoremap J mzJ`z
-nnoremap <C-d> <C-d>zz
-nnoremap <C-u> <C-u>zz
-nnoremap n nzzzv
-nnoremap N Nzzzv
-
-nnoremap Q <nop>
-
-" Copy file path
-nmap cpr :let @+ = expand("%")<cr>
-nmap cpf :let @+ = expand("%:p")<cr>
-" Copy file directory
-nmap cdr :let @+ = expand("%:h")<cr>
-nmap cdf :let @+ = expand("%:p:h")<cr>
-
-" Undo tree
-nnoremap <leader>ut :UndotreeToggle<cr>
 
 " Netrw
 " Avoid ctrl-l to refresh netrw
