@@ -1,9 +1,11 @@
-local exports = {}
-
 -- Stash URL
 local function get_file()
   -- get git root directory
   local handle = io.popen("git rev-parse --show-toplevel")
+  if handle == nil then
+    return ""
+  end
+
   local result = handle:read("*a")
   handle:close()
 
@@ -23,34 +25,34 @@ local function get_file()
 end
 
 local function get_remote()
-    -- get the remote url
-    local handle = io.popen("git config --get remote.origin.url")
-	if handle == nil then
-		return ""
-	end
-    local result = handle:read("*a")
+  -- get the remote url
+  local handle = io.popen("git config --get remote.origin.url")
+  if handle == nil then
+    return ""
+  end
+  local result = handle:read("*a")
 
-	if result == "" then
-		print("No remote found")
-		return ""
-	end
-    handle:close()
-    local ssh, user, domain, port, group, repo = result:match("(ssh://)([^@]+)@([^:]+):(%d+)/([^/]+)/([^/]+).git")
+  if result == "" then
+    print("No remote found")
+    return ""
+  end
 
-    local git_remote_url = ("https://%s/projects/%s/repos/%s/browse/"):format(domain, group:upper(), repo)
+  handle:close()
+  local _, _, domain, _, group, repo = result:match("(ssh://)([^@]+)@([^:]+):(%d+)/([^/]+)/([^/]+).git")
 
-    return git_remote_url
+  return ("https://%s/projects/%s/repos/%s/browse/"):format(domain, group:upper(), repo)
 end
 
-function exports.sturl()
-	local fp = get_file()
-	local rp = get_remote()
-	local path = rp .. fp
+local function sturl()
+  local fp = get_file()
+  local rp = get_remote()
+  local path = rp .. fp
 
-	-- Copy URL to clipboard in MacOS
-    os.execute("echo '" .. path .. "' | pbcopy")
+  -- Copy URL to clipboard in MacOS
+  os.execute("echo '" .. path .. "' | pbcopy")
 
-    print("Copied to clipboard: " .. path)
+  print("Copied to clipboard: " .. path)
 end
 
-return exports
+-- Keymap: Copy stash url to clipboard
+vim.keymap.set("n", "<leader>rurl", sturl)

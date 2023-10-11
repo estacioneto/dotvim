@@ -68,46 +68,9 @@ call plug#end()
 """ }}}1
 """ Section: Options {{{1
 
-set langmenu=en_US
-let $LANG='en_US'
-set autoindent
-set expandtab
-set shiftwidth=2
-set softtabstop=2
-set incsearch
-set nohlsearch
-set foldmethod=indent
-set foldopen+=jump
-set foldlevel=99
-set number relativenumber
-set backspace=indent,eol,start
-set clipboard=unnamedplus
-set scrolloff=8
-set splitbelow
-set splitright
-set cursorline
-set mouse=a
-set rtp+=/usr/local/opt/fzf
-set rtp+=~/.fzf
-" set completeopt+=noinsert
-set nohls
-set ignorecase
-set updatetime=300
-
-" Better display for messages
-set cmdheight=2
-
-" don't give |ins-completion-menu| messages.
-set shortmess+=c
-
-" always show signcolumns
-set signcolumn=yes
-
-set laststatus=2
-
-autocmd User CocStatusChange redrawstatus
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-set sessionoptions+=globals
+lua << EOLUA
+require('set')
+EOLUA
 
 " Netrw options
 
@@ -132,7 +95,9 @@ let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %
 
 " -- The future
 lua << EOLUA
+require('commands')
 require('keymaps')
+require("git_ui")
 EOLUA
 
 """ Section: CoC {{{2
@@ -197,9 +162,7 @@ nnoremap <silent> <leader>cs :CocSearch
 
 """}}}2
 
-" Fugitive
-nnoremap <silent> <leader>gs :Git<cr>
-
+" Fuzzy finder
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}))
 
@@ -220,26 +183,6 @@ command! -bang -nargs=? GGrep
   \   'git grep --line-number -- '.shellescape(<q-args>), 0,
   \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
 
-" Close all buffers except current one
-command! BufCurOnly execute '%bdelete|edit#|bdelete#'
-nnoremap <leader>qo :BufCurOnly<cr>
-
-" Fuzzy finder
-nnoremap <leader>gr :GFiles && git ls-files -o --exclude-standard<cr>
-nnoremap <leader>gd :GFilesPwd && git ls-files -o --exclude-standard<cr>
-
-nnoremap <leader>fr :Files<cr>
-nnoremap <leader>fd :FilesPwd<cr>
-
-" Terminal
-tnoremap jk <c-\><c-n>
-
-" Formatters
-vnoremap <leader>fg :!prettier --stdin --stdin-filepath query.gql<cr>
-vnoremap <leader>fj :!prettier --stdin --stdin-filepath module.js<cr>
-vnoremap <leader>fm :!fmt -80 -s<cr>
-
-nnoremap <leader>p :Prettier<cr>
 
 " Netrw
 " Avoid ctrl-l to refresh netrw
@@ -277,14 +220,6 @@ nnoremap <leader>dtlb :Telescope dap list_breakpoints<CR>
 " Dap UI
 " Plug 'rcarriga/nvim-dap-ui'
 nnoremap <leader>dui :lua require("dapui").toggle()<CR>
-
-command! WQ wq
-command! Wq wq
-command! W w
-command! Q BufCurOnly
-
-" Open URL
-nnoremap gx :call OpenURLUnderCursor()<CR>
 
 """ }}}1
 """ Section: Plugins options {{{1
@@ -337,90 +272,6 @@ if has("persistent_undo")
     set undofile
 endif
 
-lua << EOLUA
--- nvim-treesitter
-require'nvim-treesitter.configs'.setup {
-  -- A list of parser names, or "all"
-  ensure_installed = { "typescript", "tsx", "javascript", "graphql" },
-
-  -- Install parsers synchronously (only applied to `ensure_installed`)
-  sync_install = false,
-
-  -- List of parsers to ignore installing (for "all")
-  ignore_install = {},
-
-  highlight = {
-    -- `false` will disable the whole extension
-    enable = true,
-
-    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-    -- the name of the parser)
-    -- list of language that will be disabled
-    disable = {},
-
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
-}
-
--- nvim-dap
-local dap = require('dap')
-dap.adapters.node2 = {
-  type = 'executable',
-  command = 'node',
-  args = {os.getenv('HOME') .. '/.nvim/dev/microsoft/vscode-node-debug2/out/src/nodeDebug.js'},
-}
-dap.configurations.javascript = {
-  {
-    name = 'Launch',
-    type = 'node2',
-    request = 'launch',
-    program = '${file}',
-    cwd = vim.fn.getcwd(),
-    sourceMaps = true,
-    protocol = 'inspector',
-    console = 'integratedTerminal',
-  },
-  {
-    -- For this to work you need to make sure the node process is started with the `--inspect` flag.
-    name = 'Attach to remote',
-    type = 'node2',
-    request = 'attach',
-    processId = require'dap.utils'.pick_process,
-    address = "127.0.0.1",
-    port = 9229,
-    protocol = 'inspector'
-  },
-  {
-    -- For this to work you need to make sure the node process is started with the `--inspect` flag.
-    name = 'Attach to process',
-    type = 'node2',
-    request = 'attach',
-    processId = require'dap.utils'.pick_process,
-  },
-}
-
-vim.fn.sign_define('DapBreakpoint', {text='✋', texthl='', linehl='', numhl=''})
-vim.fn.sign_define('DapStopped', {text='👉', texthl='', linehl='', numhl=''})
-
--- Telescope
-require('telescope').setup()
-require('telescope').load_extension('dap')
-
--- Dap UI
-
-require("dapui").setup()
-
-local git_ui = require("git_ui")
-
-vim.keymap.set("n", "<leader>sturl", git_ui.sturl) -- Copy stash url to clipboard
-
-EOLUA
-
 if executable("rg") 
     set grepprg=rg\ --vimgrep 
 endif
@@ -441,16 +292,6 @@ function MyExplore(command)
   else
     let g:netrw_browse_split = 4
     :execute a:command
-  endif
-endfunction
-
-function! OpenURLUnderCursor()
-  let s:uri = expand('<cWORD>')
-  let s:uri = substitute(s:uri, '?', '\\?', '')
-  let s:uri = shellescape(s:uri, 1)
-  if s:uri != ''
-    silent exec "!open '".s:uri."'"
-    :redraw!
   endif
 endfunction
 
