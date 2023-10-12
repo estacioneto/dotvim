@@ -10,7 +10,8 @@ let g:coc_global_extensions = [
   \'coc-go',
   \'coc-angular',
   \'coc-highlight',
-  \'coc-lua'
+  \'coc-lua',
+  \'coc-snippets'
   \]
 
 """ Section: Packages {{{1
@@ -101,63 +102,14 @@ require("git_ui")
 EOLUA
 
 """ Section: CoC {{{2
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gt <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nmap <silent><leader>rn <Plug>(coc-rename)
-nmap <silent><leader>re <Plug>(coc-refactor)
-
-" Use `[c` and `]c` to navigate diagnostics
-nmap <silent> [c <Plug>(coc-diagnostic-prev)<CR>zz
-nmap <silent> ]c <Plug>(coc-diagnostic-next)<CR>zz
-nnoremap <silent><leader>D :copen<cr>
-
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
  
 " Make <CR> to accept selected completion item or notify coc.nvim to format
 " <C-g>u breaks current undo, please make your own choice.
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#pum#next(1):
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-" remap for complete to use tab and <cr>
-inoremap <silent><expr> <c-space> coc#refresh()
+" inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+" \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 hi CocSearch ctermfg=12 guifg=#18A3FF
 hi CocMenuSel ctermbg=109 guibg=#13354A
-
-command! -nargs=0 Tsc :call CocAction('runCommand', 'tsserver.watchBuild')
-nnoremap <leader>T :Tsc<cr>
-
-command! -nargs=0 OrgImports :call CocAction('organizeImport')
-nnoremap <leader>oi :OrgImports<cr>
-
-nnoremap <silent> <leader>ee :CocCommand eslint.executeAutofix<cr>
-nnoremap <silent> <leader>ea :OrgImports<cr> <bar> :CocCommand eslint.executeAutofix<cr>
-nnoremap <silent> <leader>cs :CocSearch
-
 
 
 """}}}2
@@ -256,25 +208,6 @@ let g:copilot_filetypes = {
 \ 'typescript': v:true,
 \ 'javascript': v:true,
 \}
-
-
-" Undotree
-if has("persistent_undo")
-   let target_path = expand('~/.undodir')
-
-    " create the directory and any parent directories
-    " if the location does not exist.
-    if !isdirectory(target_path)
-        call mkdir(target_path, "p", 0700)
-    endif
-
-    let &undodir=target_path
-    set undofile
-endif
-
-if executable("rg") 
-    set grepprg=rg\ --vimgrep 
-endif
 
 """}}}
 """ Section: Functions {{{1

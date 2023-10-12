@@ -1,3 +1,7 @@
+if vim.fn.executable("rg") then
+  vim.opt.grepprg = 'rg\\' --vimgrep 
+end
+
 vim.keymap.set('n', '<leader>s', vim.cmd.Rg)
 vim.keymap.set('n', '<leader>gg', vim.cmd.GGrep)
 

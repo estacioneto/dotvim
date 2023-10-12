@@ -7,11 +7,11 @@
   "diagnostic.virtualText": true,
   "diagnostic.virtualTextCurrentLineOnly": false,
   "workspace.workspaceFolderFallbackCwd": false,
-  "Lua.workspace.library": [
-    "/usr/share/nvim/runtime/lua",
-    "/usr/share/nvim/runtime/lua/vim",
-    "/usr/share/nvim/runtime/lua/vim/lsp"
-  ],
+  "Lua.workspace.library": {
+    "/usr/local/share/nvim/runtime/lua": true,
+    "/usr/local/share/nvim/runtime/lua/vim": true,
+    "/usr/local/share/nvim/runtime/lua/vim/lsp": true
+  },
   "Lua.diagnostics.globals": ["vim"],
   "eslint.filetypes": [
     "javascript",
