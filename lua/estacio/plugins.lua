@@ -27,6 +27,20 @@ return require('packer').startup(function(use)
   -- LSP
   use { 'neoclide/coc.nvim', branch = 'release' }
   use 'prettier/vim-prettier'
+  -- LSP Zero: https://github.com/VonHeikemen/lsp-zero.nvim
+  use {
+    'neovim/nvim-lspconfig',
+    requires = {
+      --- Uncomment these if you want to manage LSP servers from neovim
+      { 'williamboman/mason.nvim' },
+      { 'williamboman/mason-lspconfig.nvim' },
+
+      -- Autocompletion
+      { 'hrsh7th/nvim-cmp' },
+      { 'hrsh7th/cmp-nvim-lsp' },
+      { 'L3MON4D3/LuaSnip' },
+    }
+  }
 
   -- Code tools
   -- See https://github.com/nvim-treesitter/nvim-treesitter/wiki/Installation
@@ -43,11 +57,13 @@ return require('packer').startup(function(use)
   use 'tomasiser/vim-code-dark'
   use 'marko-cerovac/material.nvim'
   use({ 'rose-pine/neovim', as = 'rose-pine' })
+
   -- Statusline
   use {
     'nvim-lualine/lualine.nvim',
     requires = { 'nvim-tree/nvim-web-devicons', opt = true }
   }
+  use 'arkav/lualine-lsp-progress'
 
   -- Debugging
   use 'mfussenegger/nvim-dap'

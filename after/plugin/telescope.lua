@@ -14,7 +14,23 @@ vim.keymap.set('n', '<leader>fr', function()
   })
 end, {})
 
-vim.keymap.set('n', '<leader>s', builtin.live_grep, {})
+local function fuzzySearch(opts)
+  opts = opts or {}
+
+  builtin.grep_string({
+    cwd = opts.cwd,
+    path_display = { 'smart' },
+    only_sort_text = true,
+    word_match = "-w",
+    search = '',
+  })
+end
+
+vim.keymap.set('n', '<leader>sd', function() fuzzySearch() end, {})
+
+vim.keymap.set('n', '<leader>sr', function()
+  fuzzySearch({ cwd = vim.fn.systemlist('git rev-parse --show-toplevel')[1] })
+end, {})
 vim.keymap.set('n', '<leader>wg', builtin.grep_string, {})
 
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})

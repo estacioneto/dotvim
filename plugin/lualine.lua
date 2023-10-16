@@ -1,7 +1,10 @@
 -- Lualine: https://github.com/nvim-lualine/lualine.nvim
+-- TODO: Get tsserver version
 require('lualine').setup {
+  extensions = { 'quickfix' },
   sections = {
-    lualine_a = { 'mode', 'bo:filetype', 'g:coc_status' },
+    lualine_a = { 'g:coc_status', 'mode', 'bo:filetype' },
+    lualine_c = { { 'filename', path = 1 } },
     lualine_x = {
       {
         'diagnostics',
@@ -22,7 +25,7 @@ require('lualine').setup {
           info  = 'DiagnosticInfo',  -- Changes diagnostics' info color.
           hint  = 'DiagnosticHint',  -- Changes diagnostics' hint color.
         },
-        symbols = {error = 'E', warn = 'W', info = 'I', hint = 'H'},
+        -- symbols = {error = 'E', warn = 'W', info = 'I', hint = 'H'},
         colored = true,           -- Displays diagnostics status in color if set to true.
         update_in_insert = false, -- Update diagnostics in insert mode.
         always_visible = false,   -- Show diagnostics even if there are none.

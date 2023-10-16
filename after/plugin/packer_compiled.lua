@@ -99,10 +99,10 @@ _G.packer_plugins = {
     path = "/Users/estacio.pereira/.local/share/nvim/site/pack/packer/start/copilot.vim",
     url = "https://github.com/github/copilot.vim"
   },
-  ["lualine-lsp-progress"] = {
+  ["lsp-zero.nvim"] = {
     loaded = true,
-    path = "/Users/estacio.pereira/.local/share/nvim/site/pack/packer/start/lualine-lsp-progress",
-    url = "https://github.com/arkav/lualine-lsp-progress"
+    path = "/Users/estacio.pereira/.local/share/nvim/site/pack/packer/start/lsp-zero.nvim",
+    url = "https://github.com/VonHeikemen/lsp-zero.nvim"
   },
   ["lualine.nvim"] = {
     loaded = true,
