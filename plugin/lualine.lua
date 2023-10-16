@@ -1,5 +1,4 @@
 -- Lualine: https://github.com/nvim-lualine/lualine.nvim
--- TODO: Get tsserver version
 require('lualine').setup {
   extensions = { 'quickfix' },
   sections = {
