@@ -1,9 +1,34 @@
+-- Options
+vim.g.coc_global_extensions = {
+  'coc-tsserver',
+  'coc-eslint',
+  'coc-css',
+  'coc-json',
+  'coc-texlab',
+  'coc-vimtex',
+  'coc-go',
+  'coc-angular',
+  'coc-highlight',
+  'coc-lua',
+  'coc-snippets'
+}
+
+vim.g.coc_disable_transparent_cursor = 1
+
 -- Coc statusline
 table.insert(vim.opt.statusline, "%{coc#status()}%{get(b:,'coc_current_function','')}")
 vim.cmd('autocmd User CocStatusChange redrawstatus')
 
-local silent = { silent = true }
+-- Highlight
+-- vim.cmd([[
+-- hi CocSearch ctermfg=12 guifg=#18A3FF
+-- hi CocMenuSel ctermbg=109 guibg=#13354A
+-- ]])
+
+
 -- Mappings
+local silent = { silent = true }
+
 -- Remap keys for gotos
 vim.keymap.set('n', 'gd', '<Plug>(coc-definition)', silent)
 vim.keymap.set('n', 'gt', '<Plug>(coc-type-definition)', silent)
@@ -25,7 +50,6 @@ vim.keymap.set('i', '<cr>', [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<
 vim.keymap.set('i', '<c-j>', '<Plug>(coc-snippets-expand-jump)')
 -- Use <c-space> to trigger completion
 vim.keymap.set('i', '<c-space>', 'coc#refresh()', { silent = true, expr = true })
-
 
 -- Use K to show documentation in preview window
 local function show_docs()

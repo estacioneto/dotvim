@@ -1,2 +1,0 @@
--- Telescope
-require('telescope').setup()

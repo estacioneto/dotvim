@@ -21,5 +21,6 @@
     "html"
   ],
   "eslint.autoFixOnSave": true,
-  "suggest.virtualText": true
+  "suggest.virtualText": true,
+  "snippets.ultisnips.pythonPrompt": false
 }

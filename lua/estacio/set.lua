@@ -38,7 +38,20 @@ vim.opt.shortmess:append('c')
 
 -- always show signcolumns
 vim.opt.signcolumn = 'yes'
+-- vim.opt.colorcolumn = 80
 
 vim.opt.laststatus = 2
 
 vim.opt.sessionoptions:append('globals')
+
+-- Netrw
+vim.g.netrw_preview = 1
+vim.g.netrw_altv = 1
+-- Default to tree mode
+vim.g.netrw_liststyle = 3
+
+-- Hide netrw banner
+--  vim.g.netrw_banner = 0
+vim.g.netrw_winsize = 30
+vim.g.netrw_localcopydircmd = 'cp -r'
+

@@ -4,8 +4,8 @@ vim.g.mapleader = ','
 vim.keymap.set('i', 'jk', '<esc>')
 
 -- Movement
-vim.keymap.set('v', 'J :m', "'>+1<cr>gv=gv")
-vim.keymap.set('v', 'K :m', "'<-2<cr>gv=gv")
+vim.keymap.set('v', 'J', ":m '>+1<cr>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<cr>gv=gv")
 vim.keymap.set('n', 'J', 'mzJ`z')
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
@@ -38,6 +38,8 @@ vim.keymap.set('n', 'cpf', function() vim.cmd('let @+ = expand("%:p")') end, { s
 vim.keymap.set('n', 'cdr', function() vim.cmd('let @+ = expand("%:h")') end, { silent = true })
 vim.keymap.set('n', 'cdf', function() vim.cmd('let @+ = expand("%:p:h")') end, { silent = true })
 
+-- Jump to previous file
+vim.keymap.set('n', '<c-p>', '<c-^>', { silent = true })
 
 -- Terminal
 vim.keymap.set('t', 'jk', '<c-\\><c-n>')
@@ -53,3 +55,24 @@ vim.keymap.set('n', 'gx', function()
     vim.cmd.redraw()
   end
 end)
+
+-- Netrw
+-- Avoid ctrl-l to refresh netrw
+if vim.fn.hasmapto('<Plug>NetrwRefresh') == 0 then
+  vim.keymap.set('n', '<c-n>', '<Plug>NetrwRefresh', { unique = true })
+end
+
+-- Custom exporer for specific scenarios
+local function MyExplore(command)
+  if vim.fn.winnr('$') == 1 then
+    vim.g.netrw_browse_split = 0
+  else
+    vim.g.netrw_browse_split = 4
+  end
+
+  vim.cmd(command)
+end
+
+vim.keymap.set('n', '<leader>ef', function() MyExplore("Lexplore %:p:h") end)
+vim.keymap.set('n', '<leader>ed', function() MyExplore("Lexplore") end)
+vim.keymap.set('n', '<leader>E', function() MyExplore("Explore") end)

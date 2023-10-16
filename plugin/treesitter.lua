@@ -1,12 +1,20 @@
 -- nvim-treesitter
 require'nvim-treesitter.configs'.setup {
-  -- A list of parser names, or "all"
-  ensure_installed = { "typescript", "tsx", "javascript", "graphql" },
+  -- A list of parser names, or 'all'
+  ensure_installed = {
+    'vim',
+    'lua',
+    -- Tech stack
+    'typescript',
+    'tsx',
+    'javascript',
+    'graphql',
+  },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
 
-  -- List of parsers to ignore installing (for "all")
+  -- List of parsers to ignore installing (for 'all')
   ignore_install = {},
 
   highlight = {
@@ -26,3 +34,12 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 }
+
+-- Workaround. See https://github.com/nvim-treesitter/nvim-treesitter/wiki/Installation
+vim.api.nvim_create_autocmd({'BufEnter','BufAdd','BufNew','BufNewFile','BufWinEnter'}, {
+  group = vim.api.nvim_create_augroup('TS_FOLD_WORKAROUND', {}),
+  callback = function()
+    vim.opt.foldmethod = 'expr'
+    vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+  end
+})
