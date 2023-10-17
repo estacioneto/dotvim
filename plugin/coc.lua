@@ -5,7 +5,8 @@ vim.g.coc_global_extensions = {
   'coc-css',
   'coc-json',
   'coc-highlight',
-  'coc-snippets'
+  'coc-snippets',
+  'coc-pairs'
 }
 
 vim.g.coc_disable_transparent_cursor = 1
@@ -38,7 +39,7 @@ vim.keymap.set('n', '<leader>D', function () vim.cmd('copen') end, silent)
 
 -- Make <CR> to accept selected completion item or notify coc.nvim to format
 -- <C-g>u breaks current undo, please make your own choice.
-vim.keymap.set('i', '<silent><cr>', [[coc#pum#visible() ? coc#pum#confirm() : \<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>]], { noremap = true, expr = true })
+vim.keymap.set('i', '<cr>', [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], { silent = true, expr = true })
 
 -- Use <c-j> to trigger snippets
 vim.keymap.set('i', '<c-j>', '<Plug>(coc-snippets-expand-jump)')

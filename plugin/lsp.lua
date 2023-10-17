@@ -70,6 +70,38 @@ local function on_attach(client, buffer)
     vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
     vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+
+    local cmp = require('cmp')
+    cmp.setup({
+      sources = {
+        {name = 'nvim_lsp'},
+      },
+      mapping = cmp.mapping.preset.insert({
+        -- Enter key confirms completion item
+        ['<CR>'] = function(fallback)
+          if cmp.visible() then
+            cmp.mapping.confirm({ select = true })
+          else
+            vim.print('Fallback')
+            fallback()
+          end
+        end,
+
+        -- Ctrl + space triggers completion menu
+        ['<C-Space>'] = function(fallback)
+          if cmp.visible() then
+            cmp.mapping.complete()
+          else
+            fallback()
+          end
+        end,
+      }),
+      snippet = {
+        expand = function(args)
+          require('luasnip').lsp_expand(args.body)
+        end,
+      },
+    })
   end
 
 end
@@ -94,9 +126,9 @@ local default_setup = function(server_name)
     config.settings = lua_settings
   end
 
--- if server_name == 'tsserver' then
--- config = vim.tbl_extend('force', config, require 'estacio.lsp.typescript')
--- end
+  -- if server_name == 'tsserver' then
+  -- config = vim.tbl_extend('force', config, require 'estacio.lsp.typescript')
+  -- end
 
   lspconfig[server_name].setup(config)
 end
@@ -113,29 +145,10 @@ require("mason").setup({
 
 require('mason-lspconfig').setup({
   ensure_installed = {
--- 'tsserver',
--- 'eslint',
+    -- 'tsserver',
+    -- 'eslint',
     'lua_ls'
   },
   handlers = { default_setup },
 })
 
-local cmp = require('cmp')
-
-cmp.setup({
-  sources = {
-    {name = 'nvim_lsp'},
-  },
-  mapping = cmp.mapping.preset.insert({
-    -- Enter key confirms completion item
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-
-    -- Ctrl + space triggers completion menu
-    ['<C-Space>'] = cmp.mapping.complete(),
-  }),
-  snippet = {
-    expand = function(args)
-      require('luasnip').lsp_expand(args.body)
-    end,
-  },
-})

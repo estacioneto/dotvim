@@ -20,7 +20,7 @@ return require('packer').startup(function(use)
   }
 
   -- Writing code
-  use 'jiangmiao/auto-pairs'
+  -- use 'jiangmiao/auto-pairs'
   use 'tpope/vim-surround'
   use 'chrisbra/vim-commentary'
 
