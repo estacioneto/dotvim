@@ -42,10 +42,12 @@ local lua_settings = {
 local function setup_mappings_and_cmp(opts)
   local function quickfix()
     vim.lsp.buf.code_action({
-        filter = function(a) return a.isPreferred end,
-        apply = true
+      filter = function(a) return a.isPreferred end,
+      apply = true
     })
   end
+  -- See https://www.reddit.com/r/neovim/comments/nytu9c/how_to_prevent_focus_on_floating_window_created/
+  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { focusable = false })
 
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
