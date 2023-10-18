@@ -20,7 +20,6 @@ return require('packer').startup(function(use)
   }
 
   -- Writing code
-  -- use 'jiangmiao/auto-pairs'
   use 'tpope/vim-surround'
   use 'chrisbra/vim-commentary'
   use {
@@ -68,6 +67,12 @@ return require('packer').startup(function(use)
     requires = { 'nvim-tree/nvim-web-devicons', opt = true }
   }
   use 'arkav/lualine-lsp-progress'
+  use {
+    'linrongbin16/lsp-progress.nvim',
+    config = function()
+      require('lsp-progress').setup()
+    end
+  }
 
   -- Debugging
   use 'mfussenegger/nvim-dap'

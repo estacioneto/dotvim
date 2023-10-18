@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [ ! -f ~/.vimrc ]; then
-  ln -s $PWD/init.vim ~/.vimrc
+  ln -s $PWD/.vimrc ~/.vimrc
 fi
 
 if [ ! -f ~/.ideavimrc ]; then
-  ln -s $PWD/.ideavimrc ~/.ideavimrc
+  ln -s $PWD/.vimrc ~/.ideavimrc
 fi
 
 if [[ ! -d ~/.config/nvim ]]; then
@@ -18,11 +18,6 @@ if which brew &> /dev/null; then
   if ! which rg &> /dev/null; then
     echo ">>> Installing ripgrep..."
     brew install ripgrep
-    echo ">>> Done"
-  fi
-  if ! which bat &> /dev/null; then
-    echo ">>> Installing bat..."
-    brew install bat
     echo ">>> Done"
   fi
   if ! which python &> /dev/null; then
@@ -51,9 +46,15 @@ if [[ ! -d ~/.nvim/dev/microsoft ]]; then
   echo ">>> Done"
 fi
 
+if [[ !-d ~/Library/Fonts/ ]]; then
+  echo ">>> Installing Hack Nerd Font"
+  brew tap homebrew/cask-fonts
+  brew install font-hack-nerd-font
+fi
+
 if ! which nvim &> /dev/null; then
   echo ">>> Installing neovim..."
   brew install neovim
 fi
 
-nvim -c "PlugInstall"
+nvim -c "PackerSync"

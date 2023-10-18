@@ -1,6 +1,8 @@
 " vim: set foldmethod=marker foldlevel=0:
 
 set relativenumber
+set nu
+syntax on
 
 """ Section: Mappings {{{1
 

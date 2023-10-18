@@ -90,12 +90,12 @@ end
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     if not string.find(vim.fn.getcwd(), '/clients/') then
--- vim.g.coc_enabled = 0
-      vim.cmd('CocDisable')
-
-      return
+      vim.cmd('silent CocDisable')
+      vim.g.coc_enabled = 0
+    else
+      setup_coc()
     end
 
-    setup_coc()
+    require('lualine').refresh()
   end
 })

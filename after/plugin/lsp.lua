@@ -153,20 +153,9 @@ local default_setup = function(server_name)
     config.settings = lua_settings
   end
 
+  -- TODO: Add ESLint autofix on save
   if server_name == 'tsserver' then
     config = vim.tbl_extend('force', config, require 'estacio.lsp.typescript')
-  end
-
-  if server_name == 'tsserver' then
-    config.handlers = {
-      ['$/typescriptVersion'] = function(err, result)
-        if err ~= nil then
-          return
-        end
-
-        vim.g.lualine_ts_version = 'TSC: '..result.version
-      end
-    }
   end
 
   lspconfig[server_name].setup(config)

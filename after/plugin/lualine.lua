@@ -1,9 +1,19 @@
 -- Lualine: https://github.com/nvim-lualine/lualine.nvim
+
+-- Since we're conditionally using coc.nvim, we only setup the lualine after we know what to show.
+local function ts_version()
+  return vim.g.coc_enabled == 0 and vim.g.lualine_ts_version or vim.g.coc_status or ''
+end
+
+local function lsp_progress()
+  return vim.g.coc_enabled == 0 and require('lsp-progress').progress() or ''
+end
+
 require('lualine').setup {
   extensions = { 'quickfix' },
   sections = {
-    lualine_a = { 'g:lualine_ts_version', 'g:coc_status', 'mode', 'bo:filetype' },
-    lualine_c = { { 'filename', path = 1 } },
+    lualine_a = { ts_version, 'mode', 'bo:filetype' },
+    lualine_c = { { 'filename', path = 1 }, lsp_progress },
     lualine_x = {
       {
         'diagnostics',
@@ -32,3 +42,12 @@ require('lualine').setup {
     }
   }
 }
+
+
+-- listen lsp-progress event and refresh lualine
+vim.api.nvim_create_augroup("lualine_augroup", { clear = true })
+vim.api.nvim_create_autocmd("User", {
+  group = "lualine_augroup",
+  pattern = "LspProgressStatusUpdated",
+  callback = require("lualine").refresh,
+})
