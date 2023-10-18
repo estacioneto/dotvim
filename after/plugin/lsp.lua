@@ -14,6 +14,7 @@ local disable_format_servers = { 'lua_ls' }
 -- LSP servers that offer document formatting capabilities
 local enable_format_servers = { 'luaformatter' }
 
+-- Coc.nvim
 local disable_mapping_servers = { 'tsserver', 'eslint' }
 
 -- Configure lua language server for neovim development
@@ -38,6 +39,75 @@ local lua_settings = {
   }
 }
 
+local function setup_mappings_and_cmp(opts)
+  local function quickfix()
+    vim.lsp.buf.code_action({
+        filter = function(a) return a.isPreferred end,
+        apply = true
+    })
+  end
+
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+  vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+  vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
+  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+  vim.keymap.set({'n', 'x'}, '<leader>ee', function()
+    quickfix()
+    vim.lsp.buf.format({ async = true })
+  end, opts)
+  vim.keymap.set('n', '<leader>fx', vim.lsp.buf.code_action, opts)
+
+  vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
+  vim.keymap.set('n', '[c', function()
+    vim.diagnostic.goto_prev()
+    vim.cmd('norm zz')
+  end, opts)
+  vim.keymap.set('n', ']c', function()
+    vim.diagnostic.goto_next()
+    vim.cmd('norm zz')
+  end, opts)
+
+  local cmp = require('cmp')
+
+  cmp.setup({
+    sources = {
+      {name = 'nvim_lsp'},
+    },
+    mapping = cmp.mapping.preset.insert({
+      -- Enter key confirms completion item
+      ['<CR>'] = function(fallback)
+        if cmp.visible() then
+          cmp.confirm({ select = true })
+        else
+          fallback()
+        end
+      end,
+
+      -- Ctrl + space triggers completion menu
+      ['<C-Space>'] = function(fallback)
+        if cmp.visible() then
+          cmp.complete()
+        else
+          fallback()
+        end
+      end,
+    }),
+    snippet = {
+      expand = function(args)
+        require('luasnip').lsp_expand(args.body)
+      end,
+    },
+  })
+
+  -- If you want insert `(` after select function or method item
+  local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+  cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+end
+
 local function on_attach(client, buffer)
   if vim.tbl_contains(enable_format_servers, client.name) then
     client.server_capabilities.documentFormattingProvider = true
@@ -54,54 +124,11 @@ local function on_attach(client, buffer)
     client.server_capabilities.documentRangeFormattingProvider = false
   end
 
-  if not vim.tbl_contains(disable_mapping_servers, client.name) then
+  if not vim.tbl_contains(disable_mapping_servers, client.name) or vim.g.coc_enabled == 0 then
     local opts = { buffer = buffer }
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', 'go', vim.lsp.buf.type_definition, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set({'n', 'x'}, '<leader>ee', function() vim.lsp.buf.format({ async = true }) end, opts)
-    vim.keymap.set('n', '<leader>fx', vim.lsp.buf.code_action, opts)
 
-    vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
-    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-
-    local cmp = require('cmp')
-    cmp.setup({
-      sources = {
-        {name = 'nvim_lsp'},
-      },
-      mapping = cmp.mapping.preset.insert({
-        -- Enter key confirms completion item
-        ['<CR>'] = function(fallback)
-          if cmp.visible() then
-            cmp.mapping.confirm({ select = true })
-          else
-            vim.print('Fallback')
-            fallback()
-          end
-        end,
-
-        -- Ctrl + space triggers completion menu
-        ['<C-Space>'] = function(fallback)
-          if cmp.visible() then
-            cmp.mapping.complete()
-          else
-            fallback()
-          end
-        end,
-      }),
-      snippet = {
-        expand = function(args)
-          require('luasnip').lsp_expand(args.body)
-        end,
-      },
-    })
+    vim.print('[LSP]: nvim-lsp')
+    setup_mappings_and_cmp(opts)
   end
 
 end
@@ -126,9 +153,21 @@ local default_setup = function(server_name)
     config.settings = lua_settings
   end
 
-  -- if server_name == 'tsserver' then
-  -- config = vim.tbl_extend('force', config, require 'estacio.lsp.typescript')
-  -- end
+  if server_name == 'tsserver' then
+    config = vim.tbl_extend('force', config, require 'estacio.lsp.typescript')
+  end
+
+  if server_name == 'tsserver' then
+    config.handlers = {
+      ['$/typescriptVersion'] = function(err, result)
+        if err ~= nil then
+          return
+        end
+
+        vim.g.lualine_ts_version = 'TSC: '..result.version
+      end
+    }
+  end
 
   lspconfig[server_name].setup(config)
 end
@@ -145,8 +184,8 @@ require("mason").setup({
 
 require('mason-lspconfig').setup({
   ensure_installed = {
-    -- 'tsserver',
-    -- 'eslint',
+    'tsserver',
+    'eslint',
     'lua_ls'
   },
   handlers = { default_setup },

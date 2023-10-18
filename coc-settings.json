@@ -1,5 +1,4 @@
 {
-  "angular.experimental-ivy": true,
   "tsserver.npm": "yarn",
   "tsserver.maxTsServerMemory": 9216,
   "workspace.workspaceFolderCheckCwd": true,
@@ -13,13 +12,6 @@
     "/usr/local/share/nvim/runtime/lua/vim/lsp": true
   },
   "Lua.diagnostics.globals": ["vim"],
-  "eslint.filetypes": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "html"
-  ],
   "eslint.autoFixOnSave": true,
   "suggest.virtualText": true,
   "snippets.ultisnips.pythonPrompt": false

@@ -17,11 +17,6 @@ if has('autocmd')
     autocmd FileType cs setlocal shiftwidth=4 |
           \ setlocal softtabstop=4
   augroup END
-  augroup Coc
-    autocmd!
-    " Highlight symbol under cursor on CursorHold
-    autocmd CursorHold * silent call CocActionAsync('highlight')
-  augroup END
   if has('nvim')
     augroup Term
       autocmd!

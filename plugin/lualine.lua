@@ -2,7 +2,7 @@
 require('lualine').setup {
   extensions = { 'quickfix' },
   sections = {
-    lualine_a = { 'g:coc_status', 'mode', 'bo:filetype' },
+    lualine_a = { 'g:lualine_ts_version', 'g:coc_status', 'mode', 'bo:filetype' },
     lualine_c = { { 'filename', path = 1 } },
     lualine_x = {
       {

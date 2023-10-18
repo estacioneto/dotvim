@@ -23,10 +23,14 @@ return require('packer').startup(function(use)
   -- use 'jiangmiao/auto-pairs'
   use 'tpope/vim-surround'
   use 'chrisbra/vim-commentary'
+  use {
+    "windwp/nvim-autopairs",
+    config = function() require("nvim-autopairs").setup {} end
+  }
 
   -- LSP
-  use { 'neoclide/coc.nvim', branch = 'release' }
-  use 'prettier/vim-prettier'
+  use { 'neoclide/coc.nvim', branch = 'release', run = 'yarn install' }
+  use { 'prettier/vim-prettier', run = 'yarn install' }
   -- LSP Zero: https://github.com/VonHeikemen/lsp-zero.nvim
   use {
     'neovim/nvim-lspconfig',
