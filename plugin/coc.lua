@@ -1,6 +1,4 @@
 local function setup_coc()
-  vim.print('[LSP]: coc.nvim')
-
   -- Options
   vim.g.coc_global_extensions = {
     'coc-tsserver',
@@ -38,7 +36,6 @@ local function setup_coc()
   -- Use `[c` and `]c` to navigate diagnostics
   vim.keymap.set('n', '[c', '<Plug>(coc-diagnostic-prev)<CR>zz', silent)
   vim.keymap.set('n', ']c', '<Plug>(coc-diagnostic-next)<CR>zz', silent)
-  vim.keymap.set('n', '<leader>D', function () vim.cmd('copen') end, silent)
 
   -- Make <CR> to accept selected completion item or notify coc.nvim to format
   -- <C-g>u breaks current undo, please make your own choice.

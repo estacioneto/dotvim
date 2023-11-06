@@ -1,4 +1,3 @@
--- TODO: Change to setup like https://github.com/zbirenbaum/copilot.lua.
 -- Also see: https://github.com/orgs/community/discussions/41869
 -- Options
 vim.g.copilot_enabled = false

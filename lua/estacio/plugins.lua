@@ -18,14 +18,18 @@ return require('packer').startup(function(use)
     'nvim-telescope/telescope.nvim', tag = '0.1.4',
     requires = { {'nvim-lua/plenary.nvim'} }
   }
+  use {
+    'junegunn/fzf.vim',
+    requires = { 'junegunn/fzf', run = ':call fzf#install()' }
+  }
 
   -- Writing code
   use 'tpope/vim-surround'
   use 'chrisbra/vim-commentary'
-  use {
-    "windwp/nvim-autopairs",
-    config = function() require("nvim-autopairs").setup {} end
-  }
+  -- use {
+  -- "windwp/nvim-autopairs",
+  -- config = function() require("nvim-autopairs").setup {} end
+  -- }
 
   -- LSP
   use { 'neoclide/coc.nvim', branch = 'release', run = 'yarn install' }
@@ -64,7 +68,7 @@ return require('packer').startup(function(use)
   -- Statusline
   use {
     'nvim-lualine/lualine.nvim',
-    requires = { 'nvim-tree/nvim-web-devicons', opt = true }
+    requires = { 'nvim-tree/nvim-web-devicons' }
   }
   use 'arkav/lualine-lsp-progress'
   use {

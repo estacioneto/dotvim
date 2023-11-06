@@ -28,4 +28,7 @@ if has('autocmd')
     augroup END
   endif
 endif
+
+" Auto-create parent directories (except for URIs "://").
+au BufWritePre,FileWritePre * if @% !~# '\(://\)' | call mkdir(expand('<afile>:p:h'), 'p') | endif
 ]])

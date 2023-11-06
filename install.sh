@@ -20,6 +20,11 @@ if which brew &> /dev/null; then
     brew install ripgrep
     echo ">>> Done"
   fi
+  if ! which bat &> /dev/null; then
+    echo ">>> Installing bat..."
+    brew install bat
+    echo ">>> Done"
+  fi
   if ! which python &> /dev/null; then
     echo ">>> Installing python..."
     brew install python

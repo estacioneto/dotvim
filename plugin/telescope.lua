@@ -1,59 +1,104 @@
 -- Telescope
+
+local utils = require('telescope.utils')
+local entry_display = require('telescope.pickers.entry_display')
+local strings = require('plenary.strings')
+local devicons = require('nvim-web-devicons')
+
+local def_icon = devicons.get_icon('fname', { default = true })
+local iconwidth = strings.strdisplaywidth(def_icon)
+
+local function get_path_and_tail(filename)
+  local bufname_tail = utils.path_tail(filename)
+  local path_without_tail = require('plenary.strings').truncate(filename, #filename - #bufname_tail, '')
+  local path_to_display = utils.transform_path({
+    path_display = { 'truncate' },
+  }, path_without_tail)
+
+  return bufname_tail, path_to_display
+end
+
+local function create_path_display(opts)
+  return function(_, path)
+    local items = {}
+    if opts.show_icon then
+      items = {
+        { width = iconwidth },
+        { width = nil },
+        { remaining = true },
+      }
+    else
+      items = {
+        { width = nil },
+        { remaining = true },
+      }
+    end
+
+    local displayer = entry_display.create({
+      separator = ' ',
+      items = items,
+    })
+
+    local tail_raw, path_to_display = get_path_and_tail(path)
+    local tail = tail_raw .. ' '
+    local icon, color = devicons.get_icon(tail_raw, vim.filetype.match { filename = tail_raw }, { default = true })
+
+    if opts.show_icon then
+
+      return displayer({
+        { icon, color },
+        tail,
+        { path_to_display, 'TelescopeResultsComment' },
+      })
+    else
+      return displayer({
+        tail,
+        { path_to_display, 'TelescopeResultsComment' },
+      })
+    end
+  end
+end
+
 require('telescope').setup{
   defaults = {
     file_ignore_patterns = {
       'node_modules'
+    },
+    path_display = function(_, path)
+      local displayer = entry_display.create({
+        separator = ' ',
+        items = {
+          { width = iconwidth },
+          { width = nil },
+          { remaining = true },
+        },
+      })
+
+      local tail_raw, path_to_display = get_path_and_tail(path)
+      local tail = tail_raw .. ' '
+      local icon, color = devicons.get_icon(tail_raw, vim.filetype.match { filename = tail_raw }, { default = true })
+
+      return displayer({
+        { icon, color },
+        tail,
+        { path_to_display, 'TelescopeResultsComment' },
+      })
+    end,
+  },
+  pickers = {
+    find_files = {
+      path_display = create_path_display({ show_icon = false })
+    },
+    git_files = {
+      path_display = create_path_display({ show_icon = false })
+    },
+    lsp_references = {
+      path_display = create_path_display({ show_icon = true })
     }
   }
 }
 local builtin = require('telescope.builtin')
 
-local is_inside_work_tree = {}
-
-local function project_files(opts)
-  local cwd = vim.fn.getcwd()
-  if is_inside_work_tree[cwd] == nil then
-    vim.fn.system("git rev-parse --is-inside-work-tree")
-    is_inside_work_tree[cwd] = vim.v.shell_error == 0
-  end
-
-  if is_inside_work_tree[cwd] then
-    builtin.git_files(opts)
-  else
-    builtin.find_files(opts)
-  end
-end
-
-vim.keymap.set('n', '<leader>gd', function() project_files({ use_git_root = false}) end)
-vim.keymap.set('n', '<leader>gr', project_files)
-
--- Find files inside directory
-vim.keymap.set('n', '<leader>fd', function() builtin.find_files({ no_ignore = true }) end)
--- Find files inside repo
-vim.keymap.set('n', '<leader>fr', function()
-  builtin.find_files({
-    no_ignore = true,
-    cwd = vim.fn.systemlist('git rev-parse --show-toplevel')[1]
-  })
-end)
-
-local function fuzzySearch(opts)
-  opts = opts or {}
-
-  builtin.grep_string({
-    cwd = opts.cwd,
-    path_display = { 'smart' },
-    only_sort_text = true,
-    word_match = "-w",
-    search = '',
-  })
-end
-
-vim.keymap.set('n', '<leader>sd', function() fuzzySearch() end, {})
-
-vim.keymap.set('n', '<leader>sr', function()
-  fuzzySearch({ cwd = vim.fn.systemlist('git rev-parse --show-toplevel')[1] })
-end, {})
 vim.keymap.set('n', '<leader>wg', builtin.grep_string, {})
 
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})

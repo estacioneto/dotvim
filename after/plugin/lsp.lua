@@ -41,25 +41,38 @@ local lua_settings = {
 
 local function setup_mappings_and_cmp(opts)
   local function quickfix()
-    vim.lsp.buf.code_action({
-      filter = function(a) return a.isPreferred end,
-      apply = true
-    })
+    if vim.cmd.EslintFixAll ~= nil then
+      vim.cmd[[EslintFixAll]]
+    else
+      vim.lsp.buf.code_action({
+        context = { only = 'quickfix' },
+        filter = function(a) return a.isPreferred end,
+        apply = true
+      })
+    end
   end
   -- See https://www.reddit.com/r/neovim/comments/nytu9c/how_to_prevent_focus_on_floating_window_created/
   vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { focusable = false })
-
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
   vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+  -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+  -- TODO: Enhance telescope pickers: https://github.com/nvim-telescope/telescope.nvim/issues/2014
+  vim.keymap.set('n', 'gr', function()
+    local builtin = require('telescope.builtin')
+    if builtin ~= nil then
+      builtin.lsp_references()
+    else
+      vim.lsp.buf.references()
+    end
+  end, opts)
   vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
   vim.keymap.set({'n', 'x'}, '<leader>ee', function()
     quickfix()
-    vim.lsp.buf.format({ async = true })
+  -- vim.lsp.buf.format({ async = true })
   end, opts)
   vim.keymap.set('n', '<leader>fx', vim.lsp.buf.code_action, opts)
 
@@ -105,9 +118,9 @@ local function setup_mappings_and_cmp(opts)
     },
   })
 
-  -- If you want insert `(` after select function or method item
-  local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-  cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+  -- if you want insert `(` after select function or method item
+  -- local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+  -- cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 end
 
 local function on_attach(client, buffer)
@@ -129,7 +142,6 @@ local function on_attach(client, buffer)
   if not vim.tbl_contains(disable_mapping_servers, client.name) or vim.g.coc_enabled == 0 then
     local opts = { buffer = buffer }
 
-    vim.print('[LSP]: nvim-lsp')
     setup_mappings_and_cmp(opts)
   end
 
@@ -155,7 +167,6 @@ local default_setup = function(server_name)
     config.settings = lua_settings
   end
 
-  -- TODO: Add ESLint autofix on save
   if server_name == 'tsserver' then
     config = vim.tbl_extend('force', config, require 'estacio.lsp.typescript')
   end

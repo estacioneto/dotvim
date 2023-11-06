@@ -1,4 +1,11 @@
+-- let g:mapleader = ','
 vim.g.mapleader = ','
+
+-- Regexp to replace string mappings:
+--   s/^vim.keymap.set('\(.\)', '\(.\+\)', ['"]\(.\+\)['"])$/\1map \2 \3/g
+--
+-- Silent/Unique:
+--   s/^vim.keymap.set('\(.\)', '\(.\+\)', ['"]\(.\+\)['"], { \(\(.\+\) = true\) })$/\1map <\5> \2 \3
 
 -- Insert mode
 vim.keymap.set('i', 'jk', '<esc>')
@@ -20,6 +27,11 @@ vim.keymap.set('n', '<c-h>', '<c-w>h', { silent = true })
 vim.keymap.set('n', '<c-j>', '<c-w>j', { silent = true })
 vim.keymap.set('n', '<c-k>', '<c-w>k', { silent = true })
 vim.keymap.set('n', '<c-l>', '<c-w>l', { silent = true })
+
+-- Tab switching
+vim.keymap.set('n', '<c-t><c-n>', vim.cmd.tabnew, { silent = true })
+vim.keymap.set('n', '<c-t><c-l>', vim.cmd.tabnext, { silent = true })
+vim.keymap.set('n', '<c-t><c-h>', vim.cmd.tabprevious, { silent = true })
 
 -- Buffer switching
 vim.keymap.set('n', '<s-l>', vim.cmd.bnext, { silent = true })
@@ -43,6 +55,9 @@ vim.keymap.set('n', '<c-p>', '<c-^>', { silent = true })
 
 -- Terminal
 vim.keymap.set('t', 'jk', '<c-\\><c-n>')
+
+-- Quickfix
+vim.keymap.set('n', '<leader>D', function () vim.cmd('copen') end, { silent = true })
 
 -- Open URL
 vim.keymap.set('n', 'gx', function()
@@ -76,3 +91,7 @@ end
 vim.keymap.set('n', '<leader>ef', function() MyExplore("Lexplore %:p:h") end)
 vim.keymap.set('n', '<leader>ed', function() MyExplore("Lexplore") end)
 vim.keymap.set('n', '<leader>E', function() MyExplore("Explore") end)
+
+-- New file
+-- Current directory
+vim.keymap.set('n', '<leader>nf', ':e %:h/')
