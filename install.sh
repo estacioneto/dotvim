@@ -1,16 +1,16 @@
 #!/bin/bash
 
 if [ ! -f ~/.vimrc ]; then
-  ln -s $PWD/.vimrc ~/.vimrc
+  ln -s "$PWD"/.vimrc ~/.vimrc
 fi
 
 if [ ! -f ~/.ideavimrc ]; then
-  ln -s $PWD/.vimrc ~/.ideavimrc
+  ln -s "$PWD"/.vimrc ~/.ideavimrc
 fi
 
 if [[ ! -d ~/.config/nvim ]]; then
   mkdir -p ~/.config
-  ln -s $PWD ~/.config/nvim
+  ln -s "$PWD" ~/.config/nvim
 fi
 
 if which brew &> /dev/null; then
@@ -41,12 +41,12 @@ if [[ ! -d ~/.nvim/dev/microsoft ]]; then
   mkdir -p ~/.nvim/dev/microsoft
   git clone https://github.com/microsoft/vscode-node-debug2.git ~/.nvim/dev/microsoft/vscode-node-debug2
   
-  prev_pwd=$PWD
+  prev_pwd="$PWD"
   cd ~/.nvim/dev/microsoft/vscode-node-debug2
   npm install
   NODE_OPTIONS=--no-experimental-fetch npm run build
 
-  cd $prev_pwd
+  cd "$prev_pwd"
 
   echo ">>> Done"
 fi

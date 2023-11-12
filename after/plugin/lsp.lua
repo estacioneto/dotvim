@@ -12,7 +12,7 @@ lsp_defaults.capabilities = vim.tbl_deep_extend(
 local disable_format_servers = { 'lua_ls' }
 
 -- LSP servers that offer document formatting capabilities
-local enable_format_servers = { 'luaformatter' }
+local enable_format_servers = { 'luaformatter', 'prettier' }
 
 -- Coc.nvim
 local disable_mapping_servers = { 'tsserver', 'eslint' }
@@ -58,6 +58,7 @@ local function setup_mappings_and_cmp(opts)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
   vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)
+
   -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
   -- TODO: Enhance telescope pickers: https://github.com/nvim-telescope/telescope.nvim/issues/2014
   vim.keymap.set('n', 'gr', function()
@@ -68,12 +69,16 @@ local function setup_mappings_and_cmp(opts)
       vim.lsp.buf.references()
     end
   end, opts)
+
   vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+  vim.keymap.set('n', '<leader>rf', function() vim.cmd('RenameFile') end, opts)
+
   vim.keymap.set({'n', 'x'}, '<leader>ee', function()
     quickfix()
-  -- vim.lsp.buf.format({ async = true })
   end, opts)
+  vim.keymap.set('n', '<leader>fmt', function() vim.lsp.buf.format({ async = true }) end, opts)
+
   vim.keymap.set('n', '<leader>fx', vim.lsp.buf.code_action, opts)
 
   vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)

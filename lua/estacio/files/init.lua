@@ -1,3 +1,10 @@
+vim.keymap.set('n', '<leader>sg', function()
+  local pattern = vim.fn.input('Pattern:', '')
+
+  vim.cmd('silent! grep! '..pattern)
+  vim.cmd[[copen]]
+end)
+
 -- Use fzf.vim or telescope depending on the initialization
 if not string.find(vim.fn.getcwd(), '/clients') then
   require('estacio.files.telescope')

@@ -26,10 +26,10 @@ return require('packer').startup(function(use)
   -- Writing code
   use 'tpope/vim-surround'
   use 'chrisbra/vim-commentary'
-  -- use {
-  -- "windwp/nvim-autopairs",
-  -- config = function() require("nvim-autopairs").setup {} end
-  -- }
+  use {
+    "windwp/nvim-autopairs",
+    config = function() require("nvim-autopairs").setup {} end
+  }
 
   -- LSP
   use { 'neoclide/coc.nvim', branch = 'release', run = 'yarn install' }
@@ -63,7 +63,8 @@ return require('packer').startup(function(use)
   -- Colorschemes
   use 'tomasiser/vim-code-dark'
   use 'marko-cerovac/material.nvim'
-  use({ 'rose-pine/neovim', as = 'rose-pine' })
+  use { 'rose-pine/neovim', as = 'rose-pine' }
+  use { "catppuccin/nvim", as = "catppuccin" }
 
   -- Statusline
   use {
@@ -83,4 +84,14 @@ return require('packer').startup(function(use)
   use 'nvim-telescope/telescope-dap.nvim'
   use 'theHamsta/nvim-dap-virtual-text'
   use 'rcarriga/nvim-dap-ui'
+
+  -- Tips
+  use {
+    'rcarriga/nvim-notify',
+    config = function()
+      vim.opt.termguicolors = true
+      vim.notify = require('notify')
+    end
+  }
+
 end)

@@ -1,5 +1,6 @@
 -- let g:mapleader = ','
-vim.g.mapleader = ','
+-- vim.g.mapleader = ','
+vim.g.mapleader = ' '
 
 -- Regexp to replace string mappings:
 --   s/^vim.keymap.set('\(.\)', '\(.\+\)', ['"]\(.\+\)['"])$/\1map \2 \3/g
@@ -95,3 +96,6 @@ vim.keymap.set('n', '<leader>E', function() MyExplore("Explore") end)
 -- New file
 -- Current directory
 vim.keymap.set('n', '<leader>nf', ':e %:h/')
+
+-- Delete current file
+vim.keymap.set('n', '<leader>df', ":call delete(expand('%'))")

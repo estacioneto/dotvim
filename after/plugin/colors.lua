@@ -1,19 +1,33 @@
 -- See https://gist.github.com/ryanflorence/1381526
 local function RandomColorSchemeMyPicks()
-  local mypicks = { 'codedark', 'material', 'rose-pine', 'rose-pine-moon' }
-  -- TODO: Reactivate material when done with lua migration and probably coc.nvim
--- local mypicks = { 'codedark', 'rose-pine', 'rose-pine-moon' }
+  local mypicks = {
+    'codedark',
+    'material::oceanic',
+    'material::deepocean',
+    'material::palenight',
+    'material::darker',
+    'rose-pine',
+    'rose-pine-moon',
+    'catppuccin',
+-- 'catppuccin-latte', -- White colorscheme
+    'catppuccin-frappe',
+    'catppuccin-macchiato',
+    'catppuccin-mocha'
+  }
+
   -- Lua being 1-indexed
   vim.g.picked_color = mypicks[1 + (vim.fn.localtime() % #mypicks)]
-  local my_material_themes = { 'oceanic', 'deep ocean', 'palenight', 'darker' }
 
-  vim.g.material_style = my_material_themes[1 + (vim.fn.localtime() % #my_material_themes)]
+  local separator_index = string.find(vim.g.picked_color, '::')
+  if separator_index then
+    local full_color = vim.g.picked_color
+
+    vim.g.picked_color = string.sub(full_color, 1, separator_index - 1)
+    vim.g.material_style = string.sub(full_color, separator_index + 2, #full_color)
+
+  end
 
   vim.cmd.colo(vim.g.picked_color)
 end
-
-vim.cmd([[
-command NewColor :lua RandomColorSchemeMyPicks()
-]])
 
 RandomColorSchemeMyPicks()
