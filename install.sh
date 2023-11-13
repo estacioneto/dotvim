@@ -13,32 +13,42 @@ if [[ ! -d ~/.config/nvim ]]; then
   ln -s "$PWD" ~/.config/nvim
 fi
 
-if which brew &> /dev/null; then
-  echo ">>> Installing dependencies..."
-  if ! which rg &> /dev/null; then
-    echo ">>> Installing ripgrep..."
-    brew install ripgrep
-    echo ">>> Done"
-  fi
-  if ! which bat &> /dev/null; then
-    echo ">>> Installing bat..."
-    brew install bat
-    echo ">>> Done"
-  fi
-  if ! which python &> /dev/null; then
-    echo ">>> Installing python..."
-    brew install python
-    echo ">>> Done"
-  fi
+if ! which brew &> /dev/null; then
+  echo "💿 Installing Homebrew (https://brew.sh/)..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && echo "✅ [Dependencies] Homebrew installed" || exit 1
 else
-  echo ">>> You should have brew to install the dependencies."
-  exit 1
+  echo "⏭️  Homebrew already installed!"
 fi
+
+echo "💿 Installing dependencies..."
+
+if ! which rg &> /dev/null; then
+  echo "💿 [Dependencies] Installing ripgrep (https://github.com/BurntSushi/ripgrep)..."
+  brew install ripgrep && echo "✅ [Dependencies] ripgrep installed" || exit 1
+else
+  echo "⏭️  [Dependencies] ripgrep already installed!"
+fi
+
+if ! which bat &> /dev/null; then
+  echo "💿 [Dependencies] Installing bat for fzf.vim (https://github.com/sharkdp/bat)..."
+  brew install bat && echo "✅ [Dependencies] bat installed" || exit 1
+else
+  echo "⏭️  [Dependencies] bat already installed!"
+fi
+
+if ! which python &> /dev/null; then
+  echo "💿 [Dependencies] Installing python..."
+  brew install python && echo "✅ [Dependencies] python installed" || exit 1
+else
+  echo "⏭️  [Dependencies] bat already installed!"
+fi
+
 
 # vscode-node-debug2 installation
 if [[ ! -d ~/.nvim/dev/microsoft ]]; then
-  echo ">>> Adding vscode-node-debug2"
+  echo "💿 [Debugging] Adding vscode-node-debug2 for TS debugging"
   mkdir -p ~/.nvim/dev/microsoft
+
   git clone https://github.com/microsoft/vscode-node-debug2.git ~/.nvim/dev/microsoft/vscode-node-debug2
   
   prev_pwd="$PWD"
@@ -48,18 +58,30 @@ if [[ ! -d ~/.nvim/dev/microsoft ]]; then
 
   cd "$prev_pwd"
 
-  echo ">>> Done"
+  echo "✅ [Debugging] vscode-node-debug2 installed!"
 fi
 
-if [[ !-d ~/Library/Fonts/ ]]; then
-  echo ">>> Installing Hack Nerd Font"
-  brew tap homebrew/cask-fonts
-  brew install font-hack-nerd-font
+echo "💿 Checking for fonts..."
+brew tap homebrew/cask-fonts
+
+if [[ -z `find ~/Library/Fonts -type f -name "HackNerd*"` ]]; then
+  echo "💿 [Fonts] Installing HackNerd..."
+  brew install font-hack-nerd-font && echo "✅ [Fonts] HackNerd installed!" || exit 1
+else
+  echo "⏭️  [Fonts] HackNerd already installed!"
+fi
+
+# https://github.com/githubnext/monaspace
+if [[ -z `find ~/Library/Fonts -type f -name "Monaspace*"` ]]; then
+  echo "💿 [Fonts] Installing Monaspace..."
+  brew install font-hack-nerd-font && echo "✅ [Fonts] Monaspace installed!" || exit 1
+else
+  echo "⏭️  [Fonts] Monaspace already installed!"
 fi
 
 if ! which nvim &> /dev/null; then
-  echo ">>> Installing neovim..."
-  brew install neovim
+  echo "💿 Installing neovim..."
+  brew install neovim && echo "✅ Neovim installed!" || exit 1
 fi
 
 nvim -c "PackerSync"
