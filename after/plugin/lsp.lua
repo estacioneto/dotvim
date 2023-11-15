@@ -77,7 +77,7 @@ local function setup_mappings_and_cmp(opts)
   vim.keymap.set({'n', 'x'}, '<leader>ee', function()
     quickfix()
   end, opts)
-  vim.keymap.set('n', '<leader>fmt', function() vim.lsp.buf.format({ async = true }) end, opts)
+-- vim.keymap.set('n', '<leader>fmt', function() vim.lsp.buf.format({ async = true }) end, opts)
 
   vim.keymap.set('n', '<leader>fx', vim.lsp.buf.code_action, opts)
 

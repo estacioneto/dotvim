@@ -61,8 +61,7 @@ return require('packer').startup(function(use)
   use 'github/copilot.vim'
 
   -- Formatting
-  -- TODO: Maybe change to use formatter.nvim + mason.nvim: https://github.com/mhartington/formatter.nvim
-  use { 'prettier/vim-prettier', run = 'yarn install' }
+  use 'mhartington/formatter.nvim'
 
   -- Colorschemes
   use 'tomasiser/vim-code-dark'

@@ -95,4 +95,9 @@ vim.keymap.set('n', '<leader>E', function() MyExplore("Explore") end)
 vim.keymap.set('n', '<leader>nf', ':e %:h/')
 
 -- Delete current file
-vim.keymap.set('n', '<leader>df', ":call delete(expand('%'))")
+vim.keymap.set('n', '<leader>df', function()
+  local path = vim.fn.expand('%')
+
+  vim.cmd(string.format('call delete(%q)', path))
+  vim.print(path..' deleted!')
+end)
