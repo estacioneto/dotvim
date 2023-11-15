@@ -41,9 +41,6 @@ vim.keymap.set('n', '<s-h>', vim.cmd.bprevious, { silent = true })
 -- Close all buffers except current one
 vim.keymap.set('n', '<leader>qo', function() vim.cmd("execute '%bdelete|edit#|bdelete#'") end)
 
--- Misc
-vim.keymap.set('n', '<leader>q', vim.cmd.q, { silent = true })
-
 -- Copy file path
 vim.keymap.set('n', 'cpr', function() vim.cmd('let @+ = expand("%")') end, { silent = true })
 vim.keymap.set('n', 'cpf', function() vim.cmd('let @+ = expand("%:p")') end, { silent = true })

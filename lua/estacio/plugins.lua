@@ -33,7 +33,6 @@ return require('packer').startup(function(use)
 
   -- LSP
   use { 'neoclide/coc.nvim', branch = 'release', run = 'yarn install' }
-  use { 'prettier/vim-prettier', run = 'yarn install' }
   -- LSP Zero: https://github.com/VonHeikemen/lsp-zero.nvim
   use {
     'neovim/nvim-lspconfig',
@@ -58,7 +57,12 @@ return require('packer').startup(function(use)
       ts_update()
     end,
   }
+  use 'nvim-treesitter/nvim-treesitter-context'
   use 'github/copilot.vim'
+
+  -- Formatting
+  -- TODO: Maybe change to use formatter.nvim + mason.nvim: https://github.com/mhartington/formatter.nvim
+  use { 'prettier/vim-prettier', run = 'yarn install' }
 
   -- Colorschemes
   use 'tomasiser/vim-code-dark'

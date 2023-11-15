@@ -1,3 +1,37 @@
+local function rename_file()
+  local source_file, target_file
+
+  vim.ui.input({
+    prompt = "Source : ",
+    completion = "file",
+    default = vim.api.nvim_buf_get_name(0)
+  },
+  function(input)
+    source_file = input
+  end)
+
+  if source_file == nil then
+    vim.print('Rename canceled')
+    return
+  end
+
+  vim.ui.input({
+    prompt = "Target : ",
+    completion = "file",
+    default = source_file
+  },
+  function(input)
+    target_file = input
+  end)
+
+  if target_file == nil then
+    vim.print('Rename canceled')
+    return
+  end
+
+  os.execute('mv '..source_file..' '..target_file)
+end
+
 local function setup_coc()
   -- Options
   vim.g.coc_global_extensions = {
@@ -32,6 +66,8 @@ local function setup_coc()
   vim.keymap.set('n', 'gr', '<Plug>(coc-references)', silent)
   vim.keymap.set('n', '<leader>rn', '<Plug>(coc-rename)', silent)
   vim.keymap.set('n', '<leader>re', '<Plug>(coc-refactor)', silent)
+  -- Rename file
+  vim.keymap.set('n', '<leader>rf', rename_file, silent)
 
   -- Use `[c` and `]c` to navigate diagnostics
   vim.keymap.set('n', '[c', '<Plug>(coc-diagnostic-prev)<CR>zz', silent)

@@ -9,12 +9,12 @@ lsp_defaults.capabilities = vim.tbl_deep_extend(
 
 -- LSP servers that must have document formatting capabilities disabled
 -- local disable_format_servers = { 'lua_ls', 'tsserver' }
-local disable_format_servers = { 'lua_ls' }
+local disable_format_servers = { 'lua_ls', 'tsserver' }
 
 -- LSP servers that offer document formatting capabilities
 local enable_format_servers = { 'luaformatter', 'prettier' }
 
--- Coc.nvim
+-- In case of using coc.nvim
 local disable_mapping_servers = { 'tsserver', 'eslint' }
 
 -- Configure lua language server for neovim development
@@ -179,7 +179,7 @@ local default_setup = function(server_name)
   lspconfig[server_name].setup(config)
 end
 
-require("mason").setup({
+require('mason').setup({
   ui = {
     icons = {
       package_installed = "✓",
