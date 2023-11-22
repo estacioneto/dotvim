@@ -32,3 +32,9 @@ endif
 " Auto-create parent directories (except for URIs "://").
 au BufWritePre,FileWritePre * if @% !~# '\(://\)' | call mkdir(expand('<afile>:p:h'), 'p') | endif
 ]])
+
+-- Open image file
+vim.api.nvim_create_autocmd({ 'BufReadPre', 'FileReadPre' }, {
+  pattern = { '*.png', '*.jpeg', '*.jpg' },
+  command = 'OpenImage'
+})

@@ -2,7 +2,7 @@
 local function RandomColorSchemeMyPicks()
   local mypicks = {
     'codedark',
-    'material::oceanic',
+-- 'material::oceanic', -- Good one but not great
     'material::deepocean',
     'material::palenight',
     'material::darker',
