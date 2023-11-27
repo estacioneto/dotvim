@@ -98,6 +98,15 @@ vim.keymap.set('n', '<leader>nf', ':e %:h/')
 vim.keymap.set('n', '<leader>df', function()
   local path = vim.fn.expand('%')
 
-  vim.cmd(string.format('call delete(%q)', path))
-  vim.print(path..' deleted!')
+  vim.ui.input({
+    prompt = 'Are you sure you want to delete '..path..'? [Y/n] ',
+  },
+  function(input)
+    if input == '' or input == 'y' or input == 'Y' then
+      vim.cmd(string.format('call delete(%q)', path))
+      vim.print(path..' deleted!')
+    else
+      vim.print('Delete canceled!')
+    end
+  end)
 end)
