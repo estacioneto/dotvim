@@ -108,13 +108,7 @@ local function setup_mappings_and_cmp(opts)
       end,
 
       -- Ctrl + space triggers completion menu
-      ['<C-Space>'] = function(fallback)
-        if cmp.visible() then
-          cmp.complete()
-        else
-          fallback()
-        end
-      end,
+      ['<C-Space>'] = cmp.mapping.complete(),
     }),
     snippet = {
       expand = function(args)

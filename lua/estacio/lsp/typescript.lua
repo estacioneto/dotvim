@@ -4,7 +4,7 @@ local function rename_file()
   local source_file, target_file
 
   vim.ui.input({
-    prompt = "Source : ",
+    prompt = "Source: ",
     completion = "file",
     default = vim.api.nvim_buf_get_name(0)
   },
@@ -12,14 +12,29 @@ local function rename_file()
     source_file = input
   end)
 
+  if not source_file or source_file == '' then
+    vim.print('Rename canceled!')
+    return
+  end
+
   vim.ui.input({
-    prompt = "Target : ",
+    prompt = "Target: ",
     completion = "file",
     default = source_file
   },
   function(input)
     target_file = input
   end)
+
+  if not target_file or target_file == '' then
+    vim.print('Rename canceled!')
+    return
+  end
+
+  local dir = target_file:match('.*/')
+  if vim.fn.isdirectory(dir) == 0 then
+    vim.fn.mkdir(dir, "p")
+  end
 
   vim.lsp.util.rename(source_file, target_file)
 
@@ -35,8 +50,19 @@ local function rename_file()
   })
 end
 
+-- TODO: Add command to watch file save and re-run the :make
+-- Also, do it on background instead
+vim.cmd[[
+augroup tsc\_comp
+
+autocmd FileType typescript,typescriptreact compiler tsc | setlocal makeprg=tsc\ --noEmit\ --pretty\ false
+
+augroup END
+]]
+
 
 return {
+  filetypes = { 'typescript', 'typescriptreact', 'typescript.tsx', 'javascript' },
   handlers = {
     ['$/typescriptVersion'] = function(err, result)
       if err ~= nil then
@@ -49,9 +75,14 @@ return {
   settings = {
     typescript = {
       npm = 'yarn',
-      tsserver = {
-        maxTsServerMemory = 9216
-      }
+    }
+  },
+  init_options = {
+    hostInfo = "neovim",
+    maxTsServerMemory = 9216,
+    preferences = {
+      quotePreference = 'single',
+      importModuleSpecifierPreference = 'relative',
     }
   },
   commands = {

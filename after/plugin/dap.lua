@@ -1,18 +1,17 @@
 -- nvim-dap
-local dap = require('dap')
+local dap, dapui = require('dap'), require('dapui')
 
 -- Options
--- theHamsta/nvim-dap-virtual-text and mfussenegger/nvim-dap
-vim.g.dap_virtual_text = true
+dap.defaults.fallback.terminal_win_cmd = '25split new'
 
 -- Config
 dap.adapters.node2 = {
   type = 'executable',
   command = 'node',
-  args = {os.getenv('HOME') .. '/.nvim/dev/microsoft/vscode-node-debug2/out/src/nodeDebug.js'},
+  args = { vim.fn.stdpath('data') .. '/mason/packages/node-debug2-adapter/out/src/nodeDebug.js' },
 }
 
-dap.configurations.javascript = {
+local node_config = {
   {
     name = 'Launch',
     type = 'node2',
@@ -22,6 +21,18 @@ dap.configurations.javascript = {
     sourceMaps = true,
     protocol = 'inspector',
     console = 'integratedTerminal',
+  },
+  {
+    name = 'Run tests',
+    type = 'node2',
+    request = 'launch',
+    cwd = vim.fn.getcwd(),
+    runtimeArgs = { '--inspect-brk', 'node_modules/.bin/jest', '--no-coverage' },
+    sourceMaps = true,
+    protocol = 'inspector',
+    skipFiles = { '<node_internals>/**/*.js' },
+    console = 'integratedTerminal',
+    port = 9229,
   },
   {
     -- For this to work you need to make sure the node process is started with the `--inspect` flag.
@@ -42,6 +53,9 @@ dap.configurations.javascript = {
   },
 }
 
+dap.configurations.javascript = node_config
+dap.configurations.typescript = node_config
+
 vim.fn.sign_define('DapBreakpoint', {text='✋', texthl='', linehl='', numhl=''})
 vim.fn.sign_define('DapStopped', {text='👉', texthl='', linehl='', numhl=''})
 
@@ -50,9 +64,12 @@ vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint)
 vim.keymap.set('n', '<leader>do', dap.step_out)
 vim.keymap.set('n', '<leader>di', dap.step_into)
 vim.keymap.set('n', '<leader>dn', dap.step_over)
-vim.keymap.set('n', '<leader>ds', dap.stop)
+vim.keymap.set('n', '<leader>ds', function()
+  dap.terminate()
+  dapui.close()
+end)
 vim.keymap.set('n', '<leader>dc', dap.continue)
-vim.keymap.set('n', '<leader>du', dap.up)
+vim.keymap.set('n', '<leader>dup', dap.up)
 vim.keymap.set('n', '<leader>dj', dap.down)
 vim.keymap.set('n', '<leader>d_', function()
   dap.disconnect()
@@ -65,19 +82,15 @@ vim.keymap.set('n', '<leader>dr', function ()
 end)
 vim.keymap.set('n', '<leader>de', function() dap.set_exception_breakpoints({'all'}) end)
 
--- FIXME: dap.ui.variables not found
--- local dap_ui_variables = require('dap.ui.variables')
--- vim.keymap.set('n', '<leader>di', dap_ui_variables.hover)
--- vim.keymap.set('v', '<leader>dvi', dap_ui_variables.visual_hover)
--- vim.keymap.set('n', '<leader>d?', dap_ui_variables.scopes)
-
+-- Helper mappings
 local debug_helper = require('estacio.debug_helper')
 vim.keymap.set('n', '<leader>da', debug_helper.attach)
 vim.keymap.set('n', '<leader>dA', debug_helper.attachToRemote)
+vim.keymap.set('n', '<leader>dJ', debug_helper.debugJest)
 
 local dap_ui_widgets = require('dap.ui.widgets')
 vim.keymap.set('n', '<leader>dk', dap_ui_widgets.hover)
-vim.keymap.set('n', '<leader>d? local', function () dap_ui_widgets.centered_float(dap_ui_widgets.scopes) end)
+vim.keymap.set('n', '<leader>d?', function () dap_ui_widgets.centered_float(dap_ui_widgets.scopes) end)
 
 -- Dap telescope
 require('telescope').load_extension('dap')
@@ -86,3 +99,23 @@ require('telescope').load_extension('dap')
 vim.keymap.set('n', '<leader>dtf', ':Telescope dap frames<CR>')
 vim.keymap.set('n', '<leader>dtc', ':Telescope dap commands<CR>')
 vim.keymap.set('n', '<leader>dtlb', ':Telescope dap list_breakpoints<CR>')
+
+-- Dap virtual text
+-- theHamsta/nvim-dap-virtual-text and mfussenegger/nvim-dap
+vim.g.dap_virtual_text = true
+require('nvim-dap-virtual-text').setup()
+
+vim.keymap.set('n', '<leader>duio', dapui.open)
+vim.keymap.set('n', '<leader>duic', dapui.close)
+
+-- Dap ui: https://github.com/rcarriga/nvim-dap-ui
+dapui.setup()
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+-- dap.listeners.before.event_terminated["dapui_config"] = function()
+  -- dapui.close()
+  -- end
+  -- dap.listeners.before.event_exited["dapui_config"] = function()
+    -- dapui.close()
+    -- end
