@@ -29,18 +29,11 @@ else
   echo "⏭️  [Dependencies] ripgrep already installed!"
 fi
 
-if ! which bat &> /dev/null; then
-  echo "💿 [Dependencies] Installing bat for fzf.vim (https://github.com/sharkdp/bat)..."
-  brew install bat && echo "✅ [Dependencies] bat installed" || exit 1
-else
-  echo "⏭️  [Dependencies] bat already installed!"
-fi
-
 if ! which python &> /dev/null; then
   echo "💿 [Dependencies] Installing python..."
   brew install python && echo "✅ [Dependencies] python installed" || exit 1
 else
-  echo "⏭️  [Dependencies] bat already installed!"
+  echo "⏭️  [Dependencies] python already installed!"
 fi
 
 

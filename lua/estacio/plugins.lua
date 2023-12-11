@@ -21,9 +21,11 @@ return require('packer').startup(function(use)
 
   -- See https://github.com/ibhagwan/fzf-lua
   use {
-    'junegunn/fzf.vim',
-    requires = { 'junegunn/fzf', run = ':call fzf#install()' }
+    "ibhagwan/fzf-lua",
+    -- optional for icon support
+    requires = { "nvim-tree/nvim-web-devicons" }
   }
+  use { "junegunn/fzf", run = "./install --bin" }
 
   -- Writing code
   use 'tpope/vim-surround'

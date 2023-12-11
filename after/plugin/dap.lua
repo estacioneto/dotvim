@@ -8,7 +8,7 @@ dap.defaults.fallback.terminal_win_cmd = '25split new'
 dap.adapters.node2 = {
   type = 'executable',
   command = 'node',
-  args = { vim.fn.stdpath('data') .. '/mason/packages/node-debug2-adapter/out/src/nodeDebug.js' },
+  args = {os.getenv('HOME') .. '/.nvim/dev/microsoft/vscode-node-debug2/out/src/nodeDebug.js'},
 }
 
 local node_config = {
@@ -21,18 +21,6 @@ local node_config = {
     sourceMaps = true,
     protocol = 'inspector',
     console = 'integratedTerminal',
-  },
-  {
-    name = 'Run tests',
-    type = 'node2',
-    request = 'launch',
-    cwd = vim.fn.getcwd(),
-    runtimeArgs = { '--inspect-brk', 'node_modules/.bin/jest', '--no-coverage' },
-    sourceMaps = true,
-    protocol = 'inspector',
-    skipFiles = { '<node_internals>/**/*.js' },
-    console = 'integratedTerminal',
-    port = 9229,
   },
   {
     -- For this to work you need to make sure the node process is started with the `--inspect` flag.
@@ -76,10 +64,7 @@ vim.keymap.set('n', '<leader>d_', function()
   dap.close()
   dap.run_last()
 end)
-vim.keymap.set('n', '<leader>dr', function ()
-  dap.repl.open({}, 'vsplit')
-  vim.cmd.wincmd('l')
-end)
+vim.keymap.set('n', '<leader>dr', dap.clear_breakpoints)
 vim.keymap.set('n', '<leader>de', function() dap.set_exception_breakpoints({'all'}) end)
 
 -- Helper mappings
@@ -105,8 +90,13 @@ vim.keymap.set('n', '<leader>dtlb', ':Telescope dap list_breakpoints<CR>')
 vim.g.dap_virtual_text = true
 require('nvim-dap-virtual-text').setup()
 
-vim.keymap.set('n', '<leader>duio', dapui.open)
+vim.keymap.set('n', '<leader>dui', function() dapui.toggle({ reset = true }) end)
+vim.keymap.set('n', '<leader>duio', function() dapui.open({ reset = true }) end)
 vim.keymap.set('n', '<leader>duic', dapui.close)
+vim.keymap.set('n', '<leader>duir', function()
+  dapui.close()
+  dapui.open({ reset = true })
+end)
 
 -- Dap ui: https://github.com/rcarriga/nvim-dap-ui
 dapui.setup()

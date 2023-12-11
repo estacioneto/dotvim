@@ -1,22 +1,9 @@
 -- See https://github.com/neovim/neovim/issues/20784#issuecomment-1288085253
 -- Maybe later it would be worth using: https://github.com/antosha417/nvim-lsp-file-operations
 local function rename_file()
-  local source_file, target_file
+  local source_file = vim.api.nvim_buf_get_name(0)
 
-  vim.ui.input({
-    prompt = "Source: ",
-    completion = "file",
-    default = vim.api.nvim_buf_get_name(0)
-  },
-  function(input)
-    source_file = input
-  end)
-
-  if not source_file or source_file == '' then
-    vim.print('Rename canceled!')
-    return
-  end
-
+  local target_file
   vim.ui.input({
     prompt = "Target: ",
     completion = "file",
@@ -75,7 +62,10 @@ return {
   settings = {
     typescript = {
       npm = 'yarn',
-    }
+    },
+    implicitProjectConfiguration = {
+      checkJs = true
+    },
   },
   init_options = {
     hostInfo = "neovim",

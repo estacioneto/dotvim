@@ -1,19 +1,6 @@
 local function rename_file()
-  local source_file, target_file
-
-  vim.ui.input({
-    prompt = "Source : ",
-    completion = "file",
-    default = vim.api.nvim_buf_get_name(0)
-  },
-  function(input)
-    source_file = input
-  end)
-
-  if source_file == nil then
-    vim.print('Rename canceled')
-    return
-  end
+  local source_file = vim.api.nvim_buf_get_name(0)
+  local target_file
 
   vim.ui.input({
     prompt = "Target : ",
