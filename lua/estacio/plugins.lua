@@ -12,6 +12,7 @@ return require('packer').startup(function(use)
 
   -- File handling
   use 'mbbill/undotree'
+  use 'stevearc/oil.nvim'
 
   -- Finding files
   use {
@@ -21,18 +22,18 @@ return require('packer').startup(function(use)
 
   -- See https://github.com/ibhagwan/fzf-lua
   use {
-    "ibhagwan/fzf-lua",
+    'ibhagwan/fzf-lua',
     -- optional for icon support
-    requires = { "nvim-tree/nvim-web-devicons" }
+    requires = { 'nvim-tree/nvim-web-devicons' }
   }
-  use { "junegunn/fzf", run = "./install --bin" }
+  use { 'junegunn/fzf', run = './install --bin' }
 
   -- Writing code
   use 'tpope/vim-surround'
   use 'chrisbra/vim-commentary'
   use {
-    "windwp/nvim-autopairs",
-    config = function() require("nvim-autopairs").setup {} end
+    'windwp/nvim-autopairs',
+    config = function() require('nvim-autopairs').setup {} end
   }
 
   -- LSP
@@ -63,6 +64,7 @@ return require('packer').startup(function(use)
   }
   use 'nvim-treesitter/nvim-treesitter-context'
   use 'github/copilot.vim'
+  use 'tpope/vim-dispatch'
 
   -- Formatting
   use 'mhartington/formatter.nvim'
@@ -71,7 +73,7 @@ return require('packer').startup(function(use)
   use 'tomasiser/vim-code-dark'
   use 'marko-cerovac/material.nvim'
   use { 'rose-pine/neovim', as = 'rose-pine' }
-  use { "catppuccin/nvim", as = "catppuccin" }
+  use { 'catppuccin/nvim', as = 'catppuccin' }
 
   -- Statusline
   use {

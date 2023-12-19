@@ -7,7 +7,7 @@ local fzf = require('fzf-lua')
 local git_icons = false
 
 local function get_git_root ()
-  return vim.fn.systemlist('git rev-parse --show-toplevel')[1]
+  return vim.fn.system({ 'git', 'rev-parse', '--show-toplevel' }):gsub('\n', '')
 end
 
 local M = {}
@@ -24,7 +24,7 @@ M.files_picker = function(opts)
     end,
   }
 
-  opts.cmd = opts.cmd or 'rg --color=never --files --hidden --follow --no-ignore'
+  opts.cmd = opts.cmd or 'rg --color=never --files --hidden --follow'
 
   if opts.cmd:match '%s+%-%-no%-ignore$' then
     opts.cmd = opts.cmd:gsub('%s+%-%-no%-ignore$', '')

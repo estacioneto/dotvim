@@ -37,12 +37,10 @@ local function rename_file()
   })
 end
 
--- TODO: Add command to watch file save and re-run the :make
--- Also, do it on background instead
 vim.cmd[[
 augroup tsc\_comp
 
-autocmd FileType typescript,typescriptreact compiler tsc | setlocal makeprg=tsc\ --noEmit\ --pretty\ false
+autocmd FileType typescript,typescriptreact compiler tsc | setlocal makeprg=tsc\ --build\ --pretty\ false;\ tsc\ --build\ --clean
 
 augroup END
 ]]

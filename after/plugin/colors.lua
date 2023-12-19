@@ -12,7 +12,7 @@ local function RandomColorSchemeMyPicks()
 -- 'catppuccin-latte', -- White colorscheme
     'catppuccin-frappe',
     'catppuccin-macchiato',
-    'catppuccin-mocha'
+    'catppuccin-mocha',
   }
 
   -- Lua being 1-indexed
