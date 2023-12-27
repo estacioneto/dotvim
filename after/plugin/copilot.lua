@@ -6,5 +6,7 @@ vim.g.copilot_filetypes = {
   ['*'] = false,
   typescript = true,
   javascript = true,
+  lua = true,
+  markdown = true,
 }
 

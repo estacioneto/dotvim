@@ -15,18 +15,18 @@ return require('packer').startup(function(use)
   use 'stevearc/oil.nvim'
 
   -- Finding files
-  use {
-    'nvim-telescope/telescope.nvim', tag = '0.1.4',
-    requires = { {'nvim-lua/plenary.nvim'} }
-  }
-
   -- See https://github.com/ibhagwan/fzf-lua
   use {
     'ibhagwan/fzf-lua',
     -- optional for icon support
     requires = { 'nvim-tree/nvim-web-devicons' }
   }
-  use { 'junegunn/fzf', run = './install --bin' }
+  -- use { 'junegunn/fzf', run = './install --bin' }
+  -- Finding everything (used by dap, for example)
+  use {
+    'nvim-telescope/telescope.nvim', tag = '0.1.4',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
 
   -- Writing code
   use 'tpope/vim-surround'
@@ -53,6 +53,11 @@ return require('packer').startup(function(use)
     }
   }
 
+  use {
+    'folke/trouble.nvim',
+    requires = { 'nvim-tree/nvim-web-devicons' }
+
+  }
   -- Code tools
   -- See https://github.com/nvim-treesitter/nvim-treesitter/wiki/Installation
   use {
@@ -68,6 +73,13 @@ return require('packer').startup(function(use)
 
   -- Formatting
   use 'mhartington/formatter.nvim'
+
+  -- nvim
+  use {
+    "folke/which-key.nvim",
+    config = function()
+    end
+  }
 
   -- Colorschemes
   use 'tomasiser/vim-code-dark'

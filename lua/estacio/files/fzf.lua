@@ -18,13 +18,13 @@ M.files_picker = function(opts)
 
   opts.actions = {
     -- Use ctrl-g to toggle --no-ignore
-    ['ctrl-g'] = function(_, o)
-      o.resume = true
-      M.files_picker(o)
+    ['ctrl-g'] = function()
+      opts.resume = true
+      M.files_picker(opts)
     end,
   }
 
-  opts.cmd = opts.cmd or 'rg --color=never --files --hidden --follow'
+  opts.cmd = opts.cmd or 'rg --color=never --files --hidden --follow --no-ignore'
 
   if opts.cmd:match '%s+%-%-no%-ignore$' then
     opts.cmd = opts.cmd:gsub('%s+%-%-no%-ignore$', '')
@@ -65,6 +65,9 @@ M.set_mappings = function ()
 
   -- Resuming last action
   vim.keymap.set('n', '<leader>ff', fzf.resume)
+
+  -- History
+  vim.keymap.set('n', '<leader>fo', fzf.oldfiles)
 end
 
 return M

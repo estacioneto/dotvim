@@ -17,6 +17,7 @@ local function rename_file()
   end
 
   os.execute('mv '..source_file..' '..target_file)
+  vim.cmd('e '..target_file)
 end
 
 local function setup_coc()
@@ -119,3 +120,6 @@ vim.api.nvim_create_autocmd('VimEnter', {
     require('lualine').refresh()
   end
 })
+
+-- See https://github.com/neoclide/coc.nvim/issues/2087#issuecomment-646480053
+vim.api.nvim_create_user_command('CocLocation', 'CocList --no-quit --normal location', {})

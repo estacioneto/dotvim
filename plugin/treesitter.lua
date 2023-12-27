@@ -11,6 +11,8 @@ require'nvim-treesitter.configs'.setup {
     'javascript',
     'jsdoc',
     'graphql',
+    -- Template
+    'markdown',
   },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
