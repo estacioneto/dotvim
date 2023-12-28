@@ -35,21 +35,20 @@ vim.keymap.set('n', '<c-t><c-l>', vim.cmd.tabnext, { silent = true })
 vim.keymap.set('n', '<c-t><c-h>', vim.cmd.tabprevious, { silent = true })
 
 -- Buffer switching
-vim.keymap.set('n', '<s-l>', vim.cmd.bnext, { silent = true })
-vim.keymap.set('n', '<s-h>', vim.cmd.bprevious, { silent = true })
+-- Not sure about those. It's quite common to mistakenly press those keys.
+--
+-- vim.keymap.set('n', '<s-l>', vim.cmd.bnext, { silent = true })
+-- vim.keymap.set('n', '<s-h>', vim.cmd.bprevious, { silent = true })
 
 -- Close all buffers except current one
 vim.keymap.set('n', '<leader>qo', function() vim.cmd("execute '%bdelete|edit#|bdelete#'") end)
 
 -- Copy file path
-vim.keymap.set('n', 'cpr', function() vim.cmd('let @+ = expand("%")') end, { silent = true })
-vim.keymap.set('n', 'cpf', function() vim.cmd('let @+ = expand("%:p")') end, { silent = true })
+vim.keymap.set('n', 'cpr', function() vim.fn.setreg('+', vim.fn.expand("%")) end, { silent = true })
+vim.keymap.set('n', 'cpf', function() vim.fn.setreg('+', vim.fn.expand("%:p")) end, { silent = true })
 -- Copy file directory
-vim.keymap.set('n', 'cdr', function() vim.cmd('let @+ = expand("%:h")') end, { silent = true })
-vim.keymap.set('n', 'cdf', function() vim.cmd('let @+ = expand("%:p:h")') end, { silent = true })
-
--- Jump to previous file
-vim.keymap.set('n', '<c-p>', '<c-^>', { silent = true })
+vim.keymap.set('n', 'cpdr', function() vim.fn.setreg('+', vim.fn.expand("%:h")) end, { silent = true })
+vim.keymap.set('n', 'cpdf', function() vim.fn.setreg('+', vim.fn.expand("%:p:h")) end, { silent = true })
 
 -- Terminal
 vim.keymap.set('t', 'jk', '<c-\\><c-n>')

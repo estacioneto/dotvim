@@ -6,4 +6,7 @@ vim.keymap.set('n', '<leader>sg', function()
 end)
 
 -- fzf-lua FTW :)
-require('estacio.files.fzf').set_mappings()
+local my_fzf = require('estacio.files.fzf')
+
+my_fzf.set_mappings()
+my_fzf.create_commands()
