@@ -14,18 +14,12 @@ return require('packer').startup(function(use)
   use 'mbbill/undotree'
   use 'stevearc/oil.nvim'
 
-  -- Finding files
+  -- Finding everything
   -- See https://github.com/ibhagwan/fzf-lua
   use {
     'ibhagwan/fzf-lua',
     -- optional for icon support
     requires = { 'nvim-tree/nvim-web-devicons' }
-  }
-  -- use { 'junegunn/fzf', run = './install --bin' }
-  -- Finding everything (used by dap, for example)
-  use {
-    'nvim-telescope/telescope.nvim', tag = '0.1.4',
-    requires = { {'nvim-lua/plenary.nvim'} }
   }
 
   -- Writing code
@@ -103,12 +97,12 @@ return require('packer').startup(function(use)
   -- Debugging
   use 'mfussenegger/nvim-dap'
   use { 'rcarriga/nvim-dap-ui', requires = { 'mfussenegger/nvim-dap' } }
-  use 'nvim-telescope/telescope-dap.nvim'
   use 'theHamsta/nvim-dap-virtual-text'
 
   -- Tips
   use {
     'rcarriga/nvim-notify',
+    requires = { {'nvim-lua/plenary.nvim'} },
     config = function()
       vim.opt.termguicolors = true
       vim.notify = require('notify')

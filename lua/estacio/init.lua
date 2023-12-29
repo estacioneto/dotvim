@@ -4,7 +4,6 @@ require('estacio.commands')
 require('estacio.keymaps')
 require('estacio.git_ui')
 require('estacio.autocmd')
-require('estacio.files')
 require('estacio.tips')
 
 require('estacio.klarna')

@@ -77,14 +77,6 @@ local dap_ui_widgets = require('dap.ui.widgets')
 vim.keymap.set('n', '<leader>dk', dap_ui_widgets.hover)
 vim.keymap.set('n', '<leader>d?', function () dap_ui_widgets.centered_float(dap_ui_widgets.scopes) end)
 
--- Dap telescope
-require('telescope').load_extension('dap')
-
--- Dap telescope mappings
-vim.keymap.set('n', '<leader>dtf', ':Telescope dap frames<CR>')
-vim.keymap.set('n', '<leader>dtc', ':Telescope dap commands<CR>')
-vim.keymap.set('n', '<leader>dtlb', ':Telescope dap list_breakpoints<CR>')
-
 -- Dap virtual text
 -- theHamsta/nvim-dap-virtual-text and mfussenegger/nvim-dap
 vim.g.dap_virtual_text = true

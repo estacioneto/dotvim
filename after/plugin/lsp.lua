@@ -60,15 +60,7 @@ local function setup_mappings_and_cmp(opts)
   vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)
 
   -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-  -- TODO: Enhance telescope pickers: https://github.com/nvim-telescope/telescope.nvim/issues/2014
-  vim.keymap.set('n', 'gr', function()
-    local builtin = require('telescope.builtin')
-    if builtin ~= nil then
-      builtin.lsp_references()
-    else
-      vim.lsp.buf.references()
-    end
-  end, opts)
+  vim.keymap.set('n', 'gr', require('fzf-lua').lsp_references, opts)
 
   vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)

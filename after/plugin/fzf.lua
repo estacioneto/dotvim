@@ -196,63 +196,61 @@ function M.parent_dirs_picker(opts)
   end })
 end
 
-M.set_mappings = function ()
-  -- Current directory
-  vim.keymap.set('n', '<leader>gd', function ()
-    fzf.git_files({ cwd = vim.fn.getcwd(), git_icons = git_icons })
-  end)
-  vim.keymap.set('n', '<leader>fd', function () M.files_picker({ git_icons = git_icons }) end)
+-- Set mappings
+-- Current directory
+vim.keymap.set('n', '<leader>gd', function ()
+  fzf.git_files({ cwd = vim.fn.getcwd(), git_icons = git_icons })
+end)
+vim.keymap.set('n', '<leader>fd', function () M.files_picker({ git_icons = git_icons }) end)
 
-  vim.keymap.set('n', '<leader>sd', function () fzf.grep_project({ git_icons = git_icons }) end)
-  vim.keymap.set('v', '<leader>sd', function () fzf.grep_visual({ git_icons = git_icons }) end)
+vim.keymap.set('n', '<leader>sd', function () fzf.grep_project({ git_icons = git_icons }) end)
+vim.keymap.set('v', '<leader>sd', function () fzf.grep_visual({ git_icons = git_icons }) end)
 
-  -- Git root
-  vim.keymap.set('n', '<leader>gr', function ()
-    fzf.git_files({
-      cwd = get_git_root(),
-      git_icons = git_icons
-    })
-  end)
-  vim.keymap.set('n', '<leader>fr', function ()
-    M.files_picker({
-      cwd = get_git_root(),
-      git_icons = git_icons
-    })
-  end)
-  vim.keymap.set('n', '<leader>sr', function()
-    fzf.grep_project({
-      cwd = get_git_root(),
-      git_icons = git_icons
-    })
-  end)
-  vim.keymap.set('v', '<leader>sr', function()
-    fzf.grep_visual({
-      cwd = get_git_root(),
-      git_icons = git_icons
-    })
-  end)
+-- Git root
+vim.keymap.set('n', '<leader>gr', function ()
+  fzf.git_files({
+    cwd = get_git_root(),
+    git_icons = git_icons
+  })
+end)
+vim.keymap.set('n', '<leader>fr', function ()
+  M.files_picker({
+    cwd = get_git_root(),
+    git_icons = git_icons
+  })
+end)
+vim.keymap.set('n', '<leader>sr', function()
+  fzf.grep_project({
+    cwd = get_git_root(),
+    git_icons = git_icons
+  })
+end)
+vim.keymap.set('v', '<leader>sr', function()
+  fzf.grep_visual({
+    cwd = get_git_root(),
+    git_icons = git_icons
+  })
+end)
 
-  -- Resuming last action
-  vim.keymap.set('n', '<leader>ff', fzf.resume)
+-- Resuming last action
+vim.keymap.set('n', '<leader>ff', fzf.resume)
 
-  -- History
-  vim.keymap.set('n', '<leader>fo', fzf.oldfiles)
+-- History
+vim.keymap.set('n', '<leader>fo', fzf.oldfiles)
 
-  -- Buffers
-  vim.keymap.set('n', '<leader>fb', fzf.buffers)
+-- Buffers
+vim.keymap.set('n', '<leader>fb', fzf.buffers)
 
-  -- Custom functions
-  vim.keymap.set('n', '<leader>cdr', M.repos_picker)
-  vim.keymap.set('n', '<leader>cds', M.subdir_picker)
-  vim.keymap.set('n', '<leader>cdp', M.parent_dirs_picker)
-  vim.keymap.set('n', '<leader>cds', M.nodejs_packages_picker)
-end
+-- Custom functions
+vim.keymap.set('n', '<leader>cdr', M.repos_picker)
+vim.keymap.set('n', '<leader>cds', M.subdir_picker)
+vim.keymap.set('n', '<leader>cdp', M.parent_dirs_picker)
+vim.keymap.set('n', '<leader>cds', M.nodejs_packages_picker)
 
-function M.create_commands()
-  vim.api.nvim_create_user_command('ReposPicker', M.repos_picker, {})
-  vim.api.nvim_create_user_command('SubdirPicker', M.subdir_picker, {})
-  vim.api.nvim_create_user_command('NodejsPicker', M.nodejs_packages_picker, {})
-  vim.api.nvim_create_user_command('ParentDirsPicker', M.parent_dirs_picker, {})
-end
+-- Create commands
+vim.api.nvim_create_user_command('ReposPicker', M.repos_picker, {})
+vim.api.nvim_create_user_command('SubdirPicker', M.subdir_picker, {})
+vim.api.nvim_create_user_command('NodejsPicker', M.nodejs_packages_picker, {})
+vim.api.nvim_create_user_command('ParentDirsPicker', M.parent_dirs_picker, {})
 
 return M

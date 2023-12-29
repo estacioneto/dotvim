@@ -109,3 +109,11 @@ vim.keymap.set('n', '<leader>df', function()
     end
   end)
 end)
+
+-- Silent grep
+vim.keymap.set('n', '<leader>sg', function()
+  local pattern = vim.fn.input('Pattern: ', '')
+
+  vim.cmd('silent! grep! '..pattern)
+  vim.cmd[[copen]]
+end)
