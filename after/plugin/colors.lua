@@ -16,6 +16,7 @@ local function RandomColorSchemeMyPicks(pick)
     'catppuccin-frappe',
     'catppuccin-macchiato',
     'catppuccin-mocha',
+    'killer-queen',
   }
 
   -- Lua being 1-indexed

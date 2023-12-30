@@ -42,7 +42,7 @@ vim.keymap.set("n", '<leader>ov', function()
     return
   end
 
-  vim.cmd("vsplit | wincmd H | vertical resize -50")
+  vim.cmd("vsplit | wincmd H | vertical resize -50 | set wfh | set wfw")
   oil.open()
 end)
 

@@ -9,4 +9,3 @@ vim.g.copilot_filetypes = {
   lua = true,
   markdown = true,
 }
-

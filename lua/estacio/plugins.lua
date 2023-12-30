@@ -80,6 +80,7 @@ return require('packer').startup(function(use)
   use 'marko-cerovac/material.nvim'
   use { 'rose-pine/neovim', as = 'rose-pine' }
   use { 'catppuccin/nvim', as = 'catppuccin' }
+  use 'askfiy/killer-queen'
 
   -- Statusline
   use {

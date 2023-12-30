@@ -87,8 +87,6 @@ function M.repos_picker(opts)
 
     vim.cmd('cd '..selected[2])
 
-    -- Close all buffers
-    vim.cmd("silent! %bwipeout!")
     reload_config()
 
     M.subdir_picker()
@@ -124,8 +122,6 @@ function M.subdir_picker(opts, fallback)
 
     vim.cmd('cd '..selected[2])
 
-    -- Close all buffers
-    vim.cmd("silent! %bwipeout!")
     reload_config()
 
     M.files_picker({ git_icons = git_icons })
@@ -157,8 +153,6 @@ function M.nodejs_packages_picker(opts)
 
     vim.cmd('cd '..selected[2])
 
-    -- Close all buffers
-    vim.cmd("silent! %bwipeout!")
     reload_config()
 
     M.files_picker({ git_icons = git_icons })
@@ -184,8 +178,6 @@ function M.parent_dirs_picker(opts)
 
     vim.cmd('cd '..selected[2])
 
-    -- Close all buffers
-    vim.cmd("silent! %bwipeout!")
     reload_config()
 
     M.subdir_picker(

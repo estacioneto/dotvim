@@ -29,6 +29,10 @@ vim.keymap.set('n', '<c-j>', '<c-w>j', { silent = true })
 vim.keymap.set('n', '<c-k>', '<c-w>k', { silent = true })
 vim.keymap.set('n', '<c-l>', '<c-w>l', { silent = true })
 
+-- Window fixed height and width
+vim.keymap.set('n', '<c-w>fh', function () vim.cmd.set('wfh') end , { silent = true })
+vim.keymap.set('n', '<c-w>fw', function () vim.cmd.set('wfw') end , { silent = true })
+
 -- Tab switching
 vim.keymap.set('n', '<c-t><c-n>', vim.cmd.tabnew, { silent = true })
 vim.keymap.set('n', '<c-t><c-l>', vim.cmd.tabnext, { silent = true })
@@ -91,7 +95,7 @@ vim.keymap.set('n', '<leader>E', function() MyExplore("Explore") end)
 
 -- New file
 -- Current directory
-vim.keymap.set('n', '<leader>nf', ':e %:h/')
+vim.keymap.set('n', '<leader>nf', function () return ':e '..vim.fn.expand('%:h/') end, { expr = true })
 
 -- Delete current file
 vim.keymap.set('n', '<leader>df', function()
@@ -112,8 +116,16 @@ end)
 
 -- Silent grep
 vim.keymap.set('n', '<leader>sg', function()
-  local pattern = vim.fn.input('Pattern: ', '')
+  vim.ui.input({
+    prompt = 'Pattern: ',
+    default = ''
+  },
+  function(pattern)
+    if pattern == '' or pattern == nil then
+      return
+    end
 
-  vim.cmd('silent! grep! '..pattern)
-  vim.cmd[[copen]]
+    vim.cmd('silent! grep! '..pattern)
+    vim.cmd[[copen]]
+  end)
 end)
