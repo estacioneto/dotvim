@@ -1,6 +1,6 @@
--- Stash URL
-local function get_file()
-  -- get git root directory
+local M = {}
+
+function M.get_git_root()
   local handle = io.popen("git rev-parse --show-toplevel")
   if handle == nil then
     return ""
@@ -9,8 +9,13 @@ local function get_file()
   local result = handle:read("*a")
   handle:close()
 
+  return result
+end
+
+-- Stash URL
+local function get_file()
   -- get the relative file path
-  local git_root_dir = result:match("^.*/")
+  local git_root_dir = M.get_git_root():match("^.*/")
   local file_path = vim.fn.expand('%:p')
   local relative_file_path = file_path:sub(#git_root_dir+1)
 
@@ -54,5 +59,36 @@ local function sturl()
   print("Copied to clipboard: " .. path)
 end
 
--- Keymap: Copy stash url to clipboard
-vim.keymap.set("n", "<leader>rurl", sturl)
+function M.set_keymaps()
+  -- Keymap: Copy stash url to clipboard
+  vim.keymap.set("n", "<leader>rurl", sturl)
+end
+
+function M.is_small_repo()
+  if M.get_git_root() == "" then
+    return
+  end
+  -- If we're inside a Git repository, check the size-pack
+  local handle = io.popen("git count-objects -v")
+  if handle == nil then
+    return
+  end
+
+  local result = handle:read("*a")
+  handle:close()
+
+  for line in result:gmatch("[^\r\n]+") do
+    if line:find("size%-pack:") then
+      local size_pack = tonumber(line:match("%d+"))
+      if size_pack then
+        -- Convert KB to MB and check if it's less than 500MB
+        return (size_pack / 1024) < 500
+      end
+    end
+  end
+
+  -- Return false if size-pack is not found or not less than 500MB
+  return false
+end
+
+return M

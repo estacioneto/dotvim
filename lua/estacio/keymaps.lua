@@ -95,7 +95,7 @@ vim.keymap.set('n', '<leader>E', function() MyExplore("Explore") end)
 
 -- New file
 -- Current directory
-vim.keymap.set('n', '<leader>nf', function () return ':e '..vim.fn.expand('%:h/') end, { expr = true })
+vim.keymap.set('n', '<leader>nf', function () return ':e '..vim.fn.expand('%:p:h')..'/' end, { expr = true })
 
 -- Delete current file
 vim.keymap.set('n', '<leader>df', function()

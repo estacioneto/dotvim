@@ -29,6 +29,13 @@ else
   echo "⏭️  [Dependencies] ripgrep already installed!"
 fi
 
+if ! which fd &> /dev/null; then
+  echo "💿 [Dependencies] Installing fd (https://github.com/sharkdp/fd)..."
+  brew install ripgrep && echo "✅ [Dependencies] fd installed" || exit 1
+else
+  echo "⏭️  [Dependencies] fd already installed!"
+fi
+
 if ! which python &> /dev/null; then
   echo "💿 [Dependencies] Installing python..."
   brew install python && echo "✅ [Dependencies] python installed" || exit 1
