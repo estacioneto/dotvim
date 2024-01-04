@@ -1,6 +1,14 @@
 local fzf = require('fzf-lua')
 local git = require('estacio.git')
 
+fzf.setup {
+  previewers = {
+    builtin = {
+      syntax_limit_b = 0
+    }
+  }
+}
+
 -- Might be useful for small git repositories but for large ones it can delay
 -- the whole process of finding.
 --

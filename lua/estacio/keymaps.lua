@@ -129,3 +129,8 @@ vim.keymap.set('n', '<leader>sg', function()
     vim.cmd[[copen]]
   end)
 end)
+
+-- Show current pwd
+vim.keymap.set('n', '<leader>pwd', function()
+  vim.notify('Current pwd: '..vim.fn.getcwd())
+end)

@@ -51,16 +51,18 @@ local function setup_mappings_and_cmp(opts)
       })
     end
   end
+  local fzf = require('fzf-lua')
   -- See https://www.reddit.com/r/neovim/comments/nytu9c/how_to_prevent_focus_on_floating_window_created/
   vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { focusable = false })
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+-- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+  vim.keymap.set('n', 'gd', fzf.lsp_definitions, opts)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
   vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)
 
   -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-  vim.keymap.set('n', 'gr', require('fzf-lua').lsp_references, opts)
+  vim.keymap.set('n', 'gr', fzf.lsp_references, opts)
 
   vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
