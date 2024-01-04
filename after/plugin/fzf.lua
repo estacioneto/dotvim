@@ -243,4 +243,45 @@ vim.api.nvim_create_user_command('SubdirPicker', M.subdir_picker, {})
 vim.api.nvim_create_user_command('NodejsPicker', M.nodejs_packages_picker, {})
 vim.api.nvim_create_user_command('ParentDirsPicker', M.parent_dirs_picker, {})
 
+-- Notifications. Useful for copying the error message to the clipboard or
+-- for background git commands
+function M.notifications_picker()
+  if not pcall(require, 'notify') then
+    return
+  end
+
+  local notify = require('notify')
+
+  local notifications = vim.tbl_map(function (notification)
+    local icon_color = notification.level == 'ERROR' and 'red' or notification.level == 'WARN' and 'yellow' or 'green'
+    local icon = fzf.utils.ansi_codes[icon_color](notification.icon)
+    local timestamp = fzf.utils.ansi_codes.grey(notification.title[2])
+    local title = notification.title[1] ~= '' and notification.title[1] or '[No title]'
+
+    return {
+      prefix = table.concat({ icon, timestamp, title }, ' ')..' > ',
+      contents = notification.message,
+      preview = notification.message,
+      data = notification
+    }
+  end, notify.history())
+
+
+  table.sort(notifications, function (a, b)
+    return a.data.time > b.data.time
+  end)
+
+  fzf.fzf_exec(notifications, {
+    prompt = 'Notifications > ',
+    actions = {
+      ['default'] = function (selected)
+        vim.fn.setreg('+', table.concat(selected, '\n'))
+        vim.notify('Copied content to clipboard!', vim.log.levels.INFO, { title = 'Fzf' })
+      end
+    }
+  })
+end
+
+vim.api.nvim_create_user_command('NotificationsPicker', M.notifications_picker, {})
+
 return M

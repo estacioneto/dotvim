@@ -1,3 +1,5 @@
+local utils = require('estacio.utils')
+
 local M = {}
 
 function M.get_git_root()
@@ -86,42 +88,9 @@ function M.is_small_repo()
   return false
 end
 
--- TODO: Move to an utils module
--- Runs OS command asynchronously and notifies if it exits with error
-local function run_cmd(command)
-  -- See https://github.com/ibhagwan/fzf-lua/blob/f4f3671ebc89dd25a583a871db07529a3eff8b64/lua/fzf-lua/utils.lua#L869C1-L879C8
-  local handle = io.popen(command .. " 2>&1; echo $?", "r")
-  if handle == nil then
-    vim.notify('Failed to run command: '..command, vim.log.levels.ERROR, { title = 'Git' })
-    return
-  end
-
-  local stdout = {}
-  for h in handle:lines() do
-    stdout[#stdout + 1] = h
-  end
-  -- last line contains the exit status
-  local status_code = tonumber(stdout[#stdout])
-  stdout[#stdout] = nil
-
-  handle:close()
-
-  local output = table.concat(stdout, '\n')
-
-  if status_code ~= 0 then
-    vim.notify('Error executing command: ' .. command .. '\nError code: ' .. status_code..'\nOutput: '..output, vim.log.levels.ERROR, { title = 'Git' })
-  else
-    vim.notify('Command executed successfully: ' .. command..'\nOutput: '..output, vim.log.levels.INFO, { title = 'Git' })
-  end
-
-  return status_code, output
-end
-
-M.run_command = run_cmd
-
 local function stash_all()
   -- Check if Dispatch command is available
-  run_cmd('git stash --include-untracked')
+  utils.run_async_cmd('git', { 'stash', '--include-untracked' })
 end
 
 local function get_current_branch()
@@ -133,21 +102,31 @@ local function get_current_branch()
   local result = handle:read('*a')
   handle:close()
 
-  return result
+  return result:gsub('\n', '')
 end
 
 local function git_update_branch(opts)
   local branch = opts.args
   local current_branch = get_current_branch()
 
-  run_cmd('git checkout '..branch..' && git pull origin '..branch..' -pr && git checkout '..current_branch)
+  utils.run_async_cmd('git', { 'checkout', branch }, function (checkout_code)
+    if checkout_code ~= 0 then
+      return
+    end
+
+    utils.run_async_cmd('git', { 'pull', 'origin', branch, '-pr' }, function (pull_code)
+      if pull_code ~= 0 then
+        return
+      end
+
+      utils.run_async_cmd('git', { 'checkout', current_branch })
+    end)
+  end)
 end
 
-local function git_rebase_and_push(opts)
+local function git_rebase(opts)
   local branch = opts.args
-  local current_branch = get_current_branch()
-
-  run_cmd('git rebase origin/'..branch..' --no-verify && git push origin '..current_branch..' -f')
+  utils.run_async_cmd('git', { 'rebase', branch, '--no-verify' })
 end
 
 
@@ -155,7 +134,7 @@ M.set_commands = function()
   vim.api.nvim_create_user_command('GitRepoUrl', copy_file_remote_url, { nargs = 0 })
   vim.api.nvim_create_user_command('GitStashAll', stash_all, { nargs = 0 })
   vim.api.nvim_create_user_command('GitUpdate', git_update_branch, { nargs = 1 })
-  vim.api.nvim_create_user_command('GitRebaseAndPush', git_rebase_and_push, { nargs = 1 })
+  vim.api.nvim_create_user_command('GitRebase', git_rebase, { nargs = 1 })
 end
 
 function M.set_keymaps()
