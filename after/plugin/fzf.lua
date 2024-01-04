@@ -1,13 +1,24 @@
-local fzf = require('fzf-lua')
-local git = require('estacio.git')
-local utils = require('estacio.utils')
+local fzf = require 'fzf-lua'
+local git = require 'estacio.git'
+local utils = require 'estacio.utils'
 
 fzf.setup {
   previewers = {
     builtin = {
-      syntax_limit_b = 0
-    }
-  }
+      syntax_limit_b = 0,
+    },
+  },
+  keymap = {
+    builtin = {
+      ['<c-1>'] = 'toggle-help',
+      ['<c-p><c-d>'] = 'preview-page-down',
+      ['<c-p><c-u>'] = 'preview-page-up',
+    },
+    fzf = {
+      ['ctrl-d'] = 'half-page-down',
+      ['ctrl-u'] = 'half-page-up',
+    },
+  },
 }
 
 -- Might be useful for small git repositories but for large ones it can delay
@@ -30,19 +41,22 @@ M.files_picker = function(opts)
   fzf.files(opts)
 end
 
-local EXCLUDED_DIRS_FD = table.concat(vim.tbl_map(function (dir)
-  return '--exclude '..dir
-end, {
-  'Library',
-  'Pictures',
-  '.Trash',
-  'node_modules',
-  'vendor',
-}), ' ')
+local EXCLUDED_DIRS_FD = table.concat(
+  vim.tbl_map(function(dir)
+    return '--exclude ' .. dir
+  end, {
+    'Library',
+    'Pictures',
+    '.Trash',
+    'node_modules',
+    'vendor',
+  }),
+  ' '
+)
 
 local function reload_config()
   -- Source init.lua
-  vim.cmd('so ~/.config/nvim/init.lua')
+  vim.cmd 'so ~/.config/nvim/init.lua'
 
   -- Source all lua files in plugin directory
   for _, file in ipairs(vim.fn.glob('~/.config/nvim/plugin/**/*.lua', 0, 1)) do
@@ -62,45 +76,45 @@ function M.fd(opts, callback, fallback)
   opts.cwd = opts.cwd or '.'
   opts.prompt = opts.prompt or 'Directories > '
 
-  opts.cmd = opts.cmd or table.concat({
-    'fd',
-    '-t d',
-    '-d 5',
-    '--no-ignore',
-    '-H',
-    '--base-directory '..opts.cwd,
-    EXCLUDED_DIRS_FD,
-    '--exclude .git',
-  }, ' ')
+  opts.cmd = opts.cmd
+    or table.concat({
+      'fd',
+      '-t d',
+      '-d 5',
+      '--no-ignore',
+      '-H',
+      '--base-directory ' .. opts.cwd,
+      EXCLUDED_DIRS_FD,
+      '--exclude .git',
+    }, ' ')
 
   opts.actions = {
     ['default'] = {
-      function (selected)
+      function(selected)
         if selected[1] == nil then
           return
         end
 
-        vim.cmd('cd '..vim.fn.expand(opts.cwd..'/'..selected[1]))
+        vim.cmd('cd ' .. vim.fn.expand(opts.cwd .. '/' .. selected[1]))
 
         reload_config()
         callback(opts)
       end,
     },
-    ['esc'] = function ()
+    ['esc'] = function()
       if fallback then
         fallback(opts)
       end
-    end
+    end,
   }
 
   fzf.fzf_exec(opts.cmd, opts)
 end
 
-
 -- Get all repositories
 function M.repos_picker(opts)
   opts = opts or {}
-  opts.cwd = opts.cwd or vim.fn.expand('~')
+  opts.cwd = opts.cwd or vim.fn.expand '~'
   opts.prompt = opts.prompt or 'Git repos > '
 
   opts.cmd = table.concat({
@@ -109,16 +123,18 @@ function M.repos_picker(opts)
     EXCLUDED_DIRS_FD,
     '--no-ignore',
     '-H',
-    '--base-directory '..opts.cwd,
+    '--base-directory ' .. opts.cwd,
     '^.git$',
-    '-x dirname {} \\;'
+    '-x dirname {} \\;',
   }, ' ')
 
-  local function callback ()
+  local function callback()
     M.subdir_picker(
       { git_icons = git_icons },
       -- Fallback
-      function () M.files_picker({ git_icons = git_icons }) end
+      function()
+        M.files_picker { git_icons = git_icons }
+      end
     )
   end
 
@@ -127,8 +143,8 @@ end
 
 function M.subdir_picker(opts, fallback)
   opts = opts or {}
-  local function callback ()
-    M.files_picker({ git_icons = git_icons })
+  local function callback()
+    M.files_picker { git_icons = git_icons }
   end
 
   M.fd(opts, callback, fallback)
@@ -143,15 +159,15 @@ function M.nodejs_packages_picker(opts)
     '-t f',
     '--no-ignore',
     '-H',
-    '--base-directory '..opts.cwd,
+    '--base-directory ' .. opts.cwd,
     EXCLUDED_DIRS_FD,
     '--exclude .git',
     '^package.json$',
-    '-x dirname {} \\;'
+    '-x dirname {} \\;',
   }, ' ')
 
-  local function callback ()
-    M.files_picker({ git_icons = git_icons })
+  local function callback()
+    M.files_picker { git_icons = git_icons }
   end
 
   M.fd(opts, callback)
@@ -164,24 +180,26 @@ function M.parent_dirs_picker(opts)
   local parent_directories = {}
   local cwd = opts.cwd
 
-  while cwd ~= "/" do
+  while cwd ~= '/' do
     table.insert(parent_directories, cwd)
     cwd = vim.fn.fnamemodify(cwd, ':h')
   end
 
   opts.actions = {
-    ['default'] = function (selected)
+    ['default'] = function(selected)
       -- Full path so it doesn't need to be expanded
-      vim.cmd('cd '..selected[1])
+      vim.cmd('cd ' .. selected[1])
 
       reload_config()
 
       M.subdir_picker(
         { git_icons = git_icons },
         -- Fallback
-        function () M.files_picker({ git_icons = git_icons }) end
+        function()
+          M.files_picker { git_icons = git_icons }
+        end
       )
-    end
+    end,
   }
 
   fzf.fzf_exec(parent_directories, opts)
@@ -189,38 +207,44 @@ end
 
 -- Set mappings
 -- Current directory
-vim.keymap.set('n', '<leader>gd', function ()
-  fzf.git_files({ cwd = vim.fn.getcwd(), git_icons = git_icons })
+vim.keymap.set('n', '<leader>gd', function()
+  fzf.git_files { cwd = vim.fn.getcwd(), git_icons = git_icons }
 end)
-vim.keymap.set('n', '<leader>fd', function () M.files_picker({ git_icons = git_icons }) end)
+vim.keymap.set('n', '<leader>fd', function()
+  M.files_picker { git_icons = git_icons }
+end)
 
-vim.keymap.set('n', '<leader>sd', function () fzf.grep_project({ git_icons = git_icons }) end)
-vim.keymap.set('v', '<leader>sd', function () fzf.grep_visual({ git_icons = git_icons }) end)
+vim.keymap.set('n', '<leader>sd', function()
+  fzf.grep_project { git_icons = git_icons }
+end)
+vim.keymap.set('v', '<leader>sd', function()
+  fzf.grep_visual { git_icons = git_icons }
+end)
 
 -- Git root
-vim.keymap.set('n', '<leader>gr', function ()
-  fzf.git_files({
+vim.keymap.set('n', '<leader>gr', function()
+  fzf.git_files {
     cwd = git.get_git_root(),
-    git_icons = git_icons
-  })
+    git_icons = git_icons,
+  }
 end)
-vim.keymap.set('n', '<leader>fr', function ()
-  M.files_picker({
+vim.keymap.set('n', '<leader>fr', function()
+  M.files_picker {
     cwd = git.get_git_root(),
-    git_icons = git_icons
-  })
+    git_icons = git_icons,
+  }
 end)
 vim.keymap.set('n', '<leader>sr', function()
-  fzf.grep_project({
+  fzf.grep_project {
     cwd = git.get_git_root(),
-    git_icons = git_icons
-  })
+    git_icons = git_icons,
+  }
 end)
 vim.keymap.set('v', '<leader>sr', function()
-  fzf.grep_visual({
+  fzf.grep_visual {
     cwd = git.get_git_root(),
-    git_icons = git_icons
-  })
+    git_icons = git_icons,
+  }
 end)
 
 -- Resuming last action
@@ -251,51 +275,67 @@ function M.notifications_picker()
     return
   end
 
-  local notify = require('notify')
+  local notify = require 'notify'
 
-  local notifications = vim.tbl_map(function (notification)
-    local icon_color = notification.level == 'ERROR' and 'red' or notification.level == 'WARN' and 'yellow' or 'green'
+  local notifications = vim.tbl_map(function(notification)
+    local icon_color = notification.level == 'ERROR' and 'red'
+      or notification.level == 'WARN' and 'yellow'
+      or 'green'
     local icon = fzf.utils.ansi_codes[icon_color](notification.icon)
     local timestamp = fzf.utils.ansi_codes.grey(notification.title[2])
-    local title = notification.title[1] ~= '' and notification.title[1] or '[No title]'
+    local title = notification.title[1] ~= '' and notification.title[1]
+      or '[No title]'
 
     return {
-      prefix = table.concat({ icon, timestamp, title }, ' ')..' > ',
+      prefix = table.concat({ icon, timestamp, title }, ' ') .. ' > ',
       contents = notification.message,
       preview = notification.message,
-      data = notification
+      data = notification,
     }
   end, notify.history())
 
-
-  table.sort(notifications, function (a, b)
+  table.sort(notifications, function(a, b)
     return a.data.time > b.data.time
   end)
 
   fzf.fzf_exec(notifications, {
     prompt = 'Notifications > ',
     actions = {
-      ['default'] = function (selected)
+      ['default'] = function(selected)
         vim.fn.setreg('+', table.concat(selected, '\n'))
-        vim.notify('Copied content to clipboard!', vim.log.levels.INFO, { title = 'Fzf' })
+        vim.notify(
+          'Copied content to clipboard!',
+          vim.log.levels.INFO,
+          { title = 'Fzf' }
+        )
       end,
-      ['ctrl-k'] = function (selected)
+      ['ctrl-k'] = function(selected)
         for _, notification in ipairs(selected) do
           local pid = string.match(notification, 'pid: (%d+)')
 
           if pid == nil then
-            return
+            goto continue
           end
 
           utils.kill_process(pid)
 
-          vim.notify('Killed process with pid: '..pid, vim.log.levels.INFO, { title = 'Fzf' })
+          vim.notify(
+            'Killed process with pid: ' .. pid,
+            vim.log.levels.INFO,
+            { title = 'Fzf' }
+          )
+
+          ::continue::
         end
-      end
-    }
+      end,
+    },
   })
 end
 
-vim.api.nvim_create_user_command('NotificationsPicker', M.notifications_picker, {})
+vim.api.nvim_create_user_command(
+  'NotificationsPicker',
+  M.notifications_picker,
+  {}
+)
 
 return M
