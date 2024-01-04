@@ -1,5 +1,6 @@
 local fzf = require('fzf-lua')
 local git = require('estacio.git')
+local utils = require('estacio.utils')
 
 fzf.setup {
   previewers = {
@@ -277,6 +278,19 @@ function M.notifications_picker()
       ['default'] = function (selected)
         vim.fn.setreg('+', table.concat(selected, '\n'))
         vim.notify('Copied content to clipboard!', vim.log.levels.INFO, { title = 'Fzf' })
+      end,
+      ['ctrl-k'] = function (selected)
+        for _, notification in ipairs(selected) do
+          local pid = string.match(notification, 'pid: (%d+)')
+
+          if pid == nil then
+            return
+          end
+
+          utils.kill_process(pid)
+
+          vim.notify('Killed process with pid: '..pid, vim.log.levels.INFO, { title = 'Fzf' })
+        end
       end
     }
   })

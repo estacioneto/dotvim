@@ -4,15 +4,17 @@ require('formatter').setup {
   logging = true,
   log_level = vim.log.levels.WARN,
   filetype = {
+    lua = { require('formatter.filetypes.lua').stylua },
     html = { require('formatter.filetypes.html').prettier },
     css = { require('formatter.filetypes.css').prettier },
     json = { require('formatter.filetypes.javascript').prettier },
     typescript = { require('formatter.filetypes.typescript').prettier },
     javascript = { require('formatter.filetypes.javascript').prettier },
-    typescriptreact = { require('formatter.filetypes.typescriptreact').prettier }
-  }
+    typescriptreact = { require('formatter.filetypes.typescriptreact').prettier },
+  },
 }
 
-
 -- Keymaps
-vim.keymap.set('n', '<leader>fmt', function() vim.cmd[[Format]] end)
+vim.keymap.set('n', '<leader>fmt', function()
+  vim.cmd [[Format]]
+end)
