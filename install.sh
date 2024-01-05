@@ -84,4 +84,10 @@ if ! which nvim &> /dev/null; then
   brew install neovim && echo "✅ Neovim installed!" || exit 1
 fi
 
+if [[ ! -d ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]]; then
+  echo "💿 Installing Packer (nvim plugin manager)..."
+  git clone --depth 1 https://github.com/wbthomason/packer.nvim\
+   ~/.local/share/nvim/site/pack/packer/start/packer.nvim && echo "✅ Neovim installed!" || exit 1
+fi
+
 nvim -c "PackerSync"

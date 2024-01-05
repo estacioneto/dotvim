@@ -67,6 +67,11 @@ function M.run_async_cmd(command, opts, next)
     assert(not err, err)
     if chunk then
       table.insert(err_output, chunk)
+      -- For Git output, this is too much
+      if command == 'git' then
+        return
+      end
+
       vim.notify(chunk, vim.log.levels.WARN, { title = opts.title..' ('..full_command..')' })
     else
       stderr:close()

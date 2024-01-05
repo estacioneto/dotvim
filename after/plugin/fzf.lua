@@ -24,6 +24,7 @@ fzf.setup {
     fzf = {
       ['ctrl-z'] = 'abort',
       ['ctrl-a'] = 'toggle-all',
+      ['alt-a'] = 'toggle-all',
       ['ctrl-d'] = 'half-page-down',
       ['ctrl-u'] = 'half-page-up',
     },
