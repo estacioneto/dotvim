@@ -38,8 +38,8 @@ local function lsp_rename()
   -- Get cursor distance from the beginning of the word
   local window_opts = {
     relative = 'win',
-    -- Don't ask me why, but this works
     row = row - 1,
+    -- Sidebar is the offset
     col = col + 4,
     win = vim.api.nvim_get_current_win(),
 

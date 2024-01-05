@@ -25,7 +25,7 @@ function M.run_async_cmd(command, opts, next)
             .. full_command
             .. '\nError code: '
             .. code
-            .. '\nOutput: '
+            .. '\nFull output: '
             .. table.concat(err_output, '\n'),
           vim.log.levels.ERROR,
           { title = opts.title }
@@ -34,7 +34,7 @@ function M.run_async_cmd(command, opts, next)
         vim.notify(
           'Command executed successfully: '
             .. full_command
-            .. '\nOutput: '
+            .. '\nFull output: '
             .. table.concat(output, '\n'),
           vim.log.levels.INFO,
           { title = opts.title }
@@ -57,6 +57,7 @@ function M.run_async_cmd(command, opts, next)
     assert(not err, err)
     if chunk then
       table.insert(output, chunk)
+      vim.notify(chunk, vim.log.levels.INFO, { title = opts.title..' ('..full_command..')' })
     else
       stdout:close()
     end
@@ -66,6 +67,7 @@ function M.run_async_cmd(command, opts, next)
     assert(not err, err)
     if chunk then
       table.insert(err_output, chunk)
+      vim.notify(chunk, vim.log.levels.WARN, { title = opts.title..' ('..full_command..')' })
     else
       stderr:close()
     end
@@ -89,7 +91,6 @@ end, {
 
 vim.api.nvim_create_user_command('Kill', M.kill_process, {
   nargs = 1,
-  complete = 'customlist,v:lua.require"utils".get_pids',
 })
 
 return M

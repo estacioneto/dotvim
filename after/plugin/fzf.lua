@@ -3,6 +3,12 @@ local git = require 'estacio.git'
 local utils = require 'estacio.utils'
 
 fzf.setup {
+  winopts = {
+    preview = {
+      layout = 'vertical',
+      vertical = 'down:60%',
+    },
+  },
   previewers = {
     builtin = {
       syntax_limit_b = 0,
@@ -11,10 +17,13 @@ fzf.setup {
   keymap = {
     builtin = {
       ['<c-1>'] = 'toggle-help',
+      ['<c-f>'] = 'toggle-fullscreen',
       ['<c-p><c-d>'] = 'preview-page-down',
       ['<c-p><c-u>'] = 'preview-page-up',
     },
     fzf = {
+      ['ctrl-z'] = 'abort',
+      ['ctrl-a'] = 'toggle-all',
       ['ctrl-d'] = 'half-page-down',
       ['ctrl-u'] = 'half-page-up',
     },
@@ -89,18 +98,16 @@ function M.fd(opts, callback, fallback)
     }, ' ')
 
   opts.actions = {
-    ['default'] = {
-      function(selected)
-        if selected[1] == nil then
-          return
-        end
+    ['default'] = function(selected)
+      if selected[1] == nil then
+        return
+      end
 
-        vim.cmd('cd ' .. vim.fn.expand(opts.cwd .. '/' .. selected[1]))
+      vim.cmd('cd ' .. vim.fn.expand(opts.cwd .. '/' .. selected[1]))
 
-        reload_config()
-        callback(opts)
-      end,
-    },
+      reload_config()
+      callback(opts)
+    end,
     ['esc'] = function()
       if fallback then
         fallback(opts)
@@ -133,7 +140,9 @@ function M.repos_picker(opts)
       { git_icons = git_icons },
       -- Fallback
       function()
-        M.files_picker { git_icons = git_icons }
+        M.files_picker {
+          git_icons = git_icons,
+        }
       end
     )
   end
@@ -281,13 +290,15 @@ function M.notifications_picker()
     local icon_color = notification.level == 'ERROR' and 'red'
       or notification.level == 'WARN' and 'yellow'
       or 'green'
+
     local icon = fzf.utils.ansi_codes[icon_color](notification.icon)
+    local level = fzf.utils.ansi_codes[icon_color](notification.level)
     local timestamp = fzf.utils.ansi_codes.grey(notification.title[2])
     local title = notification.title[1] ~= '' and notification.title[1]
       or '[No title]'
 
     return {
-      prefix = table.concat({ icon, timestamp, title }, ' ') .. ' > ',
+      prefix = table.concat({ timestamp, icon, level, title }, ' ') .. ' > ',
       contents = notification.message,
       preview = notification.message,
       data = notification,
@@ -309,6 +320,7 @@ function M.notifications_picker()
           { title = 'Fzf' }
         )
       end,
+      ['alt-a'] = 'toggle-all',
       ['ctrl-k'] = function(selected)
         for _, notification in ipairs(selected) do
           local pid = string.match(notification, 'pid: (%d+)')
@@ -337,5 +349,7 @@ vim.api.nvim_create_user_command(
   M.notifications_picker,
   {}
 )
+
+vim.keymap.set('n', '<leader>fn', M.notifications_picker)
 
 return M
