@@ -17,28 +17,6 @@ local enable_format_servers = { 'luaformatter', 'prettier' }
 -- In case of using coc.nvim
 local disable_mapping_servers = { 'tsserver', 'eslint' }
 
--- Configure lua language server for neovim development
-local lua_settings = {
-  Lua = {
-    runtime = {
-      -- LuaJIT in the case of Neovim
-      version = 'LuaJIT',
-      path = vim.split(package.path, ';'),
-    },
-    diagnostics = {
-      -- Get the language server to recognize the `vim` global
-      globals = { 'vim' },
-    },
-    workspace = {
-      -- Make the server aware of Neovim runtime files
-      library = {
-        [vim.fn.expand '$VIMRUNTIME/lua'] = true,
-        [vim.fn.expand '$VIMRUNTIME/lua/vim/lsp'] = true,
-      },
-    },
-  },
-}
-
 function _G.lsp_rename_apply(win)
   local new_name = vim.trim(vim.fn.getline '.')
   vim.api.nvim_win_close(win, true)
@@ -220,7 +198,7 @@ local default_setup = function(server_name)
   local config = make_config()
 
   if server_name == 'sumneko_lua' or server_name == 'lua_ls' then
-    config.settings = lua_settings
+    config = vim.tbl_extend('force', config, require 'estacio.lsp.lua')
   end
 
   if server_name == 'tsserver' then
