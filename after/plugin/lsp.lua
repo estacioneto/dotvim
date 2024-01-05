@@ -20,7 +20,7 @@ local disable_mapping_servers = { 'tsserver', 'eslint' }
 function _G.lsp_rename_apply(win)
   local new_name = vim.trim(vim.fn.getline '.')
   vim.api.nvim_win_close(win, true)
-  vim.cmd.stopinsert()
+  vim.cmd('stopinsert|normal! l')
 
   vim.lsp.buf.rename(new_name)
 end

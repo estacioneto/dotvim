@@ -79,19 +79,21 @@ if vim.fn.hasmapto('<Plug>NetrwRefresh') == 0 then
 end
 
 -- Custom exporer for specific scenarios
-local function MyExplore(command)
-  if vim.fn.winnr('$') == 1 then
-    vim.g.netrw_browse_split = 0
-  else
-    vim.g.netrw_browse_split = 4
-  end
+-- local function MyExplore(command)
+-- if vim.fn.winnr('$') == 1 then
+-- vim.g.netrw_browse_split = 0
+-- else
+-- vim.g.netrw_browse_split = 4
+-- end
 
-  vim.cmd(command)
-end
+-- vim.cmd(command)
+-- end
 
-vim.keymap.set('n', '<leader>ef', function() MyExplore("Lexplore %:p:h") end)
-vim.keymap.set('n', '<leader>ed', function() MyExplore("Lexplore") end)
-vim.keymap.set('n', '<leader>E', function() MyExplore("Explore") end)
+-- Hijacked by oil.nvim
+
+-- vim.keymap.set('n', '<leader>ef', function() MyExplore("Lexplore %:p:h") end)
+-- vim.keymap.set('n', '<leader>ed', function() MyExplore("Lexplore") end)
+-- vim.keymap.set('n', '<leader>E', function() MyExplore("Explore") end)
 
 -- New file
 -- Current directory
