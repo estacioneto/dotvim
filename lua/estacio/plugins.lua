@@ -19,7 +19,7 @@ return require('packer').startup(function(use)
   use {
     'ibhagwan/fzf-lua',
     -- optional for icon support
-    requires = { 'nvim-tree/nvim-web-devicons' }
+    requires = { 'nvim-tree/nvim-web-devicons' },
   }
 
   -- Writing code
@@ -27,7 +27,9 @@ return require('packer').startup(function(use)
   use 'chrisbra/vim-commentary'
   use {
     'windwp/nvim-autopairs',
-    config = function() require('nvim-autopairs').setup {} end
+    config = function()
+      require('nvim-autopairs').setup {}
+    end,
   }
 
   -- LSP
@@ -44,20 +46,20 @@ return require('packer').startup(function(use)
       { 'hrsh7th/nvim-cmp' },
       { 'hrsh7th/cmp-nvim-lsp' },
       { 'L3MON4D3/LuaSnip' },
-    }
+    },
   }
 
   use {
     'folke/trouble.nvim',
-    requires = { 'nvim-tree/nvim-web-devicons' }
-
+    requires = { 'nvim-tree/nvim-web-devicons' },
   }
   -- Code tools
   -- See https://github.com/nvim-treesitter/nvim-treesitter/wiki/Installation
   use {
     'nvim-treesitter/nvim-treesitter',
     run = function()
-      local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+      local ts_update =
+        require('nvim-treesitter.install').update { with_sync = true }
       ts_update()
     end,
   }
@@ -69,11 +71,7 @@ return require('packer').startup(function(use)
   use 'mhartington/formatter.nvim'
 
   -- nvim
-  use {
-    "folke/which-key.nvim",
-    config = function()
-    end
-  }
+  use 'folke/which-key.nvim'
 
   -- Colorschemes
   use 'tomasiser/vim-code-dark'
@@ -82,17 +80,28 @@ return require('packer').startup(function(use)
   use { 'catppuccin/nvim', as = 'catppuccin' }
   use 'askfiy/killer-queen'
 
+  -- See colors on the editor
+  use {
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require('colorizer').setup {
+        names = false,
+        css = true,
+      }
+    end,
+  }
+
   -- Statusline
   use {
     'nvim-lualine/lualine.nvim',
-    requires = { 'nvim-tree/nvim-web-devicons' }
+    requires = { 'nvim-tree/nvim-web-devicons' },
   }
   use 'arkav/lualine-lsp-progress'
   use {
     'linrongbin16/lsp-progress.nvim',
     config = function()
       require('lsp-progress').setup()
-    end
+    end,
   }
 
   -- Debugging
@@ -103,11 +112,10 @@ return require('packer').startup(function(use)
   -- Tips
   use {
     'rcarriga/nvim-notify',
-    requires = { {'nvim-lua/plenary.nvim'} },
+    requires = { { 'nvim-lua/plenary.nvim' } },
     config = function()
       vim.opt.termguicolors = true
-      vim.notify = require('notify')
-    end
+      vim.notify = require 'notify'
+    end,
   }
-
 end)

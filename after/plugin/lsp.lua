@@ -1,3 +1,5 @@
+-- TODO: Enhance this file
+
 local lspconfig = require 'lspconfig'
 local lsp_defaults = lspconfig.util.default_config
 
