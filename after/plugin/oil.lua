@@ -1,4 +1,3 @@
--- vim.keymap.set('n', , function() vim.cmd('Oil --float') end, { silent = true })
 local oil = require 'oil'
 
 local oil_prefix = 'oil://'
@@ -33,7 +32,6 @@ vim.keymap.set('n', '<leader>ov', function()
   vertical_split = true
 end)
 
--- TODO: Set oil mappings for vertical split
 vim.keymap.set('n', '<leader>of', function()
   oil.open_float()
 end)

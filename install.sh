@@ -90,4 +90,5 @@ if [[ ! -d ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]]; then
    ~/.local/share/nvim/site/pack/packer/start/packer.nvim && echo "✅ Neovim installed!" || exit 1
 fi
 
-nvim -c "PackerSync"
+# nvim -c "PackerSync"
+nvim --headless "+Lazy! sync" +qa

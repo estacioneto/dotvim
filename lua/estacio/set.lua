@@ -57,3 +57,5 @@ vim.g.netrw_localcopydircmd = 'cp -r'
 
 -- Vimgrep
 vim.opt.grepprg = [[rg --vimgrep ]]
+
+vim.opt.termguicolors = true

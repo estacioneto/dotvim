@@ -94,7 +94,6 @@ function M.is_small_repo()
 end
 
 local function stash_all()
-  -- Check if Dispatch command is available
   utils.run_async_cmd(
     'git',
     { title = 'Git', args = { 'stash', '--include-untracked' } }
