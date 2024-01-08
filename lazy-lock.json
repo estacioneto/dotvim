@@ -1,5 +1,5 @@
 {
-  "LuaSnip": { "branch": "master", "commit": "2f0db89fcb22d27b908b3609d2441c02798106ab" },
+  "LuaSnip": { "branch": "master", "commit": "82108e7e31cc6fc223cc5df5cae6d89f70bb199f" },
   "catppuccin": { "branch": "main", "commit": "5e36ca599f4aa41bdd87fbf2c5aae4397ac55074" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "5af77f54de1b16c34b23cba810150689a3a90312" },
   "coc.nvim": { "branch": "release", "commit": "7b9e1ef0a1399907c51d23b6080b94a5aba4a654" },
@@ -27,7 +27,7 @@
   "nvim-web-devicons": { "branch": "master", "commit": "db0c864375c198cacc171ff373e76bfce2a85045" },
   "oil.nvim": { "branch": "master", "commit": "c4cc8240f1c71defcb67c45da96e44b968d29e5f" },
   "plenary.nvim": { "branch": "master", "commit": "55d9fe89e33efd26f532ef20223e5f9430c8b0c0" },
-  "rose-pine": { "branch": "main", "commit": "b776a47b8beadf6e86d175f5b109f0bde31ad743" },
+  "rose-pine": { "branch": "main", "commit": "c6d53a99d4c5c50fd10d5091208491b25130486b" },
   "trouble.nvim": { "branch": "main", "commit": "f1168feada93c0154ede4d1fe9183bf69bac54ea" },
   "undotree": { "branch": "master", "commit": "36ff7abb6b60980338344982ad4cdf03f7961ecd" },
   "vim-code-dark": { "branch": "master", "commit": "8def3d890b2087ee4c42af03117d7edc7d693706" },

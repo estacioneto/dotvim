@@ -167,7 +167,7 @@ end
 
 function M.set_keymaps()
   -- Keymap: Copy stash url to clipboard
-  vim.keymap.set('n', '<leader>rurl', 'GitRepoUrl')
+  vim.keymap.set('n', '<leader>rurl', '<cmd>GitRepoUrl<CR>')
 end
 
 return M
