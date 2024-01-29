@@ -11,7 +11,7 @@ function M.get_git_root()
   local result = handle:read '*a'
   handle:close()
 
-  return result
+  return result:gsub('\n', '')
 end
 
 -- Stash URL
