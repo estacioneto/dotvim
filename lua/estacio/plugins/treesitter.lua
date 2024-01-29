@@ -20,6 +20,7 @@ return {
           'javascript',
           'jsdoc',
           'graphql',
+          'erlang',
           -- Template
           'markdown',
         },

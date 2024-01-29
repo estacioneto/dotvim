@@ -21,9 +21,14 @@ return {
 
       require('lualine').setup {
         extensions = { 'quickfix' },
+        tabline = {
+          lualine_a = { 'vim.fn.getcwd()' },
+          lualine_b = { { 'filename', path = 1, file_status = true } },
+          lualine_x = { 'filetype' },
+        },
         sections = {
-          lualine_a = { ts_version, 'mode', 'bo:filetype' },
-          lualine_c = { { 'filename', path = 1 }, lsp_progress },
+          lualine_a = { ts_version, 'mode' },
+          lualine_c = { lsp_progress },
           lualine_x = {
             {
               'diagnostics',

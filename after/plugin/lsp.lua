@@ -14,7 +14,7 @@ lsp_defaults.capabilities = vim.tbl_deep_extend(
 local disable_format_servers = { 'lua_ls', 'tsserver' }
 
 -- LSP servers that offer document formatting capabilities
-local enable_format_servers = { 'luaformatter', 'prettier' }
+local enable_format_servers = { 'luaformatter', 'prettier', 'erlangls' }
 
 -- In case of using coc.nvim
 local disable_mapping_servers = { 'tsserver', 'eslint' }
@@ -22,7 +22,7 @@ local disable_mapping_servers = { 'tsserver', 'eslint' }
 function _G.lsp_rename_apply(win)
   local new_name = vim.trim(vim.fn.getline '.')
   vim.api.nvim_win_close(win, true)
-  vim.cmd('stopinsert|normal! l')
+  vim.cmd 'stopinsert|normal! l'
 
   vim.lsp.buf.rename(new_name)
 end
@@ -35,7 +35,7 @@ local function lsp_rename()
   -- Move the cursor to the beginning of the word
   vim.cmd [[normal viwbv]]
 
-  local col, row = vim.fn.col '.', vim.fn.line('.') - vim.fn.line('w0')
+  local col, row = vim.fn.col '.', vim.fn.line '.' - vim.fn.line 'w0'
 
   -- Get cursor distance from the beginning of the word
   local window_opts = {
@@ -58,30 +58,28 @@ local function lsp_rename()
 
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, { cword })
   for _, mode in ipairs { 'n', 'i', 'v' } do
-    vim.api.nvim_buf_set_keymap(
-      buf,
+    vim.keymap.set(
       mode,
       '<C-c>',
       string.format('<cmd>lua lsp_rename_abort(%d)<CR>', win),
-      { silent = true }
+      { silent = true, buffer = buf }
     )
-    vim.api.nvim_buf_set_keymap(
-      buf,
+    vim.keymap.set(
       mode,
       '<CR>',
       string.format('<cmd>lua lsp_rename_apply(%d)<CR>', win),
-      { silent = true }
+      { silent = true, buffer = buf }
     )
   end
 end
 
-local function setup_mappings_and_cmp(opts)
+local function setup_mappings_and_cmp(client, opts)
   local function quickfix()
-    if vim.cmd.EslintFixAll ~= nil then
-      vim.cmd [[EslintFixAll]]
+    if vim.fn.exists ':EslintFixAll' ~= 0 then
+      vim.cmd 'EslintFixAll'
     else
       vim.lsp.buf.code_action {
-        context = { only = 'quickfix' },
+        context = { only = { 'quickfix' } },
         filter = function(a)
           return a.isPreferred
         end,
@@ -90,10 +88,30 @@ local function setup_mappings_and_cmp(opts)
     end
   end
 
+  local function format(format_opts)
+    if
+      not format_opts.range
+      and client.server_capabilities.documentFormattingProvider
+    then
+      return vim.lsp.buf.format()
+    end
+
+    if
+      format_opts.range
+      and client.server_capabilities.documentRangeFormattingProvider
+    then
+      return vim.lsp.buf.range_formatting()
+    end
+
+    return vim.cmd.Format()
+  end
+
   local fzf = require 'fzf-lua'
+
   -- See https://www.reddit.com/r/neovim/comments/nytu9c/how_to_prevent_focus_on_floating_window_created/
   vim.lsp.handlers['textDocument/hover'] =
     vim.lsp.with(vim.lsp.handlers.hover, { focusable = false })
+
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
   -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
   vim.keymap.set('n', 'gd', fzf.lsp_definitions, opts)
@@ -107,13 +125,30 @@ local function setup_mappings_and_cmp(opts)
   vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
   vim.keymap.set('n', '<leader>rn', lsp_rename, opts)
   vim.keymap.set('n', '<leader>rf', function()
-    vim.cmd 'RenameFile'
+    if vim.fn.exists ':RenameFile' ~= 0 then
+      vim.cmd 'RenameFile'
+      return
+    end
   end, opts)
 
+  vim.keymap.set('n', '<leader>oi', function()
+    if vim.fn.exists ':OrganizeImports' ~= 0 then
+      vim.cmd 'OrganizeImports'
+    end
+  end)
   vim.keymap.set({ 'n', 'x' }, '<leader>ee', function()
     quickfix()
   end, opts)
+
   -- vim.keymap.set('n', '<leader>fmt', function() vim.lsp.buf.format({ async = true }) end, opts)
+
+  -- Set some keybinds conditional on server capabilities
+  vim.keymap.set('n', '<leader>fmt', function()
+    format { range = false }
+  end, vim.tbl_extend('keep', opts, { desc = 'Format' }))
+  vim.keymap.set('v', '<leader>fmt', function()
+    format { range = true }
+  end, opts)
 
   vim.keymap.set('n', '<leader>fx', vim.lsp.buf.code_action, opts)
 
@@ -180,7 +215,7 @@ local function on_attach(client, buffer)
   then
     local opts = { buffer = buffer }
 
-    setup_mappings_and_cmp(opts)
+    setup_mappings_and_cmp(client, opts)
   end
 end
 
@@ -225,6 +260,7 @@ require('mason-lspconfig').setup {
     'tsserver',
     'eslint',
     'lua_ls',
+    'erlangls',
   },
   handlers = { default_setup },
 }
