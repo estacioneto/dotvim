@@ -8,6 +8,8 @@ require('estacio.plugin')
 require('estacio.colors')
 require('estacio.tips')
 
+require('estacio.lsp.config')
+
 local git = require('estacio.git')
 
 git.set_keymaps()

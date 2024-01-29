@@ -37,6 +37,16 @@ local function rename_file()
   })
 end
 
+local function organize_imports()
+  local params = {
+    command = "_typescript.organizeImports",
+    arguments = {vim.api.nvim_buf_get_name(0)},
+    title = ""
+  }
+
+  vim.lsp.buf.execute_command(params)
+end
+
 vim.cmd[[
 augroup tsc\_comp
 
@@ -78,5 +88,9 @@ return {
       rename_file,
       description = "Rename File"
     },
+    OrganizeImports = {
+      organize_imports,
+      description = "Organize Imports"
+    }
   }
 }
