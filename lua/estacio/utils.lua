@@ -1,5 +1,33 @@
 local M = {}
 
+-- TODO: Extract to a module that handles all this logic
+local spinner_frames =
+  { '⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷' }
+
+local function run_spinner(notif_data)
+  if
+    not notif_data
+    or not notif_data.notification
+    or not notif_data.spinner
+  then
+    return
+  end
+
+  local new_spinner = (notif_data.spinner + 1) % #spinner_frames
+  local new_notif = vim.notify(nil, nil, {
+    hide_from_history = true,
+    icon = spinner_frames[new_spinner],
+    replace = notif_data.notification,
+  })
+
+  notif_data.notification = new_notif
+  notif_data.spinner = new_spinner
+
+  vim.defer_fn(function()
+    run_spinner(notif_data)
+  end, 100)
+end
+
 function M.run_async_cmd(command, opts, next)
   opts = opts or {}
   opts.title = opts.title or 'Utils'
@@ -10,7 +38,70 @@ function M.run_async_cmd(command, opts, next)
   local err_output = {}
   local output = {}
 
-  local full_command = command .. ' ' .. table.concat(opts.args, ' ')
+  local full_command = command
+    .. (#opts.args ~= 0 and ' ' .. table.concat(opts.args, ' ') or '')
+  local notif_data = {
+    command = {
+      notification = nil,
+      spinner = 1,
+    },
+    stdout = {
+      notification = nil,
+      spinner = 1,
+    },
+    stderr = {
+      notification = nil,
+      spinner = 1,
+    },
+  }
+
+  local function on_success()
+    vim.notify(
+      'Command executed successfully: ' .. full_command,
+      vim.log.levels.INFO,
+      {
+        title = opts.title,
+        icon = '',
+        timeout = 3000,
+        replace = notif_data.command.notification,
+        hide_from_history = false,
+      }
+    )
+
+    -- if #output ~= 0 then
+    -- vim.notify(
+    -- 'Full output: \n' .. table.concat(output, '\n'),
+    -- vim.log.levels.INFO,
+    -- {
+    -- title = opts.title .. ' (' .. full_command .. ')',
+    -- }
+    -- )
+    -- end
+  end
+
+  local function on_error(code)
+    vim.notify(
+      'Error executing command: ' .. full_command .. ' | Error code: ' .. code,
+      vim.log.levels.ERROR,
+      {
+        title = opts.title,
+        icon = '',
+        timeout = 3000,
+        replace = notif_data.command.notification,
+        hide_from_history = false,
+      }
+    )
+
+    -- if #err_output ~= 0 then
+    -- vim.notify(
+    -- 'Full output: \n' .. table.concat(err_output, '\n'),
+    -- vim.log.levels.ERROR,
+    -- {
+    -- title = opts.title .. ' (' .. full_command .. ')',
+    -- }
+    -- )
+    -- end
+  end
 
   local _, pid = vim.loop.spawn(
     command,
@@ -20,26 +111,12 @@ function M.run_async_cmd(command, opts, next)
     },
     vim.schedule_wrap(function(code)
       if code ~= 0 then
-        vim.notify(
-          'Error executing command: '
-            .. full_command
-            .. '\nError code: '
-            .. code
-            .. '\nFull output: '
-            .. table.concat(err_output, '\n'),
-          vim.log.levels.ERROR,
-          { title = opts.title }
-        )
+        on_error(code)
       else
-        vim.notify(
-          'Command executed successfully: '
-            .. full_command
-            .. '\nFull output: '
-            .. table.concat(output, '\n'),
-          vim.log.levels.INFO,
-          { title = opts.title }
-        )
+        on_success()
       end
+
+      notif_data.command.notification = nil
 
       if next then
         next(code, table.concat(output, '\n'), table.concat(err_output, '\n'))
@@ -47,23 +124,59 @@ function M.run_async_cmd(command, opts, next)
     end)
   )
 
-  vim.notify(
+  notif_data.command.notification = vim.notify(
     'Executing command: ' .. full_command .. '... (pid: ' .. pid .. ')',
     vim.log.levels.INFO,
-    { title = opts.title }
+    {
+      title = opts.title,
+      icon = spinner_frames[1],
+      timeout = false,
+      on_close = function()
+        -- Additional check to avoid "No matching notification"
+        notif_data.command.notification = nil
+      end,
+    }
   )
 
-  stdout:read_start(function(err, chunk)
+  run_spinner(notif_data.command)
+
+  stdout:read_start(vim.schedule_wrap(function(err, chunk)
     assert(not err, err)
     if chunk then
       table.insert(output, chunk)
-      vim.notify(chunk, vim.log.levels.INFO, { title = opts.title..' ('..full_command..')' })
+
+      if not notif_data.stdout.notification then
+        notif_data.stdout.notification =
+          vim.notify(chunk, vim.log.levels.INFO, {
+            title = '[stdout] ' .. opts.title .. ' (' .. full_command .. ')',
+            icon = spinner_frames[1],
+            timeout = false,
+            hide_from_history = false,
+          })
+
+        run_spinner(notif_data.stdout)
+        return
+      end
+
+      notif_data.stdout.notification = vim.notify(chunk, vim.log.levels.INFO, {
+        replace = notif_data.stdout.notification,
+        hide_from_history = false,
+      })
     else
+      if notif_data.stdout.notification then
+        vim.notify(nil, nil, {
+          icon = '',
+          timeout = 0,
+          replace = notif_data.stdout.notification,
+          hide_from_history = false,
+        })
+        notif_data.stdout.notification = nil
+      end
       stdout:close()
     end
-  end)
+  end))
 
-  stderr:read_start(function(err, chunk)
+  stderr:read_start(vim.schedule_wrap(function(err, chunk)
     assert(not err, err)
     if chunk then
       table.insert(err_output, chunk)
@@ -72,11 +185,35 @@ function M.run_async_cmd(command, opts, next)
         return
       end
 
-      vim.notify(chunk, vim.log.levels.WARN, { title = opts.title..' ('..full_command..')' })
+      if not notif_data.stderr.notification then
+        notif_data.stderr.notification =
+          vim.notify(chunk, vim.log.levels.INFO, {
+            title = '[stderr] ' .. opts.title .. ' (' .. full_command .. ')',
+            icon = spinner_frames[1],
+            timeout = false,
+          })
+
+        run_spinner(notif_data.stderr)
+        return
+      end
+
+      notif_data.stderr.notification = vim.notify(chunk, vim.log.levels.INFO, {
+        replace = notif_data.stderr.notification,
+        hide_from_history = false,
+      })
     else
+      if notif_data.stderr.notification then
+        vim.notify(nil, nil, {
+          icon = '',
+          timeout = 0,
+          replace = notif_data.stderr.notification,
+          hide_from_history = false,
+        })
+        notif_data.stderr.notification = nil
+      end
       stderr:close()
     end
-  end)
+  end))
 end
 
 -- Add command to kill process by pid
