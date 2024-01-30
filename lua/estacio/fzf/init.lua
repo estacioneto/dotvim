@@ -44,6 +44,13 @@ local function set_keymaps()
   vim.keymap.set('n', '<leader>fd', fzf.files)
 
   vim.keymap.set('n', '<leader>sd', fzf.grep_project)
+  -- Adds no-ignore flag to rg command
+  vim.keymap.set('n', '<leader>sid', function()
+    fzf.grep_project {
+      rg_opts = '--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --no-ignore -e',
+    }
+  end)
+
   vim.keymap.set('v', '<leader>sd', fzf.grep_visual)
 
   -- Git root
@@ -62,6 +69,14 @@ local function set_keymaps()
       cwd = git.get_git_root(),
     }
   end)
+  -- Adds no-ignore flag to rg command
+  vim.keymap.set('n', '<leader>sir', function()
+    fzf.grep_project {
+      cwd = git.get_git_root(),
+      rg_opts = '--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --no-ignore -e',
+    }
+  end)
+
   vim.keymap.set('v', '<leader>sr', function()
     fzf.grep_visual {
       cwd = git.get_git_root(),
