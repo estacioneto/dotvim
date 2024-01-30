@@ -51,4 +51,7 @@ return {
     end,
   },
   'nvim-treesitter/nvim-treesitter-context',
+
+  -- Not treesitter, but highlighting
+  'RRethy/vim-illuminate'
 }

@@ -55,6 +55,7 @@ local function RandomColorSchemeMyPicks(pick)
       package.loaded['rose-pine.palette'] = palette
 
       require('rose-pine').colorscheme()
+
       -- https://github.com/rose-pine/neovim/blob/main/lua/lualine/themes/rose-pine.lua
       require('lualine').setup {
         options = {
