@@ -44,12 +44,6 @@ local function set_keymaps()
   vim.keymap.set('n', '<leader>fd', fzf.files)
 
   vim.keymap.set('n', '<leader>sd', fzf.grep_project)
-  -- Adds no-ignore flag to rg command
-  vim.keymap.set('n', '<leader>sid', function()
-    fzf.grep_project {
-      rg_opts = '--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --no-ignore -e',
-    }
-  end)
 
   vim.keymap.set('v', '<leader>sd', fzf.grep_visual)
 
@@ -67,13 +61,6 @@ local function set_keymaps()
   vim.keymap.set('n', '<leader>sr', function()
     fzf.grep_project {
       cwd = git.get_git_root(),
-    }
-  end)
-  -- Adds no-ignore flag to rg command
-  vim.keymap.set('n', '<leader>sir', function()
-    fzf.grep_project {
-      cwd = git.get_git_root(),
-      rg_opts = '--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --no-ignore -e',
     }
   end)
 
@@ -157,6 +144,11 @@ function M.setup()
   fzf.setup {
     defaults = {
       git_icons = git_icons,
+    },
+    grep = {
+      -- Use `ctrl-i` to not override the `ctrl-g` regex toggle
+      -- See https://github.com/ibhagwan/fzf-lua/issues/1018
+      actions = { ['ctrl-i'] = { fzf.actions.toggle_ignore } },
     },
     winopts = {
       preview = {
