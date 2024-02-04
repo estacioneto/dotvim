@@ -6,7 +6,6 @@ require('estacio.autocmd')
 require('estacio.plugin')
 
 require('estacio.colors')
-require('estacio.tips')
 
 require('estacio.lsp.config')
 
