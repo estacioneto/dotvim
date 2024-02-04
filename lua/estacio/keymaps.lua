@@ -32,6 +32,10 @@ vim.keymap.set('n', '<c-l>', '<c-w>l', { silent = true })
 -- Window fixed height and width
 vim.keymap.set('n', '<c-w>fh', function () vim.cmd.set('wfh') end , { silent = true })
 vim.keymap.set('n', '<c-w>fw', function () vim.cmd.set('wfw') end , { silent = true })
+vim.keymap.set('n', '<c-w>x', function ()
+  vim.cmd.set('wfw')
+  vim.cmd.set('wfh')
+end , { silent = true })
 
 -- Tab switching
 vim.keymap.set('n', '<c-t><c-n>', vim.cmd.tabnew, { silent = true })
