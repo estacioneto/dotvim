@@ -148,7 +148,15 @@ function M.setup()
     grep = {
       -- Use `ctrl-i` to not override the `ctrl-g` regex toggle
       -- See https://github.com/ibhagwan/fzf-lua/issues/1018
-      actions = { ['ctrl-i'] = { fzf.actions.toggle_ignore } },
+      actions = {
+        ['ctrl-i'] = { fzf.actions.toggle_ignore },
+        ['ctrl-q'] = fzf.actions.file_sel_to_qf,
+      },
+    },
+    files = {
+      actions = {
+        ['ctrl-q'] = fzf.actions.file_sel_to_qf,
+      },
     },
     winopts = {
       preview = {
@@ -170,7 +178,6 @@ function M.setup()
       },
       fzf = {
         ['ctrl-z'] = 'abort',
-        -- Useful when sending to quickfix list ('alt-q')
         ['ctrl-a'] = 'toggle-all',
         ['alt-a'] = 'toggle-all',
         ['ctrl-d'] = 'half-page-down',

@@ -24,6 +24,7 @@ return {
         tabline = {
           lualine_a = { 'vim.fn.getcwd()' },
           lualine_b = { { 'filename', path = 1, file_status = true } },
+          lualine_c = { 'tabs' },
           lualine_x = { 'filetype' },
         },
         sections = {

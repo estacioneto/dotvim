@@ -1,1 +1,1 @@
-require('estacio')
+require 'estacio'

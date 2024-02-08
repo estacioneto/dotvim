@@ -7,8 +7,13 @@ vim.opt.incsearch = true
 vim.opt.hlsearch = false
 
 vim.opt.foldmethod = 'indent'
-vim.opt.foldopen:append('jump')
+vim.opt.foldopen:append 'jump'
 vim.opt.foldlevel = 99
+
+-- See https://github.com/neovim/neovim/issues/20726
+vim.cmd [[
+autocmd TermOpen * setlocal foldmethod=manual
+]]
 
 vim.opt.nu = true
 vim.opt.relativenumber = true
@@ -22,8 +27,8 @@ vim.opt.splitright = true
 vim.opt.cursorline = true
 vim.opt.mouse = 'a'
 
-vim.opt.rtp:append('/usr/local/opt/fzf')
-vim.opt.rtp:append('~/.fzf')
+vim.opt.rtp:append '/usr/local/opt/fzf'
+vim.opt.rtp:append '~/.fzf'
 
 -- vim.opt.completeopt+ = 'noinsert'
 vim.opt.hls = false
@@ -34,7 +39,7 @@ vim.opt.updatetime = 300
 vim.opt.cmdheight = 2
 
 -- don't give |ins-completion-menu| messages.
-vim.opt.shortmess:append('c')
+vim.opt.shortmess:append 'c'
 
 -- always show signcolumns
 vim.opt.signcolumn = 'yes'
@@ -42,7 +47,7 @@ vim.opt.signcolumn = 'yes'
 
 vim.opt.laststatus = 2
 
-vim.opt.sessionoptions:append('globals')
+vim.opt.sessionoptions:append 'globals'
 
 -- Netrw
 vim.g.netrw_preview = 1

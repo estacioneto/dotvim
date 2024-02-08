@@ -50,8 +50,28 @@ return {
       }
     end,
   },
-  'nvim-treesitter/nvim-treesitter-context',
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    event = 'BufReadPre',
+    config = function()
+      vim.api.nvim_set_hl(
+        0,
+        'TreesitterContextBottom',
+        { underline = true, sp = 'grey' }
+      )
+      vim.api.nvim_set_hl(
+        0,
+        'TreesitterContextLineNumberBottom',
+        { underline = true, sp = 'grey' }
+      )
+      vim.api.nvim_set_hl(
+        0,
+        'TreesitterContextLineNumber',
+        vim.api.nvim_get_hl(0, { name = 'CursorLineNr' })
+      )
+    end,
+  },
 
   -- Not treesitter, but highlighting
-  'RRethy/vim-illuminate'
+  'RRethy/vim-illuminate',
 }
