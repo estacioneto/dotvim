@@ -9,8 +9,16 @@ dap.adapters.node2 = {
   type = 'executable',
   command = 'node',
   args = {
-    os.getenv 'HOME'
-      .. '/.nvim/dev/microsoft/vscode-node-debug2/out/src/nodeDebug.js',
+    vim.fn.stdpath 'data' .. '/mason/packages/node-debug2-adapter/out/src/nodeDebug.js',
+  },
+}
+
+dap.adapters.chrome = {
+  type = 'executable',
+  command = 'node',
+  args = {
+    vim.fn.stdpath 'data'
+      .. '/mason/packages/chrome-debug-adapter/out/src/chromeDebug.js',
   },
 }
 
@@ -27,10 +35,9 @@ local node_config = {
   },
   {
     -- For this to work you need to make sure the node process is started with the `--inspect` flag.
-    name = 'Attach to remote',
+    name = 'Attach to remote (localhost)',
     type = 'node2',
     request = 'attach',
-    processId = require('dap.utils').pick_process,
     address = '127.0.0.1',
     port = 9229,
     protocol = 'inspector',
@@ -44,8 +51,44 @@ local node_config = {
   },
 }
 
-dap.configurations.javascript = node_config
-dap.configurations.typescript = node_config
+-- Not working :/
+local react_native_config = {
+  {
+    name = 'React native',
+    type = 'node2',
+    request = 'attach',
+-- cwd = os.getenv 'KLAPP_NATIVE_PATH',
+-- protocol = 'inspector',
+-- console = 'integratedTerminal',
+    address = 'localhost',
+    port = 8081,
+  },
+  {
+    name = 'Chrome',
+    type = 'chrome',
+    request = 'attach',
+    program = '${file}',
+    cwd = vim.fn.getcwd(),
+    sourceMaps = true,
+    protocol = 'inspector',
+    address = '127.0.0.1',
+    port = 8081,
+  },
+}
+
+for _, lang in ipairs {
+  'javascript',
+  'typescript',
+} do
+  dap.configurations[lang] = node_config
+end
+
+for _, lang in ipairs {
+  'javascriptreact',
+  'typescriptreact',
+} do
+  dap.configurations[lang] = react_native_config
+end
 
 vim.fn.sign_define(
   'DapBreakpoint',
@@ -57,38 +100,47 @@ vim.fn.sign_define(
 )
 
 -- Mappings
-vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint)
-vim.keymap.set('n', '<leader>do', dap.step_out)
-vim.keymap.set('n', '<leader>di', dap.step_into)
-vim.keymap.set('n', '<leader>dn', dap.step_over)
+vim.keymap.set(
+  'n',
+  '<leader>db',
+  dap.toggle_breakpoint,
+  { desc = '[Dap] Toggle breakpoint' }
+)
+vim.keymap.set('n', '<leader>do', dap.step_out, { desc = '[Dap] Step out' })
+vim.keymap.set('n', '<leader>di', dap.step_into, { desc = '[Dap] Step into' })
+vim.keymap.set('n', '<leader>dn', dap.step_over, { desc = '[Dap] Step over' })
 vim.keymap.set('n', '<leader>ds', function()
   dap.terminate()
   dapui.close()
-end)
-vim.keymap.set('n', '<leader>dc', dap.continue)
-vim.keymap.set('n', '<leader>dup', dap.up)
-vim.keymap.set('n', '<leader>dj', dap.down)
+end, { desc = '[Dap] Stop' })
+vim.keymap.set('n', '<leader>dc', dap.continue, { desc = '[Dap] Continue' })
+vim.keymap.set('n', '<leader>dup', dap.up, { desc = '[Dap] Up' })
+vim.keymap.set('n', '<leader>dj', dap.down, { desc = '[Dap] Down' })
 vim.keymap.set('n', '<leader>d_', function()
   dap.disconnect()
   dap.close()
   dap.run_last()
-end)
-vim.keymap.set('n', '<leader>dr', dap.clear_breakpoints)
+end, { desc = '[Dap] Disconnect' })
+vim.keymap.set(
+  'n',
+  '<leader>dr',
+  dap.clear_breakpoints,
+  { desc = '[Dap] Clear breakpoints' }
+)
 vim.keymap.set('n', '<leader>de', function()
   dap.set_exception_breakpoints { 'all' }
-end)
-
--- Helper mappings
-local debug_helper = require 'estacio.debug_helper'
-vim.keymap.set('n', '<leader>da', debug_helper.attach)
-vim.keymap.set('n', '<leader>dA', debug_helper.attachToRemote)
-vim.keymap.set('n', '<leader>dJ', debug_helper.debugJest)
+end, { desc = '[Dap] Exception breakpoints' })
 
 local dap_ui_widgets = require 'dap.ui.widgets'
-vim.keymap.set('n', '<leader>dk', dap_ui_widgets.hover)
+vim.keymap.set(
+  'n',
+  '<leader>dk',
+  dap_ui_widgets.hover,
+  { desc = '[Dap] Hover' }
+)
 vim.keymap.set('n', '<leader>d?', function()
   dap_ui_widgets.centered_float(dap_ui_widgets.scopes)
-end)
+end, { desc = '[Dap] Scopes' })
 
 -- Dap virtual text
 -- theHamsta/nvim-dap-virtual-text and mfussenegger/nvim-dap
@@ -97,24 +149,18 @@ require('nvim-dap-virtual-text').setup()
 
 vim.keymap.set('n', '<leader>dui', function()
   dapui.toggle { reset = true }
-end)
+end, { desc = '[Dap UI] Toggle UI' })
 vim.keymap.set('n', '<leader>duio', function()
   dapui.open { reset = true }
-end)
-vim.keymap.set('n', '<leader>duic', dapui.close)
+end, { desc = '[Dap UI] Open' })
+vim.keymap.set('n', '<leader>duic', dapui.close, { desc = '[Dap UI] Close' })
 vim.keymap.set('n', '<leader>duir', function()
   dapui.close()
   dapui.open { reset = true }
-end)
+end, { desc = '[Dap UI] Reset' })
 
 -- Dap ui: https://github.com/rcarriga/nvim-dap-ui
 dapui.setup()
 dap.listeners.after.event_initialized['dapui_config'] = function()
   dapui.open()
 end
--- dap.listeners.before.event_terminated["dapui_config"] = function()
--- dapui.close()
--- end
--- dap.listeners.before.event_exited["dapui_config"] = function()
--- dapui.close()
--- end

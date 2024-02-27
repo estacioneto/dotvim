@@ -187,6 +187,7 @@ function M.setup()
   }
 
   fzf_directories.setup { reload_config = reload_config }
+  fzf.register_ui_select()
 
   setup_commands()
   set_keymaps()
