@@ -1,10 +1,4 @@
 return {
-  -- LSP
-  {
-    'neoclide/coc.nvim',
-    branch = 'release',
-    build = 'yarn install --frozen-lockfile',
-  },
   -- LSP Zero: https://github.com/VonHeikemen/lsp-zero.nvim
   {
     'neovim/nvim-lspconfig',
@@ -50,6 +44,10 @@ return {
   {
     -- https://github.com/mhartington/formatter.nvim
     'mhartington/formatter.nvim',
+    lazy = false,
+    keys = {
+      { '<leader>fmt', '<cmd>Format<CR>', desc = 'Format' },
+    },
     config = function()
       require('formatter').setup {
         logging = true,

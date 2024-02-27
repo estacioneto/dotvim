@@ -7,16 +7,8 @@ return {
     config = function()
       -- Lualine: https://github.com/nvim-lualine/lualine.nvim
 
-      -- Since we're conditionally using coc.nvim, we only setup the lualine after we know what to show.
       local function ts_version()
-        return vim.g.coc_enabled == 0 and vim.g.lualine_ts_version
-          or vim.g.coc_status
-          or ''
-      end
-
-      local function lsp_progress()
-        return vim.g.coc_enabled == 0 and require('lsp-progress').progress()
-          or ''
+        return vim.g.lualine_ts_version or ''
       end
 
       require('lualine').setup {
@@ -29,7 +21,7 @@ return {
         },
         sections = {
           lualine_a = { ts_version, 'mode' },
-          lualine_c = { lsp_progress },
+          lualine_c = { require('lsp-progress').progress },
           lualine_x = {
             {
               'diagnostics',
@@ -38,7 +30,7 @@ return {
               --   'nvim_lsp', 'nvim_diagnostic', 'nvim_workspace_diagnostic', 'coc', 'ale', 'vim_lsp'.
               -- or a function that returns a table as such:
               --   { error=error_cnt, warn=warn_cnt, info=info_cnt, hint=hint_cnt }
-              sources = { 'nvim_diagnostic', 'coc' },
+              sources = { 'nvim_diagnostic' },
 
               -- Displays diagnostics for the defined severity types
               sections = { 'error', 'warn', 'info', 'hint' },
