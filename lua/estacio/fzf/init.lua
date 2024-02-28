@@ -40,80 +40,83 @@ local function set_keymaps()
   -- Current directory
   vim.keymap.set('n', '<leader>gd', function()
     fzf.git_files { cwd = vim.fn.getcwd() }
-  end)
-  vim.keymap.set('n', '<leader>fd', fzf.files)
+  end, { desc = '[FzfLua] Git files' })
+  vim.keymap.set('n', '<leader>fd', fzf.files, { desc = '[FzfLua] Files' })
 
-  vim.keymap.set('n', '<leader>sd', fzf.grep_project)
+  vim.keymap.set('n', '<leader>sd', fzf.grep_project, { desc = '[FzfLua] Grep' })
 
-  vim.keymap.set('v', '<leader>sd', fzf.grep_visual)
+  vim.keymap.set('v', '<leader>sd', fzf.grep_visual, { desc = '[FzfLua] Grep visual' })
 
   -- Git root
   vim.keymap.set('n', '<leader>gr', function()
     fzf.git_files {
       cwd = git.get_git_root(),
     }
-  end)
+  end, { desc = '[FzfLua] Repo git files' })
   vim.keymap.set('n', '<leader>fr', function()
     fzf.files {
       cwd = git.get_git_root(),
     }
-  end)
+  end, { desc = '[FzfLua] Repo files' })
   vim.keymap.set('n', '<leader>sr', function()
     fzf.grep_project {
       cwd = git.get_git_root(),
     }
-  end)
+  end, { desc = '[FzfLua] Repo grep' })
 
   vim.keymap.set('v', '<leader>sr', function()
     fzf.grep_visual {
       cwd = git.get_git_root(),
     }
-  end)
+  end, { desc = '[FzfLua] Repo grep visual' })
 
   -- Resuming last action
-  vim.keymap.set('n', '<leader>ff', fzf.resume)
+  vim.keymap.set('n', '<leader>ff', fzf.resume, { desc = '[FzfLua] Resume last search' })
 
   -- History
-  vim.keymap.set('n', '<leader>fo', fzf.oldfiles)
+  vim.keymap.set('n', '<leader>fo', fzf.oldfiles, { desc = '[FzfLua] Oldfiles' })
 
   -- Buffers
-  vim.keymap.set('n', '<leader>fb', fzf.buffers)
+  vim.keymap.set('n', '<leader>fb', fzf.buffers, { desc = '[FzfLua] Buffers' })
 
   -- Quickfix
-  vim.keymap.set('n', '<leader>fql', fzf.quickfix)
-  vim.keymap.set('n', '<leader>fqs', fzf.quickfix_stack)
+  vim.keymap.set('n', '<leader>fql', fzf.quickfix, { desc = '[FzfLua] Quickfix list' })
+  vim.keymap.set('n', '<leader>fqs', fzf.quickfix_stack, { desc = '[FzfLua] Quickfix stack' })
+
+  -- Commands
+  vim.keymap.set('n', '<leader>fc', fzf.commands, { desc = '[FzfLua] Commands' })
 
   -- Custom functions
   vim.keymap.set(
     'n',
     '<leader>cdr',
     fzf_directories.repos_picker,
-    { desc = 'Repos' }
+    { desc = '[FzfLua][Custom] Repos' }
   )
   vim.keymap.set(
     'n',
     '<leader>cds',
     fzf_directories.subdir_picker,
-    { desc = 'Subdir' }
+    { desc = '[FzfLua][Custom] Subdir' }
   )
   vim.keymap.set(
     'n',
     '<leader>cdp',
     fzf_directories.parent_dirs_picker,
-    { desc = 'Parent dirs' }
+    { desc = '[FzfLua][Custom] Parent dirs' }
   )
   vim.keymap.set(
     'n',
     '<leader>cdn',
     fzf_directories.nodejs_packages_picker,
-    { desc = 'Nodejs packages' }
+    { desc = '[FzfLua][Custom] Nodejs packages' }
   )
 
   vim.keymap.set(
     'n',
     '<leader>fn',
     fzf_notifications.notifications_picker,
-    { desc = 'Notifications' }
+    { desc = '[FzfLua][Custom] Notifications' }
   )
 end
 
