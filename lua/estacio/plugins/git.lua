@@ -10,6 +10,9 @@ return {
     'lewis6991/gitsigns.nvim',
     config = function()
       require('gitsigns').setup {
+        watch_gitdir = {
+          enable = false,
+        },
         current_line_blame = true,
       }
     end,

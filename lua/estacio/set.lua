@@ -64,3 +64,7 @@ vim.g.netrw_localcopydircmd = 'cp -r'
 vim.opt.grepprg = [[rg --vimgrep ]]
 
 vim.opt.termguicolors = true
+
+-- https://vi.stackexchange.com/questions/31811/neovim-lua-config-how-to-append-to-listchars
+vim.opt.listchars:append({ eol = '↵' })
+vim.opt.list = false
