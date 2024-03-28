@@ -2,6 +2,7 @@ require('estacio.set')
 require('estacio.keymaps')
 require('estacio.commands')
 require('estacio.autocmd')
+require('estacio.messages')
 
 require('estacio.plugin')
 
