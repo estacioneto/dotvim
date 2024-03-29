@@ -19,27 +19,6 @@ return {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     keys = { { '<leader>T', '<cmd>TroubleToggle<CR>', desc = 'Trouble' } },
   },
-  {
-    'github/copilot.vim',
-    config = function()
-      -- Also see: https://github.com/orgs/community/discussions/41869
-      -- Options
-      vim.g.copilot_enabled = true
-      vim.g.copilot_node_command = '/usr/local/bin/node'
-      vim.g.copilot_filetypes = {
-        ['*'] = false,
-        typescript = true,
-        typescriptreact = true,
-        javascript = true,
-
-        lua = true,
-        markdown = true,
-
-        erlang = true,
-      }
-    end,
-  },
-
   -- Formatting
   {
     -- https://github.com/mhartington/formatter.nvim
