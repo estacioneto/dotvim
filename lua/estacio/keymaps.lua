@@ -49,14 +49,16 @@ vim.keymap.set('n', '<c-t><c-h>', vim.cmd.tabprevious, { silent = true })
 -- vim.keymap.set('n', '<s-h>', vim.cmd.bprevious, { silent = true })
 
 -- Close all buffers except current one
-vim.keymap.set('n', '<leader>qo', function() vim.cmd("execute '%bdelete|edit#|bdelete#'") end)
+vim.keymap.set('n', '<leader>qob', function() vim.cmd("execute '%bdelete|edit#|bdelete#'") end, { desc = 'Close all buffers except current one' })
+-- Close all windows except current one
+vim.keymap.set('n', '<leader>qo', function() vim.cmd("only") end, { desc = 'Close all windows except current one' })
 
 -- Copy file path
-vim.keymap.set('n', 'cpr', function() vim.fn.setreg('+', vim.fn.expand("%")) end, { silent = true })
-vim.keymap.set('n', 'cpf', function() vim.fn.setreg('+', vim.fn.expand("%:p")) end, { silent = true })
+vim.keymap.set('n', 'cpr', function() vim.fn.setreg('+', vim.fn.expand("%")) end, { silent = true, desc = 'Copy relative file path' })
+vim.keymap.set('n', 'cpf', function() vim.fn.setreg('+', vim.fn.expand("%:p")) end, { silent = true, desc = 'Copy full file path' })
 -- Copy file directory
-vim.keymap.set('n', 'cpdr', function() vim.fn.setreg('+', vim.fn.expand("%:h")) end, { silent = true })
-vim.keymap.set('n', 'cpdf', function() vim.fn.setreg('+', vim.fn.expand("%:p:h")) end, { silent = true })
+vim.keymap.set('n', 'cpdr', function() vim.fn.setreg('+', vim.fn.expand("%:h")) end, { silent = true, desc = 'Copy relative file directory' })
+vim.keymap.set('n', 'cpdf', function() vim.fn.setreg('+', vim.fn.expand("%:p:h")) end, { silent = true, desc = 'Copy full file directory' })
 
 -- Terminal
 vim.keymap.set('t', 'jk', '<c-\\><c-n>')
