@@ -136,11 +136,14 @@ local function setup_mappings_and_cmp(client, opts)
       vim.cmd 'RenameFile'
       return
     end
+
+    require('estacio.lsp.utils').rename_file()
   end, opts)
 
   vim.keymap.set('n', '<leader>oi', function()
     if vim.fn.exists ':OrganizeImports' ~= 0 then
       vim.cmd 'OrganizeImports'
+      return
     end
   end)
   vim.keymap.set({ 'n', 'x' }, '<leader>ee', function()

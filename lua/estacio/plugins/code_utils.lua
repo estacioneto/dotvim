@@ -1,7 +1,7 @@
 return {
   -- Writing code
   'tpope/vim-surround',
-  'chrisbra/vim-commentary',
+  'tpope/vim-commentary',
   {
     'windwp/nvim-autopairs',
     event = "InsertEnter",

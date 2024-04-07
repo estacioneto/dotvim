@@ -51,43 +51,11 @@ local node_config = {
   },
 }
 
--- Not working :/
-local react_native_config = {
-  {
-    name = 'React native',
-    type = 'node2',
-    request = 'attach',
--- cwd = os.getenv 'KLAPP_NATIVE_PATH',
--- protocol = 'inspector',
--- console = 'integratedTerminal',
-    address = 'localhost',
-    port = 8081,
-  },
-  {
-    name = 'Chrome',
-    type = 'chrome',
-    request = 'attach',
-    program = '${file}',
-    cwd = vim.fn.getcwd(),
-    sourceMaps = true,
-    protocol = 'inspector',
-    address = '127.0.0.1',
-    port = 8081,
-  },
-}
-
 for _, lang in ipairs {
   'javascript',
   'typescript',
 } do
   dap.configurations[lang] = node_config
-end
-
-for _, lang in ipairs {
-  'javascriptreact',
-  'typescriptreact',
-} do
-  dap.configurations[lang] = react_native_config
 end
 
 vim.fn.sign_define(

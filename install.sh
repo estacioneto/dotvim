@@ -43,24 +43,6 @@ else
   echo "⏭️  [Dependencies] python already installed!"
 fi
 
-
-# vscode-node-debug2 installation
-if [[ ! -d ~/.nvim/dev/microsoft ]]; then
-  echo "💿 [Debugging] Adding vscode-node-debug2 for TS debugging"
-  mkdir -p ~/.nvim/dev/microsoft
-
-  git clone https://github.com/microsoft/vscode-node-debug2.git ~/.nvim/dev/microsoft/vscode-node-debug2
-  
-  prev_pwd="$PWD"
-  cd ~/.nvim/dev/microsoft/vscode-node-debug2
-  npm install
-  NODE_OPTIONS=--no-experimental-fetch npm run build
-
-  cd "$prev_pwd"
-
-  echo "✅ [Debugging] vscode-node-debug2 installed!"
-fi
-
 echo "💿 Checking for fonts..."
 brew tap homebrew/cask-fonts
 
@@ -84,11 +66,4 @@ if ! which nvim &> /dev/null; then
   brew install neovim && echo "✅ Neovim installed!" || exit 1
 fi
 
-if [[ ! -d ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]]; then
-  echo "💿 Installing Packer (nvim plugin manager)..."
-  git clone --depth 1 https://github.com/wbthomason/packer.nvim\
-   ~/.local/share/nvim/site/pack/packer/start/packer.nvim && echo "✅ Neovim installed!" || exit 1
-fi
-
-# nvim -c "PackerSync"
 nvim --headless "+Lazy! sync" +qa

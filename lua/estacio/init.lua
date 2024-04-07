@@ -4,7 +4,7 @@ require('estacio.commands')
 require('estacio.autocmd')
 require('estacio.messages')
 
-require('estacio.plugin')
+require('estacio.lazy')
 
 require('estacio.colors')
 

@@ -60,7 +60,6 @@ return {
       })
     end,
   },
-  'arkav/lualine-lsp-progress',
   {
     'linrongbin16/lsp-progress.nvim',
     config = function()
