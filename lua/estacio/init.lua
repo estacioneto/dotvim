@@ -18,4 +18,6 @@ git.set_commands()
 local fzf = require('estacio.fzf')
 fzf.setup()
 
-require('estacio.klarna')
+pcall(function()
+  require('estacio.klarna')
+end)

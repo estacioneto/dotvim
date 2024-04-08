@@ -51,7 +51,7 @@ vim.keymap.set('n', '<c-t><c-h>', vim.cmd.tabprevious, { silent = true })
 -- Close all buffers except current one
 vim.keymap.set('n', '<leader>qob', function() vim.cmd("execute '%bdelete|edit#|bdelete#'") end, { desc = 'Close all buffers except current one' })
 -- Close all windows except current one
-vim.keymap.set('n', '<leader>qo', function() vim.cmd("only") end, { desc = 'Close all windows except current one' })
+vim.keymap.set('n', '<leader>qow', function() vim.cmd("only") end, { desc = 'Close all windows except current one' })
 
 -- Copy file path
 vim.keymap.set('n', 'cpr', function() vim.fn.setreg('+', vim.fn.expand("%")) end, { silent = true, desc = 'Copy relative file path' })
