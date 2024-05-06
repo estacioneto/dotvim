@@ -121,7 +121,9 @@ local function setup_mappings_and_cmp(client, opts)
 
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
   -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-  vim.keymap.set('n', 'gd', fzf.lsp_definitions, opts)
+  vim.keymap.set('n', 'gd', function()
+    fzf.lsp_definitions { jump_to_single_result = true }
+  end, opts)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
   vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)
