@@ -131,6 +131,13 @@ local function setup_mappings_and_cmp(client, opts)
   -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
   vim.keymap.set('n', 'gr', fzf.lsp_references, opts)
 
+  -- Inlay hints
+  vim.keymap.set('n', '<leader>ih', function()
+    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+  end, vim.tbl_extend('keep', opts, { desc = '[LSP] Toggle inlay hints' }))
+  -- Enable inlay hints by default
+  vim.lsp.inlay_hint.enable(true)
+
   vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
   vim.keymap.set('n', '<leader>rn', lsp_rename, opts)
   vim.keymap.set('n', '<leader>rf', function()

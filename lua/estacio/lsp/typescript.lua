@@ -20,6 +20,18 @@ autocmd FileType typescript,typescriptreact compiler tsc | setlocal makeprg=tsc\
 augroup END
 ]]
 
+local inlay_hints = {
+  includeInlayParameterNameHints = 'literals',
+  includeInlayFunctionLikeReturnTypeHints = true,
+  includeInlayEnumMemberValueHints = true,
+
+  includeInlayVariableTypeHints = false,
+  includeInlayFunctionParameterTypeHints = false,
+  includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+  includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+  includeInlayPropertyDeclarationTypeHints = false,
+}
+
 return {
   filetypes = {
     'typescript',
@@ -39,6 +51,11 @@ return {
   settings = {
     typescript = {
       npm = 'yarn',
+      inlayHints = inlay_hints,
+    },
+    javascript = {
+      npm = 'yarn',
+      inlayHints = inlay_hints,
     },
     implicitProjectConfiguration = {
       checkJs = true,
