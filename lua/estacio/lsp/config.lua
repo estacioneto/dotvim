@@ -273,6 +273,7 @@ require('mason-lspconfig').setup {
   ensure_installed = {
     'tsserver',
     'eslint',
+    'bashls',
 
     'lua_ls',
   },
