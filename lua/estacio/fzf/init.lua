@@ -86,6 +86,10 @@ local function set_keymaps()
   -- Commands
   vim.keymap.set('n', '<leader>fc', fzf.commands, { desc = '[FzfLua] Commands' })
 
+  -- Git
+  vim.keymap.set('n', '<leader>fgc', fzf.git_commits, { desc = '[FzfLua] Git commits' })
+  vim.keymap.set('n', '<leader>fgb', fzf.git_commits, { desc = '[FzfLua] Git buffer commits' })
+
   -- Custom functions
   vim.keymap.set(
     'n',
