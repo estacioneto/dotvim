@@ -37,4 +37,18 @@ return {
       }
     end,
   },
+  {
+    'sindrets/diffview.nvim',
+    keys = {
+      { '<leader>dvo', '<cmd>DiffviewOpen<CR>', desc = '(diffview.nvim) Open', silent = true },
+      { '<leader>dvc', '<cmd>DiffviewClose<CR>', desc = '(diffview.nvim) Close', silent = true },
+    },
+    cmd = { 'DiffviewOpen', 'DiffviewClose' },
+    config = function()
+      vim.opt.fillchars = vim.opt.fillchars + 'diff:╱'
+      require('diffview').setup {
+        enhanced_diff_hl = true
+      }
+    end
+  }
 }
