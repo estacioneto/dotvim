@@ -31,7 +31,7 @@ return {
     config = function()
       require('gitsigns').setup {
         watch_gitdir = {
-          enable = false,
+          enable = require('estacio.git').is_small_repo(),
         },
         current_line_blame = true,
       }

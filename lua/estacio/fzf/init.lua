@@ -124,19 +124,8 @@ local function set_keymaps()
   )
 end
 
-local function reload_config()
-  -- Source init.lua
-  vim.cmd 'so ~/.config/nvim/init.lua'
-
-  -- Source all lua files in plugin directory
-  for _, file in ipairs(vim.fn.glob('~/.config/nvim/plugin/**/*.lua', 0, 1)) do
-    vim.cmd('so ' .. file)
-  end
-
-  -- Source all lua files in after directory
-  for _, file in ipairs(vim.fn.glob('~/.config/nvim/after/**/*.lua', 0, 1)) do
-    vim.cmd('so ' .. file)
-  end
+local function reload_lsp_config()
+  vim.cmd 'so ~/.config/nvim/lua/estacio/lsp/config.lua'
 
   M.setup()
 end
@@ -193,7 +182,7 @@ function M.setup()
     },
   }
 
-  fzf_directories.setup { reload_config = reload_config }
+  fzf_directories.setup { reload_config = reload_lsp_config }
   fzf.register_ui_select()
 
   setup_commands()
