@@ -150,6 +150,12 @@ local function git_rebase(opts)
   )
 end
 
+local function get_commit_deleted(opts)
+  local path = opts.args or vim.fn.expand '%'
+
+  vim.cmd('G log --all -1 -- ' .. path)
+end
+
 M.set_commands = function()
   vim.api.nvim_create_user_command(
     'GitRepoUrl',
@@ -163,6 +169,12 @@ M.set_commands = function()
     { nargs = 1 }
   )
   vim.api.nvim_create_user_command('GitRebase', git_rebase, { nargs = 1 })
+
+  vim.api.nvim_create_user_command(
+    'GitDeleted',
+    get_commit_deleted,
+    { nargs = '?', complete = 'file' }
+  )
 end
 
 function M.set_keymaps()
