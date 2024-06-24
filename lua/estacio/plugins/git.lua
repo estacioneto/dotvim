@@ -45,7 +45,6 @@ return {
     },
     cmd = { 'DiffviewOpen', 'DiffviewClose' },
     config = function()
-      vim.opt.fillchars = vim.opt.fillchars + 'diff:╱'
       require('diffview').setup {
         enhanced_diff_hl = true
       }

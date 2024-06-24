@@ -68,3 +68,6 @@ vim.opt.termguicolors = true
 -- https://vi.stackexchange.com/questions/31811/neovim-lua-config-how-to-append-to-listchars
 vim.opt.listchars:append({ eol = '↵' })
 vim.opt.list = false
+
+-- Diff
+vim.opt.fillchars = vim.opt.fillchars + 'diff:╱'
