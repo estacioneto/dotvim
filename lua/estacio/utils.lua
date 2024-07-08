@@ -235,4 +235,49 @@ vim.api.nvim_create_user_command('Kill', M.kill_process, {
   nargs = 1,
 })
 
+-- From https://github.com/ibhagwan/fzf-lua/blob/main/lua/fzf-lua/utils.lua#L735
+function M.get_visual_selection()
+  -- this will exit visual mode
+  -- use 'gv' to reselect the text
+  local _, start_row, start_column, end_row, end_column
+  local mode = vim.fn.mode()
+
+  if mode == 'v' or mode == 'V' or mode == '' then
+    -- if we are in visual mode use the live position
+    _, start_row, start_column, _ = unpack(vim.fn.getpos '.')
+    _, end_row, end_column, _ = unpack(vim.fn.getpos 'v')
+    if mode == 'V' then
+      -- visual line doesn't provide columns
+      start_column, end_column = 0, 999
+    end
+  else
+    -- otherwise, use the last known visual position
+    _, start_row, start_column, _ = unpack(vim.fn.getpos "'<")
+    _, end_row, end_column, _ = unpack(vim.fn.getpos "'>")
+  end
+
+  -- swap vars if needed
+  if end_row < start_row then
+    start_row, end_row = end_row, start_row
+  end
+  if end_column < start_column then
+    start_column, end_column = end_column, start_column
+  end
+
+  local lines = vim.fn.getline(start_row, end_row)
+  local n = #lines
+  if n <= 0 then
+    return ''
+  end
+
+  lines[n] = string.sub(lines[n], 1, end_column)
+  lines[1] = string.sub(lines[1], start_column)
+
+  return table.concat(lines, '\n'),
+    {
+      start = { line = start_row, char = start_column },
+      ['end'] = { line = end_row, char = end_column },
+    }
+end
+
 return M

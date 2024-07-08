@@ -25,4 +25,17 @@ return {
     request = 'attach',
     processId = require('dap.utils').pick_process,
   },
+  {
+    name = 'Run Jest',
+    type = 'node2',
+    request = 'launch',
+    runtimeArgs = {
+      '--inspect-brk',
+      '${workspaceRoot}/node_modules/.bin/jest',
+      '--runInBand',
+      '--no-cache',
+    },
+    console = 'integratedTerminal',
+    internalConsoleOptions = 'neverOpen',
+  }
 }
