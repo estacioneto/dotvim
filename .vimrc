@@ -6,7 +6,8 @@ syntax on
 
 """ Section: Mappings {{{1
 
-let mapleader=','
+" let mapleader=','
+let mapleader=' '
 
 " Window switching
 nnoremap <silent> <c-h> <c-w>h
