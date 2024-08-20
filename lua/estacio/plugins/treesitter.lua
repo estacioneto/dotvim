@@ -49,7 +49,7 @@ return {
         },
         indent = {
           enable = true,
-          disable = { 'typescript' }
+          -- disable = { 'typescript' }
         }
       }
     end,

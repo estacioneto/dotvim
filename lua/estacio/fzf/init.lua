@@ -3,6 +3,7 @@ local fzf = require 'fzf-lua'
 local git = require 'estacio.git'
 local fzf_directories = require 'estacio.fzf.directories'
 local fzf_notifications = require 'estacio.fzf.notifications'
+local utils = require 'estacio.utils'
 
 local M = {}
 
@@ -36,6 +37,7 @@ local function setup_commands()
 end
 
 local function set_keymaps()
+  local grep_opts = { multiprocess = true }
   -- Set mappings
   -- Current directory
   vim.keymap.set('n', '<leader>gd', function()
@@ -43,9 +45,13 @@ local function set_keymaps()
   end, { desc = '[FzfLua] Git files' })
   vim.keymap.set('n', '<leader>fd', fzf.files, { desc = '[FzfLua] Files' })
 
-  vim.keymap.set('n', '<leader>sd', fzf.grep_project, { desc = '[FzfLua] Grep' })
+  vim.keymap.set('n', '<leader>sd', function()
+    fzf.grep_project(grep_opts)
+  end, { desc = '[FzfLua] Grep' })
 
-  vim.keymap.set('v', '<leader>sd', fzf.grep_visual, { desc = '[FzfLua] Grep visual' })
+  vim.keymap.set('v', '<leader>sd', function()
+    fzf.grep_visual(grep_opts)
+  end, { desc = '[FzfLua] Grep visual' })
 
   -- Git root
   vim.keymap.set('n', '<leader>gr', function()
@@ -59,36 +65,71 @@ local function set_keymaps()
     }
   end, { desc = '[FzfLua] Repo files' })
   vim.keymap.set('n', '<leader>sr', function()
-    fzf.grep_project {
+    fzf.grep_project(utils.tables_concat(grep_opts, {
       cwd = git.get_git_root(),
-    }
+    }))
   end, { desc = '[FzfLua] Repo grep' })
 
   vim.keymap.set('v', '<leader>sr', function()
-    fzf.grep_visual {
+    fzf.grep_visual(utils.tables_concat(grep_opts, {
       cwd = git.get_git_root(),
-    }
+    }))
   end, { desc = '[FzfLua] Repo grep visual' })
 
   -- Resuming last action
-  vim.keymap.set('n', '<leader>ff', fzf.resume, { desc = '[FzfLua] Resume last search' })
+  vim.keymap.set(
+    'n',
+    '<leader>ff',
+    fzf.resume,
+    { desc = '[FzfLua] Resume last search' }
+  )
 
   -- History
-  vim.keymap.set('n', '<leader>fo', fzf.oldfiles, { desc = '[FzfLua] Oldfiles' })
+  vim.keymap.set(
+    'n',
+    '<leader>fo',
+    fzf.oldfiles,
+    { desc = '[FzfLua] Oldfiles' }
+  )
 
   -- Buffers
   vim.keymap.set('n', '<leader>fb', fzf.buffers, { desc = '[FzfLua] Buffers' })
 
   -- Quickfix
-  vim.keymap.set('n', '<leader>fql', fzf.quickfix, { desc = '[FzfLua] Quickfix list' })
-  vim.keymap.set('n', '<leader>fqs', fzf.quickfix_stack, { desc = '[FzfLua] Quickfix stack' })
+  vim.keymap.set(
+    'n',
+    '<leader>fql',
+    fzf.quickfix,
+    { desc = '[FzfLua] Quickfix list' }
+  )
+  vim.keymap.set(
+    'n',
+    '<leader>fqs',
+    fzf.quickfix_stack,
+    { desc = '[FzfLua] Quickfix stack' }
+  )
 
   -- Commands
-  vim.keymap.set('n', '<leader>fc', fzf.commands, { desc = '[FzfLua] Commands' })
+  vim.keymap.set(
+    'n',
+    '<leader>fc',
+    fzf.commands,
+    { desc = '[FzfLua] Commands' }
+  )
 
   -- Git
-  vim.keymap.set('n', '<leader>fgc', fzf.git_commits, { desc = '[FzfLua] Git commits' })
-  vim.keymap.set('n', '<leader>fgb', fzf.git_commits, { desc = '[FzfLua] Git buffer commits' })
+  vim.keymap.set(
+    'n',
+    '<leader>fgc',
+    fzf.git_commits,
+    { desc = '[FzfLua] Git commits' }
+  )
+  vim.keymap.set(
+    'n',
+    '<leader>fgb',
+    fzf.git_commits,
+    { desc = '[FzfLua] Git buffer commits' }
+  )
 
   -- Custom functions
   vim.keymap.set(
@@ -145,7 +186,8 @@ function M.setup()
       -- Use `ctrl-i` to not override the `ctrl-g` regex toggle
       -- See https://github.com/ibhagwan/fzf-lua/issues/1018
       actions = {
-        ['ctrl-i'] = { fzf.actions.toggle_ignore },
+        ['ctrl-g'] = { fzf.actions.toggle_ignore },
+        ['ctrl-r'] = { fzf.actions.grep_lgrep },
         ['ctrl-q'] = fzf.actions.file_sel_to_qf,
       },
     },

@@ -283,12 +283,20 @@ end
 M.tables_concat = function(table1, table2)
   local result = {}
 
-  for _, value in ipairs(table1) do
-    table.insert(result, value)
+  for key, value in pairs(table1) do
+    if type(key) == 'number' then
+      table.insert(result, value)
+    else
+      result[key] = value
+    end
   end
 
-  for _, value in ipairs(table2) do
-    table.insert(result, value)
+  for key, value in pairs(table2) do
+    if type(key) == 'number' then
+      table.insert(result, value)
+    else
+      result[key] = value
+    end
   end
 
   return result

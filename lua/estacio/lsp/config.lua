@@ -275,6 +275,7 @@ require('mason-lspconfig').setup {
     'eslint',
     'bashls',
     'cypher_ls',
+    'tailwindcss',
 
     'lua_ls',
   },

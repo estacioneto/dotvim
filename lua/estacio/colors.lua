@@ -26,8 +26,8 @@ local function RandomColorSchemeMyPicks(pick)
     if vim.g.picked_color == 'rose-pine::klarna' then
       -- See https://github.com/rose-pine/neovim/blob/main/lua/rose-pine/palette.lua
       local palette = {
-        _experimental_nc = '#130925',
-        nc = '#130925',
+        _nc = '#130925',
+        -- nc = '#130925',
         base = '#160C2A',
         surface = '#1C1234',
         overlay = '#231840', -- Klarna
@@ -44,6 +44,7 @@ local function RandomColorSchemeMyPicks(pick)
         foam = '#9ccfd8',
 
         iris = '#BEB3FF', -- Klarna
+        leaf = "#95b1ac",
 
         highlight_low = '#1E1534',
         highlight_med = '#3D3258',
@@ -52,6 +53,7 @@ local function RandomColorSchemeMyPicks(pick)
         none = 'NONE',
       }
 
+      -- FIXME
       package.loaded['rose-pine.palette'] = palette
 
       require('rose-pine').colorscheme()
