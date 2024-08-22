@@ -18,6 +18,7 @@ return {
         typescript = true,
         typescriptreact = true,
         javascript = true,
+        css = true,
 
         lua = true,
         markdown = true,
