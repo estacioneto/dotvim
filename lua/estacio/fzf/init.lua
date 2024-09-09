@@ -37,7 +37,7 @@ local function setup_commands()
 end
 
 local function set_keymaps()
-  local grep_opts = { multiprocess = true }
+  local grep_opts = { multiprocess = true, hidden = true }
   -- Set mappings
   -- Current directory
   vim.keymap.set('n', '<leader>gd', function()
@@ -69,6 +69,11 @@ local function set_keymaps()
       cwd = git.get_git_root(),
     }))
   end, { desc = '[FzfLua] Repo grep' })
+  vim.keymap.set('n', '<leader>sR', function()
+    fzf.live_grep(utils.tables_concat(grep_opts, {
+      cwd = git.get_git_root(),
+    }))
+  end, { desc = '[FzfLua] Repo grep (Regexp)' })
 
   vim.keymap.set('v', '<leader>sr', function()
     fzf.grep_visual(utils.tables_concat(grep_opts, {
@@ -188,6 +193,7 @@ function M.setup()
       actions = {
         ['ctrl-g'] = { fzf.actions.toggle_ignore },
         ['ctrl-r'] = { fzf.actions.grep_lgrep },
+        ['ctrl-h'] = { fzf.actions.toggle_hidden },
         ['ctrl-q'] = fzf.actions.file_sel_to_qf,
       },
     },
