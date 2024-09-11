@@ -20,8 +20,7 @@ lsp_defaults.capabilities = vim.tbl_deep_extend(
 )
 
 -- LSP servers that must have document formatting capabilities disabled
--- local disable_format_servers = { 'lua_ls', 'tsserver' }
-local disable_format_servers = { 'lua_ls', 'tsserver' }
+local disable_format_servers = { 'lua_ls', 'ts_ls' }
 
 -- LSP servers that offer document formatting capabilities
 local enable_format_servers = { 'luaformatter', 'prettier', 'erlangls' }
@@ -252,7 +251,7 @@ local default_setup = function(server_name)
     config = vim.tbl_extend('force', config, require 'estacio.lsp.lua')
   end
 
-  if server_name == 'tsserver' then
+  if server_name == 'ts_ls' then
     config = vim.tbl_extend('force', config, require 'estacio.lsp.typescript')
   end
 
@@ -271,7 +270,7 @@ require('mason').setup {
 
 require('mason-lspconfig').setup {
   ensure_installed = {
-    'tsserver',
+    'ts_ls',
     'eslint',
     'bashls',
     'cypher_ls',

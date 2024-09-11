@@ -53,30 +53,33 @@ return {
   },
   -- Formatting
   {
-    -- https://github.com/mhartington/formatter.nvim
-    'mhartington/formatter.nvim',
-    lazy = false,
+    'stevearc/conform.nvim',
     keys = {
-      { '<leader>fmt', '<cmd>Format<CR>', desc = 'Format' },
+      {
+        '<leader>fmt',
+        function()
+          require('conform').format {
+            timeout_ms = 3000,
+            async = false,
+            lsp_format = 'fallback',
+          }
+        end,
+        desc = 'Conform format',
+      },
     },
-    config = function()
-      require('formatter').setup {
-        logging = true,
-        log_level = vim.log.levels.WARN,
-        filetype = {
-          lua = { require('formatter.filetypes.lua').stylua },
 
-          typescript = { require('formatter.filetypes.typescript').prettier },
-          javascript = { require('formatter.filetypes.javascript').prettier },
-          typescriptreact = {
-            require('formatter.filetypes.typescriptreact').prettier,
-          },
+    opts = {
+      formatters_by_ft = {
+        lua = { 'stylua' },
+        sh = { 'shfmt' },
 
-          html = { require('formatter.filetypes.html').prettier },
-          css = { require('formatter.filetypes.css').prettier },
-          json = { require('formatter.filetypes.json').prettier },
-        },
-      }
-    end,
+        typescript = { 'prettier' },
+        javascript = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        html = { 'prettier' },
+        css = { 'prettier' },
+        json = { 'prettier' },
+      },
+    },
   },
 }

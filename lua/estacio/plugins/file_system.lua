@@ -46,6 +46,7 @@ return {
   },
   {
     'stevearc/oil.nvim',
+    cmd = { 'Oil' },
     keys = {
       {
         '<leader>of',
@@ -71,6 +72,7 @@ return {
         end,
         desc = 'Oil open vertical',
       },
+      { '<leader>oo', '<cmd>Oil<CR>', desc = 'Oil open' },
     },
     config = function()
       local oil = require 'oil'
