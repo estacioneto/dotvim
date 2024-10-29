@@ -277,6 +277,7 @@ require('mason-lspconfig').setup {
     -- 'tailwindcss',
 
     'lua_ls',
+    'yamlls'
   },
   handlers = { default_setup },
 }

@@ -54,32 +54,35 @@ return {
   -- Formatting
   {
     'stevearc/conform.nvim',
-    keys = {
-      {
-        '<leader>fmt',
-        function()
-          require('conform').format {
-            timeout_ms = 3000,
-            async = false,
-            lsp_format = 'fallback',
-          }
-        end,
-        desc = 'Conform format',
-      },
-    },
+    lazy = false,
 
-    opts = {
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        sh = { 'shfmt' },
+    config = function()
+      local conform = require 'conform'
 
-        typescript = { 'prettier' },
-        javascript = { 'prettier' },
-        typescriptreact = { 'prettier' },
-        html = { 'prettier' },
-        css = { 'prettier' },
-        json = { 'prettier' },
-      },
-    },
+      conform.setup {
+        log_level = vim.log.levels.WARN,
+        notify_on_error = true,
+        notify_no_formatters = true,
+        formatters_by_ft = {
+          lua = { 'stylua' },
+          sh = { 'shfmt' },
+
+          typescript = { 'prettier' },
+          javascript = { 'prettier' },
+          typescriptreact = { 'prettier' },
+          html = { 'prettier' },
+          css = { 'prettier' },
+          json = { 'prettier' },
+        },
+      }
+
+      vim.api.nvim_create_user_command('Format', function()
+        conform.format {
+          async = false,
+          timeout_ms = 3000,
+          lsp_format = 'fallback',
+        }
+      end, { nargs = 0 })
+    end,
   },
 }

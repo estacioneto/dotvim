@@ -23,6 +23,8 @@ return {
           'erlang',
           -- Template
           'markdown',
+          'yaml',
+          'http',
         },
 
         -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -50,7 +52,7 @@ return {
         indent = {
           enable = true,
           -- disable = { 'typescript' }
-        }
+        },
       }
     end,
   },

@@ -112,7 +112,7 @@ return {
   },
   dapui = {
     {
-      '<leader>dui',
+      '<leader>duit',
       mode = 'n',
       function()
         require('dapui').toggle { reset = true }

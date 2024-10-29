@@ -24,6 +24,7 @@ return {
         markdown = true,
 
         erlang = true,
+        sh = true,
       }
     end,
   },
