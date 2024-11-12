@@ -231,7 +231,26 @@ function M.setup()
   }
 
   fzf_directories.setup { reload_config = reload_lsp_config }
-  fzf.register_ui_select()
+
+  -- See https://github.com/ibhagwan/fzf-lua/pull/1512#issuecomment-2454669574
+  fzf.register_ui_select(function(opts, items)
+    local min_h, max_h = 0.15, 0.70
+    local h = (#items + 4) / vim.o.lines
+    if h < min_h then
+      h = min_h
+    elseif h > max_h then
+      h = max_h
+    end
+
+    return {
+      prompt = opts.prompt:gsub('(%S)>%s$', '%1 > '):gsub('%s*$', ' ', 1),
+      winopts = {
+        height = h,
+        width = 0.60,
+        row = 0.40,
+      },
+    }
+  end)
 
   setup_commands()
   set_keymaps()
