@@ -31,7 +31,7 @@ fi
 
 if ! which fd &> /dev/null; then
   echo "💿 [Dependencies] Installing fd (https://github.com/sharkdp/fd)..."
-  brew install ripgrep && echo "✅ [Dependencies] fd installed" || exit 1
+  brew install fd && echo "✅ [Dependencies] fd installed" || exit 1
 else
   echo "⏭️  [Dependencies] fd already installed!"
 fi
@@ -43,9 +43,6 @@ else
   echo "⏭️  [Dependencies] python already installed!"
 fi
 
-echo "💿 Checking for fonts..."
-brew tap homebrew/cask-fonts
-
 if [[ -z `find ~/Library/Fonts -type f -name "HackNerd*"` ]]; then
   echo "💿 [Fonts] Installing HackNerd..."
   brew install font-hack-nerd-font && echo "✅ [Fonts] HackNerd installed!" || exit 1
@@ -56,7 +53,7 @@ fi
 # https://github.com/githubnext/monaspace
 if [[ -z `find ~/Library/Fonts -type f -name "Monaspace*"` ]]; then
   echo "💿 [Fonts] Installing Monaspace..."
-  brew install font-hack-nerd-font && echo "✅ [Fonts] Monaspace installed!" || exit 1
+  brew install font-monaspace && echo "✅ [Fonts] Monaspace installed!" || exit 1
 else
   echo "⏭️  [Fonts] Monaspace already installed!"
 fi
