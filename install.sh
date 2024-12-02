@@ -22,6 +22,13 @@ fi
 
 echo "💿 Installing dependencies..."
 
+if ! which fzf &> /dev/null; then
+  echo "💿 [Dependencies] Installing fzf (https://github.com/junegunn/fzf)..."
+  brew install fzf && echo "✅ [Dependencies] fzf installed" || exit 1
+else
+  echo "⏭️  [Dependencies] fzf already installed!"
+fi
+
 if ! which rg &> /dev/null; then
   echo "💿 [Dependencies] Installing ripgrep (https://github.com/BurntSushi/ripgrep)..."
   brew install ripgrep && echo "✅ [Dependencies] ripgrep installed" || exit 1

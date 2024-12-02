@@ -67,4 +67,12 @@ return {
       end
     end,
   },
+  {
+    'jay-babu/mason-nvim-dap.nvim',
+    config = function ()
+      require('mason-nvim-dap').setup({
+        -- ensure_installed = {'node2'} -- FIXME: Throws an error
+      })
+    end
+  }
 }
