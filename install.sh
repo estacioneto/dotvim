@@ -1,16 +1,18 @@
 #!/bin/bash
 
+current_dir=$(dirname -- "$(readlink -f "$0")")
+
 if [ ! -f ~/.vimrc ]; then
-  ln -s "$PWD"/.vimrc ~/.vimrc
+  ln -s "$current_dir"/.vimrc ~/.vimrc
 fi
 
 if [ ! -f ~/.ideavimrc ]; then
-  ln -s "$PWD"/.vimrc ~/.ideavimrc
+  ln -s "$current_dir"/.vimrc ~/.ideavimrc
 fi
 
 if [[ ! -d ~/.config/nvim ]]; then
   mkdir -p ~/.config
-  ln -s "$PWD" ~/.config/nvim
+  ln -s "$current_dir" ~/.config/nvim
 fi
 
 if ! which brew &> /dev/null; then
@@ -69,5 +71,12 @@ if ! which nvim &> /dev/null; then
   echo "💿 Installing neovim..."
   brew install neovim && echo "✅ Neovim installed!" || exit 1
 fi
+
+# Setup .undodir
+if [ ! -d ~/.undodir ]; then
+  mkdir ~/.undodir
+fi
+
+chmod -R 755 ~/.undodir
 
 nvim --headless "+Lazy! sync" +qa
