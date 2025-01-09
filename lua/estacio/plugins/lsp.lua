@@ -55,7 +55,19 @@ return {
   {
     'stevearc/conform.nvim',
     lazy = false,
-
+    keys = {
+      {
+        '<leader>fmt',
+        function()
+          require('conform').format {
+            async = false,
+            timeout_ms = 3000,
+            lsp_format = 'first',
+          }
+        end,
+        desc = 'Format (conform.nvim)',
+      },
+    },
     config = function()
       local conform = require 'conform'
 

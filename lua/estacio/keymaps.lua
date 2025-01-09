@@ -42,6 +42,9 @@ vim.keymap.set('n', '<c-t><c-n>', vim.cmd.tabnew, { silent = true })
 vim.keymap.set('n', '<c-t><c-l>', vim.cmd.tabnext, { silent = true })
 vim.keymap.set('n', '<c-t><c-h>', vim.cmd.tabprevious, { silent = true })
 
+-- Open window in a new tab
+vim.keymap.set('n', '<c-w><c-t>', function() vim.cmd.tabnew '%' end, { silent = true })
+
 -- Buffer switching
 -- Not sure about those. It's quite common to mistakenly press those keys.
 --

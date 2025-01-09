@@ -161,9 +161,9 @@ local function setup_mappings_and_cmp(client, opts)
   -- vim.keymap.set('n', '<leader>fmt', function() vim.lsp.buf.format({ async = true }) end, opts)
 
   -- Set some keybinds conditional on server capabilities
-  vim.keymap.set('n', '<leader>fmt', function()
-    format { range = false }
-  end, vim.tbl_extend('keep', opts, { desc = 'Format' }))
+  -- vim.keymap.set('n', '<leader>fmt', function()
+  --   format { range = false }
+  -- end, vim.tbl_extend('keep', opts, { desc = 'Format' }))
   vim.keymap.set('v', '<leader>fmt', function()
     format { range = true }
   end, opts)
@@ -188,13 +188,13 @@ local function setup_mappings_and_cmp(client, opts)
     },
     mapping = cmp.mapping.preset.insert {
       -- Enter key confirms completion item
-      ['<CR>'] = function(fallback)
-        if cmp.visible() then
-          cmp.confirm { select = true }
-        else
-          fallback()
-        end
-      end,
+      -- ['<CR>'] = function(fallback)
+      --   if cmp.visible() then
+      --     cmp.confirm { select = true }
+      --   else
+      --     fallback()
+      --   end
+      -- end,
 
       -- Ctrl + space triggers completion menu
       ['<C-Space>'] = cmp.mapping.complete(),
