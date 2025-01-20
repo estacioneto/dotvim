@@ -25,6 +25,7 @@ return {
           'markdown',
           'yaml',
           'http',
+          'json',
         },
 
         -- Install parsers synchronously (only applied to `ensure_installed`)

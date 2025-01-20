@@ -43,7 +43,13 @@ vim.keymap.set('n', '<c-t><c-l>', vim.cmd.tabnext, { silent = true })
 vim.keymap.set('n', '<c-t><c-h>', vim.cmd.tabprevious, { silent = true })
 
 -- Open window in a new tab
-vim.keymap.set('n', '<c-w><c-t>', function() vim.cmd.tabnew '%' end, { silent = true })
+vim.keymap.set('n', '<c-w><c-t>', function()
+  -- Get current cursor position
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  vim.cmd.tabnew '%'
+  -- Set cursor position
+  vim.api.nvim_win_set_cursor(0, cursor)
+end, { silent = true })
 
 -- Buffer switching
 -- Not sure about those. It's quite common to mistakenly press those keys.
