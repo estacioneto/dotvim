@@ -20,6 +20,7 @@ return {
         typescriptreact = true,
         javascript = true,
         css = true,
+        python = true,
 
         lua = true,
         markdown = true,
