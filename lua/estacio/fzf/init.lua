@@ -200,6 +200,8 @@ function M.setup()
     files = {
       actions = {
         ['ctrl-q'] = fzf.actions.file_sel_to_qf,
+        ['ctrl-g'] = { fzf.actions.toggle_ignore },
+        ['ctrl-h'] = { fzf.actions.toggle_hidden },
       },
     },
     winopts = {
