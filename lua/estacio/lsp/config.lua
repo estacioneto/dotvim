@@ -121,7 +121,7 @@ local function setup_mappings_and_cmp(client, opts)
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
   -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
   vim.keymap.set('n', 'gd', function()
-    fzf.lsp_definitions { jump_to_single_result = true }
+    fzf.lsp_definitions { jump1 = true }
   end, opts)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
@@ -277,7 +277,8 @@ require('mason-lspconfig').setup {
     -- 'tailwindcss',
 
     'lua_ls',
-    'yamlls'
+    'yamlls',
+    'gopls',
   },
   handlers = { default_setup },
 }

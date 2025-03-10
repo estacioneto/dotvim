@@ -27,6 +27,7 @@ return {
 
         erlang = true,
         sh = true,
+        go = true,
       }
     end,
   },

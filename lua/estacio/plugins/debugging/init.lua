@@ -54,6 +54,12 @@ return {
     end,
   },
   {
+    'leoluz/nvim-dap-go',
+    config = function ()
+      require('dap-go').setup()
+    end
+  },
+  {
     'rcarriga/nvim-dap-ui',
     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
     keys = require('estacio.plugins.debugging.keymaps').dapui,
@@ -79,7 +85,7 @@ return {
     'jay-babu/mason-nvim-dap.nvim',
     config = function()
       require('mason-nvim-dap').setup {
-        ensure_installed = { 'node2', 'python' },
+        ensure_installed = { 'node2', 'python', 'delve' },
       }
     end,
   },
