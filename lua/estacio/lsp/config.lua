@@ -23,7 +23,8 @@ lsp_defaults.capabilities = vim.tbl_deep_extend(
 local disable_format_servers = { 'lua_ls', 'ts_ls' }
 
 -- LSP servers that offer document formatting capabilities
-local enable_format_servers = { 'luaformatter', 'prettier', 'erlangls' }
+local enable_format_servers =
+  { 'luaformatter', 'prettier', 'erlangls', 'golines' }
 
 function _G.lsp_rename_apply(win)
   local new_name = vim.trim(vim.fn.getline '.')
@@ -268,17 +269,22 @@ require('mason').setup {
   },
 }
 
-require('mason-lspconfig').setup {
-  ensure_installed = {
-    'ts_ls',
-    'eslint',
-    'bashls',
-    'cypher_ls',
-    -- 'tailwindcss',
+local ensure_installed = {
+  'ts_ls',
+  'eslint',
+  'bashls',
+  'cypher_ls',
+  -- 'tailwindcss',
 
-    'lua_ls',
-    'yamlls',
-    'gopls',
-  },
+  'lua_ls',
+  'yamlls',
+}
+
+if vim.fn.executable 'go' == 1 then
+  table.insert(ensure_installed, 'gopls')
+end
+
+require('mason-lspconfig').setup {
+  ensure_installed = ensure_installed,
   handlers = { default_setup },
 }

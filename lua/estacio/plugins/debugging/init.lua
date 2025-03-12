@@ -55,9 +55,9 @@ return {
   },
   {
     'leoluz/nvim-dap-go',
-    config = function ()
+    config = function()
       require('dap-go').setup()
-    end
+    end,
   },
   {
     'rcarriga/nvim-dap-ui',
@@ -84,8 +84,14 @@ return {
   {
     'jay-babu/mason-nvim-dap.nvim',
     config = function()
+      local ensure_installed = { 'node2', 'python' }
+
+      if vim.fn.executable 'go' == 1 then
+        table.insert(ensure_installed, 'delve')
+      end
+
       require('mason-nvim-dap').setup {
-        ensure_installed = { 'node2', 'python', 'delve' },
+        ensure_installed = ensure_installed,
       }
     end,
   },
