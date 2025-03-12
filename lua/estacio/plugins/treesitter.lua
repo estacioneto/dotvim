@@ -21,6 +21,9 @@ return {
           'jsdoc',
           'graphql',
           'erlang',
+          'go',
+          'gosum',
+          'gowork',
           -- Template
           'markdown',
           'yaml',
