@@ -14,9 +14,9 @@ local function open_messages()
 
   -- Check if there is a window with the messages buffer already
   if messages_bufnr then
-    vim.api.nvim_buf_set_option(messages_bufnr, 'modifiable', true)
+    vim.api.nvim_set_option_value('modifiable', true, { buf = messages_bufnr })
     vim.api.nvim_buf_set_lines(messages_bufnr, 0, -1, false, messages)
-    vim.api.nvim_buf_set_option(messages_bufnr, 'modifiable', false)
+    vim.api.nvim_set_option_value('modifiable', false, { buf = messages_bufnr })
     if vim.fn.bufwinid(messages_bufnr) ~= -1 then
       return
     end
@@ -24,9 +24,9 @@ local function open_messages()
     messages_bufnr = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_name(messages_bufnr, 'buf_messages')
     vim.api.nvim_buf_set_lines(messages_bufnr, 0, -1, false, messages)
-    vim.api.nvim_buf_set_option(messages_bufnr, 'filetype', 'messages')
-    vim.api.nvim_buf_set_option(messages_bufnr, 'buftype', 'nofile')
-    vim.api.nvim_buf_set_option(messages_bufnr, 'modifiable', false)
+    vim.api.nvim_set_option_value('filetype', 'messages', { buf = messages_bufnr })
+    vim.api.nvim_set_option_value('buftype', 'nofile', { buf = messages_bufnr })
+    vim.api.nvim_set_option_value('modifiable', false, { buf = messages_bufnr })
 
     vim.api.nvim_create_autocmd({ 'BufWipeout', 'BufDelete' }, {
       pattern = 'bud_messages',
@@ -43,4 +43,9 @@ local function open_messages()
 end
 
 vim.api.nvim_create_user_command('Messages', open_messages, {})
-vim.keymap.set('n', '<leader>om', ':Messages<CR>', { desc = 'Open messages buffer' })
+vim.keymap.set(
+  'n',
+  '<leader>om',
+  ':Messages<CR>',
+  { desc = 'Open messages buffer' }
+)

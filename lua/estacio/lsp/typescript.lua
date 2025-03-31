@@ -2,16 +2,6 @@
 -- Maybe later it would be worth using: https://github.com/antosha417/nvim-lsp-file-operations
 local lsp_utils = require 'estacio.lsp.utils'
 
-local function organize_imports()
-  local params = {
-    command = '_typescript.organizeImports',
-    arguments = { vim.api.nvim_buf_get_name(0) },
-    title = '',
-  }
-
-  vim.lsp.buf.execute_command(params)
-end
-
 vim.cmd [[
 augroup tsc\_comp
 
@@ -31,6 +21,31 @@ local inlay_hints = {
   includeInlayParameterNameHintsWhenArgumentMatchesName = false,
   includeInlayPropertyDeclarationTypeHints = false,
 }
+
+local lsp_name = 'ts_ls'
+
+local function organize_imports()
+  local clients = vim.lsp.get_clients { name = lsp_name }
+  if #clients == 0 then
+    vim.notify('No TypeScript server running', vim.log.levels.ERROR)
+    return
+  elseif #clients > 1 then
+    -- In case of multiple clients, notify the user to specify which one to use
+    vim.notify(
+      'Multiple TypeScript servers running, please specify one',
+      vim.log.levels.ERROR
+    )
+    return
+  end
+
+  local client = clients[1]
+
+  client:exec_cmd {
+    title = 'organize_imports',
+    command = '_typescript.organizeImports',
+    arguments = { vim.api.nvim_buf_get_name(0) },
+  }
+end
 
 return {
   filetypes = {
@@ -77,7 +92,24 @@ return {
           return
         end
 
-        vim.lsp.buf.execute_command {
+        local clients = vim.lsp.get_clients { name = lsp_name }
+
+        if #clients == 0 then
+          vim.notify('No TypeScript server running', vim.log.levels.ERROR)
+          return
+        elseif #clients > 1 then
+          -- In case of multiple clients, notify the user to specify which one to use
+          vim.notify(
+            'Multiple TypeScript servers running, please specify one',
+            vim.log.levels.ERROR
+          )
+          return
+        end
+
+        local client = clients[1]
+
+        client:exec_cmd {
+          title = 'apply_rename_file',
           command = '_typescript.applyRenameFile',
           arguments = {
             {
@@ -85,7 +117,6 @@ return {
               targetUri = result.target_file,
             },
           },
-          title = '',
         }
       end,
       description = 'Rename File',

@@ -85,6 +85,7 @@ local function setup_mappings_and_cmp(client, opts)
     if vim.fn.exists ':EslintFixAll' ~= 0 then
       vim.cmd 'EslintFixAll'
     else
+      -- FIXME: Resolve deprecation
       vim.lsp.buf.code_action {
         context = { only = { 'quickfix' } },
         filter = function(a)
@@ -115,12 +116,6 @@ local function setup_mappings_and_cmp(client, opts)
 
   local fzf = require 'fzf-lua'
 
-  -- See https://www.reddit.com/r/neovim/comments/nytu9c/how_to_prevent_focus_on_floating_window_created/
-  vim.lsp.handlers['textDocument/hover'] =
-    vim.lsp.with(vim.lsp.handlers.hover, { focusable = false })
-
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-  -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
   vim.keymap.set('n', 'gd', function()
     fzf.lsp_definitions { jump1 = true }
   end, opts)
@@ -173,11 +168,11 @@ local function setup_mappings_and_cmp(client, opts)
 
   vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
   vim.keymap.set('n', '[c', function()
-    vim.diagnostic.goto_prev()
+    vim.diagnostic.jump { count = -1 }
     vim.cmd 'norm zz'
   end, opts)
   vim.keymap.set('n', ']c', function()
-    vim.diagnostic.goto_next()
+    vim.diagnostic.jump { count = 1 }
     vim.cmd 'norm zz'
   end, opts)
 
@@ -288,3 +283,9 @@ require('mason-lspconfig').setup {
   ensure_installed = ensure_installed,
   handlers = { default_setup },
 }
+
+if vim.fn.has 'nvim-0.11' == 1 then
+  vim.diagnostic.config {
+    virtual_lines = true,
+  }
+end
