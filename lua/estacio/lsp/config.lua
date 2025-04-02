@@ -168,11 +168,11 @@ local function setup_mappings_and_cmp(client, opts)
 
   vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
   vim.keymap.set('n', '[c', function()
-    vim.diagnostic.jump { count = -1 }
+    vim.diagnostic.jump { count = -1, float = true }
     vim.cmd 'norm zz'
   end, opts)
   vim.keymap.set('n', ']c', function()
-    vim.diagnostic.jump { count = 1 }
+    vim.diagnostic.jump { count = 1, float = true }
     vim.cmd 'norm zz'
   end, opts)
 
