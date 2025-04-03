@@ -251,6 +251,10 @@ local default_setup = function(server_name)
     config = vim.tbl_extend('force', config, require 'estacio.lsp.typescript')
   end
 
+  if server_name == 'eslint' then
+    config = vim.tbl_extend('force', config, require 'estacio.lsp.eslint')
+  end
+
   lspconfig[server_name].setup(config)
 end
 
