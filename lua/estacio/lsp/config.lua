@@ -1,15 +1,3 @@
-local signs = {
-  Error = '󰅚', -- x000f015a
-  Warn = '󰀪', -- x000f002a
-  Info = '󰋽', -- x000f02fd
-  Hint = '󰌶', -- x000f0336
-}
-
-for type, icon in pairs(signs) do
-  local hl = 'DiagnosticSign' .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, linehl = '', numhl = '' })
-end
-
 local lspconfig = require 'lspconfig'
 local lsp_defaults = lspconfig.util.default_config
 
@@ -272,7 +260,7 @@ local ensure_installed = {
   'ts_ls',
   'eslint',
   'bashls',
-  'cypher_ls',
+  -- 'cypher_ls',
   -- 'tailwindcss',
 
   'lua_ls',
@@ -291,5 +279,13 @@ require('mason-lspconfig').setup {
 if vim.fn.has 'nvim-0.11' == 1 then
   vim.diagnostic.config {
     virtual_lines = true,
+    signs = {
+      text = {
+        [vim.diagnostic.severity.ERROR] = '󰅚', -- x000f015a
+        [vim.diagnostic.severity.WARN] = '󰀪', -- x000f002a
+        [vim.diagnostic.severity.INFO] = '󰋽', -- x000f02fd
+        [vim.diagnostic.severity.HINT] = '󰌶', -- x000f0336
+      },
+    },
   }
 end
