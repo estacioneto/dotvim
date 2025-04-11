@@ -1,4 +1,5 @@
--- Search for package.json files that contain eslint as a dependency
+--- Search for package.json files that contain eslint as a dependency
+--- @returns string | nil
 local function get_eslint_closest_dir()
   local cwd = vim.fn.getcwd()
   local eslint_node_modules = vim.fn.finddir('node_modules/eslint', cwd .. ';')
@@ -18,7 +19,15 @@ end
 return {
   single_file_support = true,
   on_new_config = function(config, new_root_dir)
-    new_root_dir = get_eslint_closest_dir() or new_root_dir
+    local eslint_closest_dir = get_eslint_closest_dir()
+
+    -- If new_root_dir is not a subdirectory of eslint_closest_dir, set new_root_dir to eslint_closest_dir
+    if
+      eslint_closest_dir
+      and new_root_dir:find(eslint_closest_dir, 1, true) ~= 1
+    then
+      new_root_dir = eslint_closest_dir
+    end
 
     -- See https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/configs/eslint.lua
 
