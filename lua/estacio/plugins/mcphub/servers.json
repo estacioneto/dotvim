@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "args": ["mcp-server-fetch"],
+      "disabled_tools": [],
+      "command": "uvx",
+      "disabled": false
+    }
+  },
+  "nativeMCPServers": {
+    "neovim": {
+      "disabled_prompts": ["parrot"]
+    }
+  }
+}
