@@ -1,11 +1,4 @@
 local lspconfig = require 'lspconfig'
-local lsp_defaults = lspconfig.util.default_config
-
-lsp_defaults.capabilities = vim.tbl_deep_extend(
-  'force',
-  lsp_defaults.capabilities,
-  require('cmp_nvim_lsp').default_capabilities()
-)
 
 -- LSP servers that must have document formatting capabilities disabled
 local disable_format_servers = { 'lua_ls', 'ts_ls' }
@@ -163,36 +156,6 @@ local function setup_mappings_and_cmp(client, opts)
     vim.diagnostic.jump { count = 1, float = true }
     vim.cmd 'norm zz'
   end, opts)
-
-  local cmp = require 'cmp'
-
-  cmp.setup {
-    sources = {
-      { name = 'nvim_lsp' },
-    },
-    mapping = cmp.mapping.preset.insert {
-      -- Enter key confirms completion item
-      -- ['<CR>'] = function(fallback)
-      --   if cmp.visible() then
-      --     cmp.confirm { select = true }
-      --   else
-      --     fallback()
-      --   end
-      -- end,
-
-      -- Ctrl + space triggers completion menu
-      ['<C-Space>'] = cmp.mapping.complete(),
-    },
-    snippet = {
-      expand = function(args)
-        require('luasnip').lsp_expand(args.body)
-      end,
-    },
-  }
-
-  -- if you want insert `(` after select function or method item
-  -- local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-  -- cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 end
 
 local function on_attach(client, buffer)
@@ -209,6 +172,10 @@ local function on_attach(client, buffer)
   if vim.tbl_contains(disable_format_servers, client.name) then
     client.server_capabilities.documentFormattingProvider = false
     client.server_capabilities.documentRangeFormattingProvider = false
+  end
+
+  if client:supports_method 'textDocument/completion' then
+    vim.lsp.completion.enable(true, client.id, buffer, { autotrigger = false })
   end
 
   local opts = { buffer = buffer }
