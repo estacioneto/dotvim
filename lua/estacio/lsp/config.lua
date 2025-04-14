@@ -245,7 +245,10 @@ require('mason-lspconfig').setup {
 
 if vim.fn.has 'nvim-0.11' == 1 then
   vim.diagnostic.config {
-    virtual_lines = true,
+    virtual_lines = {
+      current_line = true,
+    },
+    virtual_text = true,
     signs = {
       text = {
         [vim.diagnostic.severity.ERROR] = '󰅚', -- x000f015a
