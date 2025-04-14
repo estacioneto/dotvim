@@ -90,15 +90,15 @@ return {
       local ok, klarna_providers =
         pcall(require, 'estacio.plugins.providers.klarna')
 
-      require('avante').setup(vim.tbl_extend('keep', ok and klarna_providers or {}, {
-        provider = 'copilot',
-        behaviour = {
-          --- ... existing behaviours
-          enable_cursor_planning_mode = true, -- enable cursor planning mode!
-          enable_claude_text_editor_tool_mode = true,
-          -- minimize_diff = true,               -- Whether to remove unchanged lines when applying a code block
-        },
-      }))
+      require('avante').setup(
+        vim.tbl_extend('keep', ok and klarna_providers or {}, {
+          provider = 'copilot',
+          behaviour = {
+            -- https://github.com/yetone/avante.nvim/blob/main/cursor-planning-mode.md
+            enable_cursor_planning_mode = true,
+          },
+        })
+      )
 
       -- views can only be fully collapsed with the global statusline
       vim.opt.laststatus = 3
