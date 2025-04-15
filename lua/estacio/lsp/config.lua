@@ -211,6 +211,11 @@ local function on_attach(client, buffer)
     client.server_capabilities.documentRangeFormattingProvider = false
   end
 
+  -- FIXME: Currently not supporting auto import. When does, we can re-enable it
+  -- if client:supports_method 'textDocument/completion' then
+  --   vim.lsp.completion.enable(true, client.id, buffer, { autotrigger = false })
+  -- end
+
   local opts = { buffer = buffer }
 
   setup_mappings_and_cmp(client, opts)
