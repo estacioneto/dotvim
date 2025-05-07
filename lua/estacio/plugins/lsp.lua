@@ -4,8 +4,8 @@ return {
     'neovim/nvim-lspconfig',
     dependencies = {
       --- Uncomment these if you want to manage LSP servers from neovim
-      { 'williamboman/mason.nvim' },
-      { 'williamboman/mason-lspconfig.nvim' },
+      { 'mason-org/mason.nvim' },
+      { 'mason-org/mason-lspconfig.nvim' },
 
       -- Autocompletion
       {
