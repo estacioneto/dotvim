@@ -68,10 +68,10 @@ local function lsp_rename()
   end
 end
 
-local function setup_mappings_and_cmp(client, opts)
+local function setup_mappings(client, opts)
   local function quickfix()
-    if vim.fn.exists ':EslintFixAll' ~= 0 then
-      vim.cmd 'EslintFixAll'
+    if vim.fn.exists ':LspEslintFixAll' ~= 0 then
+      vim.cmd 'LspEslintFixAll'
     else
       -- FIXME: Resolve deprecation
       vim.lsp.buf.code_action {
@@ -163,36 +163,6 @@ local function setup_mappings_and_cmp(client, opts)
     vim.diagnostic.jump { count = 1, float = true }
     vim.cmd 'norm zz'
   end, opts)
-
-  local cmp = require 'cmp'
-
-  cmp.setup {
-    sources = {
-      { name = 'nvim_lsp' },
-    },
-    mapping = cmp.mapping.preset.insert {
-      -- Enter key confirms completion item
-      -- ['<CR>'] = function(fallback)
-      --   if cmp.visible() then
-      --     cmp.confirm { select = true }
-      --   else
-      --     fallback()
-      --   end
-      -- end,
-
-      -- Ctrl + space triggers completion menu
-      ['<C-Space>'] = cmp.mapping.complete(),
-    },
-    snippet = {
-      expand = function(args)
-        require('luasnip').lsp_expand(args.body)
-      end,
-    },
-  }
-
-  -- if you want insert `(` after select function or method item
-  -- local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-  -- cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 end
 
 local function on_attach(client, buffer)
@@ -216,40 +186,17 @@ local function on_attach(client, buffer)
   --   vim.lsp.completion.enable(true, client.id, buffer, { autotrigger = false })
   -- end
 
-  local opts = { buffer = buffer }
-
-  setup_mappings_and_cmp(client, opts)
+  setup_mappings(client, { buffer = buffer })
 end
 
-local function make_config()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities.textDocument.completion.completionItem.snippetSupport = true
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('my.lsp', {}),
+  callback = function(args)
+    local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 
-  return {
-    -- enable snippet support
-    capabilities = capabilities,
-    -- map buffer local keybindings when the language server attaches
-    on_attach = on_attach,
-  }
-end
-
-local default_setup = function(server_name)
-  local config = make_config()
-
-  if server_name == 'sumneko_lua' or server_name == 'lua_ls' then
-    config = vim.tbl_extend('force', config, require 'estacio.lsp.lua')
-  end
-
-  if server_name == 'ts_ls' then
-    config = vim.tbl_extend('force', config, require 'estacio.lsp.typescript')
-  end
-
-  if server_name == 'eslint' then
-    config = vim.tbl_extend('force', config, require 'estacio.lsp.eslint')
-  end
-
-  lspconfig[server_name].setup(config)
-end
+    on_attach(client, args.buf)
+  end,
+})
 
 require('mason').setup {
   ui = {
@@ -278,7 +225,6 @@ end
 
 require('mason-lspconfig').setup {
   ensure_installed = ensure_installed,
-  handlers = { default_setup },
 }
 
 if vim.fn.has 'nvim-0.11' == 1 then

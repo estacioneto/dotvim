@@ -24,6 +24,8 @@ local inlay_hints = {
 
 local lsp_name = 'ts_ls'
 
+vim.print('yay')
+
 local function organize_imports()
   local clients = vim.lsp.get_clients { name = lsp_name }
   if #clients == 0 then
