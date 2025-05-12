@@ -19,7 +19,7 @@ return {
             dismiss = '<C-]>',
           },
         },
-        file_types = {
+        filetypes = {
           typescript = true,
           typescriptreact = true,
           javascript = true,
@@ -97,7 +97,7 @@ return {
 
       require('avante').setup(
         vim.tbl_extend('keep', ok and klarna_providers or {}, {
-          provider = 'copilot',
+          provider = 'copilot:gemini',
           behaviour = {
             -- https://github.com/yetone/avante.nvim/blob/main/cursor-planning-mode.md
             enable_cursor_planning_mode = true,
