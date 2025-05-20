@@ -20,7 +20,7 @@ vim.opt.relativenumber = true
 
 vim.opt.backspace = 'indent,eol,start'
 vim.opt.clipboard = 'unnamedplus'
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = 15
 
 vim.opt.splitbelow = true
 vim.opt.splitright = true
