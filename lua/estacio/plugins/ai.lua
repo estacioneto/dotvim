@@ -30,8 +30,14 @@ return {
           markdown = true,
 
           erlang = true,
-          sh = true,
           go = true,
+          sh = function()
+            return not string.match(
+              vim.fs.basename(vim.api.nvim_buf_get_name(0)),
+              '^%.env.*'
+            )
+          end,
+          ['.'] = false,
           ['*'] = false,
         },
 
