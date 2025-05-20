@@ -37,4 +37,11 @@ return {
       }, { names = false })
     end,
   },
+
+  {
+    'm4xshen/hardtime.nvim',
+    lazy = false,
+    dependencies = { 'MunifTanjim/nui.nvim' },
+    opts = {},
+  },
 }
