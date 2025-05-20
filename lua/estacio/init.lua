@@ -1,21 +1,22 @@
-require('estacio.set')
-require('estacio.keymaps')
-require('estacio.commands')
-require('estacio.autocmd')
-require('estacio.messages')
+require 'estacio.set'
+require 'estacio.keymaps'
+require 'estacio.commands'
+require 'estacio.autocmd'
+require 'estacio.messages'
+require 'estacio.quickfix'
 
-require('estacio.lazy')
+require 'estacio.lazy'
 
-require('estacio.colors')
+require 'estacio.colors'
 
-require('estacio.lsp.config')
+require 'estacio.lsp.config'
 
-local git = require('estacio.git')
+local git = require 'estacio.git'
 
 git.set_keymaps()
 git.set_commands()
 
-local fzf = require('estacio.fzf')
+local fzf = require 'estacio.fzf'
 fzf.setup()
 
 pcall(require, 'estacio.klarna')
