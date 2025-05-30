@@ -40,10 +40,58 @@ local function organize_imports()
 
   local client = clients[1]
 
+  client:exec_cmd(
+    {
+      title = 'organize_imports',
+      command = '_typescript.organizeImports',
+      arguments = { vim.api.nvim_buf_get_name(0) },
+    },
+    nil,
+    function(err)
+      if err then
+        vim.notify(
+          'Error organizing imports: ' .. err.message,
+          vim.log.levels.ERROR
+        )
+        return
+      end
+
+      vim.cmd.Format()
+    end
+  )
+end
+
+local function rename_file()
+  local result = lsp_utils.rename_file()
+  if not result then
+    return
+  end
+
+  local clients = vim.lsp.get_clients { name = lsp_name }
+
+  if #clients == 0 then
+    vim.notify('No TypeScript server running', vim.log.levels.ERROR)
+    return
+  elseif #clients > 1 then
+    -- In case of multiple clients, notify the user to specify which one to use
+    vim.notify(
+      'Multiple TypeScript servers running, please specify one',
+      vim.log.levels.ERROR
+    )
+    return
+  end
+
+  local client = clients[1]
+
   client:exec_cmd {
-    title = 'organize_imports',
-    command = '_typescript.organizeImports',
-    arguments = { vim.api.nvim_buf_get_name(0) },
+    title = 'apply_rename_file',
+    command = '_typescript.applyRenameFile',
+    arguments = {
+      {
+        sourceUri = result.source_file,
+        targetUri = result.target_file,
+      },
+    },
   }
 end
 
@@ -84,46 +132,15 @@ return {
       importModuleSpecifierPreference = 'relative',
     },
   },
-  commands = {
-    RenameFile = {
-      function()
-        local result = lsp_utils.rename_file()
-        if not result then
-          return
-        end
+  setup_user_commands = function()
+    vim.api.nvim_create_user_command('LspOrganizeImports', organize_imports, {
+      desc = 'Organize Imports',
+      nargs = '?',
+    })
 
-        local clients = vim.lsp.get_clients { name = lsp_name }
-
-        if #clients == 0 then
-          vim.notify('No TypeScript server running', vim.log.levels.ERROR)
-          return
-        elseif #clients > 1 then
-          -- In case of multiple clients, notify the user to specify which one to use
-          vim.notify(
-            'Multiple TypeScript servers running, please specify one',
-            vim.log.levels.ERROR
-          )
-          return
-        end
-
-        local client = clients[1]
-
-        client:exec_cmd {
-          title = 'apply_rename_file',
-          command = '_typescript.applyRenameFile',
-          arguments = {
-            {
-              sourceUri = result.source_file,
-              targetUri = result.target_file,
-            },
-          },
-        }
-      end,
-      description = 'Rename File',
-    },
-    OrganizeImports = {
-      organize_imports,
-      description = 'Organize Imports',
-    },
-  },
+    vim.api.nvim_create_user_command('LspRenameFile', rename_file, {
+      desc = 'Rename File',
+      nargs = '?',
+    })
+  end,
 }

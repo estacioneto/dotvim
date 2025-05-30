@@ -124,8 +124,8 @@ local function setup_mappings(client, opts)
   vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, opts)
   vim.keymap.set('n', '<leader>rn', lsp_rename, opts)
   vim.keymap.set('n', '<leader>rf', function()
-    if vim.fn.exists ':RenameFile' ~= 0 then
-      vim.cmd 'RenameFile'
+    if vim.fn.exists ':LspRenameFile' ~= 0 then
+      vim.cmd 'LspRenameFile'
       return
     end
 
@@ -133,8 +133,8 @@ local function setup_mappings(client, opts)
   end, opts)
 
   vim.keymap.set('n', '<leader>oi', function()
-    if vim.fn.exists ':OrganizeImports' ~= 0 then
-      vim.cmd 'OrganizeImports'
+    if vim.fn.exists ':LspOrganizeImports' ~= 0 then
+      vim.cmd 'LspOrganizeImports'
       return
     end
   end)
@@ -165,6 +165,18 @@ local function setup_mappings(client, opts)
   end, opts)
 end
 
+local function setup_user_commands(client, opts)
+  local config = vim.lsp.config[client.name]
+
+  if not config then
+    return
+  end
+
+  if config.setup_user_commands then
+    config.setup_user_commands(client, opts)
+  end
+end
+
 local function on_attach(client, buffer)
   if vim.tbl_contains(enable_format_servers, client.name) then
     client.server_capabilities.documentFormattingProvider = true
@@ -187,6 +199,7 @@ local function on_attach(client, buffer)
   -- end
 
   setup_mappings(client, { buffer = buffer })
+  setup_user_commands(client, { buffer = buffer })
 end
 
 vim.api.nvim_create_autocmd('LspAttach', {
