@@ -115,31 +115,31 @@ return {
           },
 
           -- Copilot models not available by default in avante.nvim
-          vendors = {
+          providers = {
             ['copilot:3.7-thought'] = {
               __inherited_from = 'copilot',
               model = 'claude-3.7-sonnet-thought',
-              max_tokens = tokens(64),
+              extra_request_body = { max_tokens = tokens(64) },
             },
             ['copilot:3.7'] = {
               __inherited_from = 'copilot',
               model = 'claude-3.7-sonnet',
-              max_tokens = tokens(64),
+              extra_request_body = { max_tokens = tokens(64) },
             },
             ['copilot:o3'] = {
               __inherited_from = 'copilot',
               model = 'o3-mini',
-              max_tokens = tokens(64),
+              extra_request_body = { max_tokens = tokens(64) },
             },
             ['copilot:gpt-4.1'] = {
               __inherited_from = 'copilot',
               model = 'gpt-4.1',
-              max_tokens = tokens(256),
+              extra_request_body = { max_tokens = tokens(256) },
             },
             ['copilot:gemini'] = {
               __inherited_from = 'copilot',
               model = 'gemini-2.5-pro',
-              max_tokens = tokens(256),
+              extra_request_body = { max_tokens = tokens(256) },
             },
           },
         })
