@@ -16,44 +16,44 @@ if [[ ! -d ~/.config/nvim ]]; then
 fi
 
 if ! which brew &> /dev/null; then
-  echo "💿 Installing Homebrew (https://brew.sh/)..."
+  echo "💿 Installing Homebrew (https://brew.sh/)…"
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && echo "✅ [Dependencies] Homebrew installed" || exit 1
 else
   echo "⏭️  Homebrew already installed!"
 fi
 
-echo "💿 Installing dependencies..."
+echo "💿 Installing dependencies…"
 
 if ! which fzf &> /dev/null; then
-  echo "💿 [Dependencies] Installing fzf (https://github.com/junegunn/fzf)..."
+  echo "💿 [Dependencies] Installing fzf (https://github.com/junegunn/fzf)…"
   brew install fzf && echo "✅ [Dependencies] fzf installed" || exit 1
 else
   echo "⏭️  [Dependencies] fzf already installed!"
 fi
 
 if ! which rg &> /dev/null; then
-  echo "💿 [Dependencies] Installing ripgrep (https://github.com/BurntSushi/ripgrep)..."
+  echo "💿 [Dependencies] Installing ripgrep (https://github.com/BurntSushi/ripgrep)…"
   brew install ripgrep && echo "✅ [Dependencies] ripgrep installed" || exit 1
 else
   echo "⏭️  [Dependencies] ripgrep already installed!"
 fi
 
 if ! which fd &> /dev/null; then
-  echo "💿 [Dependencies] Installing fd (https://github.com/sharkdp/fd)..."
+  echo "💿 [Dependencies] Installing fd (https://github.com/sharkdp/fd)…"
   brew install fd && echo "✅ [Dependencies] fd installed" || exit 1
 else
   echo "⏭️  [Dependencies] fd already installed!"
 fi
 
 if ! which python &> /dev/null; then
-  echo "💿 [Dependencies] Installing python..."
+  echo "💿 [Dependencies] Installing python…"
   brew install python && echo "✅ [Dependencies] python installed" || exit 1
 else
   echo "⏭️  [Dependencies] python already installed!"
 fi
 
 if [[ -z `find ~/Library/Fonts -type f -name "HackNerd*"` ]]; then
-  echo "💿 [Fonts] Installing HackNerd..."
+  echo "💿 [Fonts] Installing HackNerd…"
   brew install font-hack-nerd-font && echo "✅ [Fonts] HackNerd installed!" || exit 1
 else
   echo "⏭️  [Fonts] HackNerd already installed!"
@@ -61,14 +61,14 @@ fi
 
 # https://github.com/githubnext/monaspace
 if [[ -z `find ~/Library/Fonts -type f -name "Monaspace*"` ]]; then
-  echo "💿 [Fonts] Installing Monaspace..."
+  echo "💿 [Fonts] Installing Monaspace…"
   brew install font-monaspace && echo "✅ [Fonts] Monaspace installed!" || exit 1
 else
   echo "⏭️  [Fonts] Monaspace already installed!"
 fi
 
 if ! which nvim &> /dev/null; then
-  echo "💿 Installing neovim..."
+  echo "💿 Installing neovim…"
   brew install neovim && echo "✅ Neovim installed!" || exit 1
 fi
 
