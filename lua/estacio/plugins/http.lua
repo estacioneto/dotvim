@@ -8,7 +8,7 @@ return {
   {
     'mistweaverco/kulala.nvim',
     opts = {
-      urlencode = "skipencoded",
+      urlencode = 'skipencoded',
       default_env = 'local',
       contenttypes = {
         ['application/xml'] = {

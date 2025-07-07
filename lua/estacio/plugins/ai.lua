@@ -31,6 +31,7 @@ return {
 
           erlang = true,
           go = true,
+          java = true,
           sh = function()
             return not string.match(
               vim.fs.basename(vim.api.nvim_buf_get_name(0)),

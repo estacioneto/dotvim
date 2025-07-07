@@ -24,6 +24,7 @@ return {
           'go',
           'gosum',
           'gowork',
+          'java',
           -- Template
           'markdown',
           'yaml',

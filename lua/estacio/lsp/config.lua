@@ -225,6 +225,8 @@ local ensure_installed = {
   'ts_ls',
   'eslint',
   'bashls',
+  'jdtls',
+  -- 'java_language_server',
   -- 'cypher_ls',
   -- 'tailwindcss',
 
