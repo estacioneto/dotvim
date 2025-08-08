@@ -37,6 +37,15 @@ vim.keymap.set('n', '<c-w>x', function ()
   vim.cmd.set('wfh')
 end , { silent = true })
 
+-- Window wrap
+vim.keymap.set('n', '<c-w><c-w>', function ()
+  if vim.o.wrap then
+    vim.cmd.set('nowrap')
+  else
+    vim.cmd.set('wrap')
+  end
+end, { silent = true })
+
 -- Tab switching
 vim.keymap.set('n', '<c-t><c-n>', vim.cmd.tabnew, { silent = true })
 vim.keymap.set('n', '<c-t><c-l>', vim.cmd.tabnext, { silent = true })
@@ -79,7 +88,7 @@ vim.keymap.set('n', '<leader>D', function () vim.cmd('copen') end, { silent = tr
 vim.keymap.set('n', 'gx', function()
   local uri = vim.fn.expand('<cWORD>')
   uri = vim.fn.substitute(uri, '?', '\\?', '')
-  uri = vim.fn.shellescape(uri, 1)
+  uri = vim.fn.shellescape(uri, true)
 
   if uri ~= '' then
     os.execute('open '..uri)

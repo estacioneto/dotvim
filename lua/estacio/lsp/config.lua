@@ -229,6 +229,7 @@ local ensure_installed = {
   -- 'java_language_server',
   -- 'cypher_ls',
   -- 'tailwindcss',
+  'terraformls',
 
   'lua_ls',
   'yamlls',
