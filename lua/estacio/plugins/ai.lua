@@ -42,8 +42,9 @@ return {
           ['*'] = false,
         },
 
-        -- copilot_node_command = '/usr/local/bin/node', -- Intel
-        copilot_node_command = '/opt/homebrew/bin/node', -- Apple Silicon
+        copilot_node_command = vim.uv.fs_stat('/opt/homebrew/bin/node')
+          and '/opt/homebrew/bin/node' -- Node.js path for macOS Homebrew
+          or '/usr/local/bin/node', -- Node.js path for node installed via n
         copilot_model = 'gpt-4o-copilot',
       }
     end,
