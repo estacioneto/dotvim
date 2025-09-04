@@ -42,8 +42,8 @@ return {
           ['*'] = false,
         },
 
-        copilot_node_command = vim.uv.fs_stat('/opt/homebrew/bin/node')
-          and '/opt/homebrew/bin/node' -- Node.js path for macOS Homebrew
+        copilot_node_command = vim.uv.fs_stat '/opt/homebrew/bin/node'
+            and '/opt/homebrew/bin/node' -- Node.js path for macOS Homebrew
           or '/usr/local/bin/node', -- Node.js path for node installed via n
         copilot_model = 'gpt-4o-copilot',
       }
@@ -144,26 +144,26 @@ return {
               extra_request_body = { max_tokens = tokens(256) },
             },
           },
+
+          -- Improved MCPHub integration
+          system_prompt = function()
+            local hub = require('mcphub').get_hub_instance()
+            return hub:get_active_servers_prompt() or ''
+          end,
+
+          -- Fix for custom tools to properly load MCPHub tools
+          custom_tools = function()
+            local ok, mcphub_ext = pcall(require, 'mcphub.extensions.avante')
+            if ok then
+              return { mcphub_ext.mcp_tool() }
+            end
+            return {}
+          end,
         })
       )
 
       -- views can only be fully collapsed with the global statusline
       vim.opt.laststatus = 3
-    end,
-
-    -- Improved MCPHub integration
-    system_prompt = function()
-      local hub = require('mcphub').get_hub_instance()
-      return hub:get_active_servers_prompt()
-    end,
-
-    -- Fix for custom tools to properly load MCPHub tools
-    custom_tools = function()
-      local ok, mcphub_ext = pcall(require, 'mcphub.extensions.avante')
-      if ok then
-        return { mcphub_ext.mcp_tool() }
-      end
-      return {}
     end,
   },
 
@@ -176,9 +176,20 @@ return {
     -- cmd = "MCPHub",
     build = 'npm install -g mcp-hub@latest', -- Installs required mcp-hub npm module
     config = function()
+      local root_mcphub_path = vim.fn.expand '~/.vim/lua/estacio/plugins/mcphub'
+
       require('mcphub').setup {
-        config = vim.fn.expand '~/.vim/lua/estacio/plugins/mcphub/servers.json',
+        config = vim.fn.expand(
+          vim.uv.fs_stat(root_mcphub_path .. '/klarna/servers.json')
+              and root_mcphub_path .. '/klarna/servers.json'
+            or root_mcphub_path .. '/servers.json'
+        ),
         auto_approve = true,
+        extensions = {
+          avante = {
+            make_slash_commands = true, -- make /slash commands from MCP server prompts
+          },
+        },
         -- Add any additional configuration needed for your Puppeteer server
         -- For example, you might need to specify server settings:
         -- servers = {
