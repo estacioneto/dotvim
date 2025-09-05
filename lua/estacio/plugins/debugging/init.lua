@@ -10,21 +10,17 @@ return {
       dap.defaults.fallback.terminal_win_cmd = '25split new'
 
       -- Config
-      dap.adapters.node2 = {
-        type = 'executable',
-        command = 'node',
-        args = {
-          vim.fn.stdpath 'data'
-            .. '/mason/packages/node-debug2-adapter/out/src/nodeDebug.js',
-        },
-      }
-
-      dap.adapters.chrome = {
-        type = 'executable',
-        command = 'node',
-        args = {
-          vim.fn.stdpath 'data'
-            .. '/mason/packages/chrome-debug-adapter/out/src/chromeDebug.js',
+      dap.adapters['pwa-node'] = {
+        type = 'server',
+        host = 'localhost',
+        port = '${port}',
+        executable = {
+          command = 'node',
+          args = {
+            vim.fn.stdpath 'data'
+              .. '/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js',
+            '${port}',
+          },
         },
       }
 
@@ -61,6 +57,7 @@ return {
   },
   {
     'rcarriga/nvim-dap-ui',
+    enabled = false,
     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
     keys = require('estacio.plugins.debugging.keymaps').dapui,
     config = function()
@@ -82,9 +79,30 @@ return {
     end,
   },
   {
+    'miroshQa/debugmaster.nvim',
+    -- osv is needed if you want to debug neovim lua code. Also can be used
+    -- as a way to quickly test-drive the plugin without configuring debug adapters
+    dependencies = {
+      'mfussenegger/nvim-dap',
+      'jbyuki/one-small-step-for-vimkind',
+    },
+    config = function()
+      local dm = require 'debugmaster'
+
+      vim.keymap.set(
+        { 'n', 'v' },
+        '<leader>dm',
+        dm.mode.toggle,
+        { nowait = true }
+      )
+
+      dm.plugins.osv_integration.enabled = true -- needed if you want to debug neovim lua code
+    end,
+  },
+  {
     'jay-babu/mason-nvim-dap.nvim',
     config = function()
-      local ensure_installed = { 'node2', 'python' }
+      local ensure_installed = { 'js', 'python' }
 
       if vim.fn.executable 'go' == 1 then
         table.insert(ensure_installed, 'delve')
