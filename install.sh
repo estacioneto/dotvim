@@ -72,6 +72,19 @@ if ! which nvim &> /dev/null; then
   brew install neovim && echo "✅ Neovim installed!" || exit 1
 fi
 
+if ! which npm &> /dev/null; then
+  echo "💥 npm is required for some plugins. Please install Node.js (https://nodejs.org/) and re-run this script."
+  exit 1
+fi
+
+if ! npm list -g tree-sitter-cli &> /dev/null; then
+  echo "💿 Installing tree-sitter-cli (https://github.com/tree-sitter/tree-sitter)…"
+  npm install -g tree-sitter-cli && echo "✅ tree-sitter-cli installed!" || exit 1
+else
+  echo "⏭️  tree-sitter-cli already installed!"
+fi
+
+
 # Setup .undodir
 if [ ! -d ~/.undodir ]; then
   mkdir ~/.undodir
