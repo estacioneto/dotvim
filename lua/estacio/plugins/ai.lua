@@ -55,123 +55,66 @@ return {
     end,
   },
   {
-    'yetone/avante.nvim',
-    event = 'VeryLazy',
-    version = false, -- Never set this value to "*"! Never!
-    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-    build = 'make',
-    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+    'NickvanDyke/opencode.nvim',
     dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-      'stevearc/dressing.nvim',
-      'nvim-lua/plenary.nvim',
-      'MunifTanjim/nui.nvim',
-      --- The below dependencies are optional,
-      'hrsh7th/nvim-cmp', -- autocompletion for avante commands and mentions
-      'ibhagwan/fzf-lua', -- for file_selector provider fzf
-      'nvim-tree/nvim-web-devicons', -- or echasnovski/mini.icons
-      'zbirenbaum/copilot.lua', -- for providers='copilot'
+      -- Recommended for `ask()` and `select()`.
+      -- Required for `snacks` provider.
+      ---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
       {
-        -- support for image pasting
-        'HakonHarnes/img-clip.nvim',
-        event = 'VeryLazy',
-        opts = {
-          -- recommended settings
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-            -- required for Windows users
-            use_absolute_path = true,
-          },
-        },
-      },
-      {
-        -- Make sure to set this up properly if you have lazy=true
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = {
-          file_types = { 'markdown', 'Avante' },
-        },
-        ft = { 'markdown', 'Avante' },
+        'folke/snacks.nvim',
+        opts = { input = {}, picker = {}, terminal = {} },
       },
     },
     config = function()
-      -- configs.avante
-      local function tokens(num)
-        return num * 1024
-      end
+      -- Required for `opts.events.reload`.
+      vim.o.autoread = true
 
-      require('avante_lib').load()
+      -- Recommended/example keymaps.
+      vim.keymap.set({ 'n', 'x' }, '<C-a>', function()
+        require('opencode').ask('@this: ', { submit = true })
+      end, { desc = 'Ask opencode…' })
+      vim.keymap.set({ 'n', 'x' }, '<C-x>', function()
+        require('opencode').select()
+      end, { desc = 'Execute opencode action…' })
+      vim.keymap.set({ 'n', 't' }, '<C-t>', function()
+        require('opencode').toggle()
+      end, { desc = 'Toggle opencode' })
 
-      local ok, klarna_providers =
-        pcall(require, 'estacio.plugins.providers.klarna')
+      vim.keymap.set({ 'n', 'x' }, '<leader>gor', function()
+        return require('opencode').operator '@this '
+      end, { desc = 'Add range to opencode', expr = true })
+      vim.keymap.set('n', '<leader>gol', function()
+        return require('opencode').operator '@this ' .. '_'
+      end, { desc = 'Add line to opencode', expr = true })
 
-      require('avante').setup(
-        vim.tbl_extend('keep', ok and klarna_providers or {}, {
-          provider = 'gemini',
-          behaviour = {
-            -- https://github.com/yetone/avante.nvim/blob/main/cursor-planning-mode.md
-            enable_cursor_planning_mode = true,
-            minimize_diff = true,
-          },
+      vim.keymap.set('n', '<S-C-u>', function()
+        require('opencode').command 'session.half.page.up'
+      end, { desc = 'Scroll opencode up' })
+      vim.keymap.set('n', '<S-C-d>', function()
+        require('opencode').command 'session.half.page.down'
+      end, { desc = 'Scroll opencode down' })
 
-          windows = {
-            width = 50,
-          },
-
-          -- Copilot models not available by default in avante.nvim
-          providers = {
-            ['copilot:3.7-thought'] = {
-              __inherited_from = 'copilot',
-              model = 'claude-3.7-sonnet-thought',
-              extra_request_body = { max_tokens = tokens(64) },
-            },
-            ['copilot:3.7'] = {
-              __inherited_from = 'copilot',
-              model = 'claude-3.7-sonnet',
-              extra_request_body = { max_tokens = tokens(64) },
-            },
-            ['copilot:o3'] = {
-              __inherited_from = 'copilot',
-              model = 'o3-mini',
-              extra_request_body = { max_tokens = tokens(64) },
-            },
-            ['copilot:gpt-4.1'] = {
-              __inherited_from = 'copilot',
-              model = 'gpt-4.1',
-              extra_request_body = { max_tokens = tokens(256) },
-            },
-            ['copilot:gemini'] = {
-              __inherited_from = 'copilot',
-              model = 'gemini-2.5-pro',
-              extra_request_body = { max_tokens = tokens(256) },
-            },
-          },
-
-          -- Improved MCPHub integration
-          system_prompt = function()
-            local hub = require('mcphub').get_hub_instance()
-            return hub:get_active_servers_prompt() or ''
-          end,
-
-          -- Fix for custom tools to properly load MCPHub tools
-          custom_tools = function()
-            local ok, mcphub_ext = pcall(require, 'mcphub.extensions.avante')
-            if ok then
-              return { mcphub_ext.mcp_tool() }
-            end
-            return {}
-          end,
-        })
+      -- You may want these if you stick with the opinionated "<C-a>" and "<C-x>" above — otherwise consider "<leader>o…".
+      vim.keymap.set(
+        'n',
+        '+',
+        '<C-a>',
+        { desc = 'Increment under cursor', noremap = true }
+      )
+      vim.keymap.set(
+        'n',
+        '-',
+        '<C-x>',
+        { desc = 'Decrement under cursor', noremap = true }
       )
 
-      -- views can only be fully collapsed with the global statusline
-      vim.opt.laststatus = 3
+      vim.g.opencode_opts = {
+        provider = {
+          enabled = 'terminal',
+        },
+      }
     end,
   },
-
   {
     'ravitemer/mcphub.nvim',
     dependencies = {
