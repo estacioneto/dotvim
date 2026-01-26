@@ -5,53 +5,46 @@ return {
     cmd = 'Copilot',
     event = 'InsertEnter',
     config = function()
-      local ok, klarna_copilot_config =
-        pcall(require, 'estacio.plugins.copilot.klarna')
-
-      require('copilot').setup(
-        vim.tbl_deep_extend('keep', ok and klarna_copilot_config or {}, {
-          suggestion = {
-            enabled = true,
-            auto_trigger = true,
-            hide_during_completion = true,
-            keymap = {
-              accept = '<TAB>',
-              accept_word = false,
-              accept_line = false,
-              next = '<C-c><C-n>',
-              prev = '<C-c><C-p>',
-              dismiss = '<C-]>',
-            },
+      require('copilot').setup {
+        suggestion = {
+          enabled = false,
+          auto_trigger = true,
+          hide_during_completion = true,
+          keymap = {
+            accept = '<TAB>',
+            accept_word = false,
+            accept_line = false,
+            next = '<C-c><C-n>',
+            prev = '<C-c><C-p>',
+            dismiss = '<C-]>',
           },
-          filetypes = {
-            typescript = true,
-            typescriptreact = true,
-            javascript = true,
-            css = true,
-            python = true,
+        },
+        filetypes = {
+          typescript = true,
+          typescriptreact = true,
+          javascript = true,
+          css = true,
+          python = true,
 
-            lua = true,
-            markdown = true,
+          lua = true,
+          markdown = true,
 
-            erlang = true,
-            go = true,
-            java = true,
-            sh = function()
-              return not string.match(
-                vim.fs.basename(vim.api.nvim_buf_get_name(0)),
-                '^%.env.*'
-              )
-            end,
-            ['.'] = false,
-            ['*'] = false,
-          },
+          erlang = true,
+          go = true,
+          java = true,
+          sh = function()
+            return not string.match(
+              vim.fs.basename(vim.api.nvim_buf_get_name(0)),
+              '^%.env.*'
+            )
+          end,
+          ['.'] = false,
+          ['*'] = false,
+        },
 
-          copilot_node_command = vim.uv.fs_stat '/opt/homebrew/bin/node'
-              and '/opt/homebrew/bin/node' -- Node.js path for macOS Homebrew
-            or '/usr/local/bin/node', -- Node.js path for node installed via n
-          copilot_model = 'gpt-4o-copilot',
-        })
-      )
+        copilot_node_command = vim.fn.system { 'which', 'node' },
+        copilot_model = 'gpt-4o-copilot',
+      }
     end,
   },
   {
@@ -127,11 +120,7 @@ return {
       local root_mcphub_path = vim.fn.expand '~/.vim/lua/estacio/plugins/mcphub'
 
       require('mcphub').setup {
-        config = vim.fn.expand(
-          vim.uv.fs_stat(root_mcphub_path .. '/klarna/servers.json')
-              and root_mcphub_path .. '/klarna/servers.json'
-            or root_mcphub_path .. '/servers.json'
-        ),
+        config = vim.fn.expand(root_mcphub_path .. '/servers.json'),
         auto_approve = true,
         extensions = {
           avante = {
