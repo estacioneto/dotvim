@@ -130,4 +130,52 @@ return {
       end, { nargs = 0 })
     end,
   },
+  {
+    'apple/pkl-neovim',
+    lazy = true,
+    ft = 'pkl',
+    build = function()
+      require('pkl-neovim').init()
+    end,
+    config = function()
+      -- Set up snippets.
+      require('luasnip.loaders.from_snipmate').lazy_load()
+
+      -- It requires Java 22
+      local ok, java_home =
+        pcall(vim.fn.system, { '/usr/libexec/java_home', '-v', '22' })
+
+      if not ok then
+        return
+      end
+
+      -- Version agnostic lsp jar
+      local ok_lsp_jar, pkl_lsp_jar_path = pcall(vim.fn.system, {
+        'fd',
+        '--type',
+        'file',
+        '--base-directory',
+        vim.fn.stdpath 'data' .. '/mason/packages/pkl-lsp',
+        '--absolute-path',
+        '--max-results',
+        '1',
+        '.jar',
+      })
+
+      if not ok_lsp_jar then
+        return
+      end
+
+      -- Configure pkl-lsp
+      vim.g.pkl_neovim = {
+        start_command = {
+          java_home:gsub('\n*$', '') .. '/bin/java',
+          '-jar',
+          -- gsub also returns the count and when used inside a table it gets
+          -- unpacked. We only care about the first returned value, which is a string
+          pkl_lsp_jar_path:gsub('\n*$', '') .. '',
+        },
+      }
+    end,
+  },
 }

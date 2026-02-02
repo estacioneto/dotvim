@@ -129,7 +129,7 @@ return {
     maxTsServerMemory = 9216,
     preferences = {
       quotePreference = 'single',
-      importModuleSpecifierPreference = 'relative',
+      importModuleSpecifierPreference = 'shortest',
     },
   },
   setup_user_commands = function()

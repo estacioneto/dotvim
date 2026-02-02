@@ -235,6 +235,12 @@ local ensure_installed = {
   'yamlls',
 }
 
+-- Need to manually be installed through Mason:
+--
+-- Formatters
+-- 'stylua'
+-- 'prettier'
+
 if vim.fn.executable 'go' == 1 then
   table.insert(ensure_installed, 'gopls')
 end

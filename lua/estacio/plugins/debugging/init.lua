@@ -10,7 +10,7 @@ return {
       dap.defaults.fallback.terminal_win_cmd = '25split new'
 
       -- Config
-      dap.adapters['pwa-node'] = {
+      dap.adapters['node'] = {
         type = 'server',
         host = 'localhost',
         port = '${port}',
