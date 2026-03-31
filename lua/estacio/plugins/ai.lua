@@ -2,6 +2,7 @@
 return {
   {
     'zbirenbaum/copilot.lua',
+    enabled = not os.getenv 'COPILOT_DISABLED',
     cmd = 'Copilot',
     event = 'InsertEnter',
     config = function()
@@ -50,6 +51,7 @@ return {
   {
     'nickjvandyke/opencode.nvim',
     version = '*', -- Latest stable release
+    enabled = not os.getenv 'OPENCODE_DISABLED',
     dependencies = {
       {
         -- `snacks.nvim` integration is recommended, but optional
@@ -120,6 +122,7 @@ return {
   },
   {
     'ravitemer/mcphub.nvim',
+    enabled = not os.getenv 'MCPHUB_DISABLED',
     dependencies = {
       'nvim-lua/plenary.nvim', -- Required for Job and HTTP requests
     },
