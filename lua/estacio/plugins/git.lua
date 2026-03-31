@@ -20,14 +20,55 @@ return {
   {
     'sindrets/diffview.nvim',
     keys = {
-      { '<leader>dvo', '<cmd>DiffviewOpen<CR>', desc = '(diffview.nvim) Open', silent = true },
-      { '<leader>dvc', '<cmd>DiffviewClose<CR>', desc = '(diffview.nvim) Close', silent = true },
+      {
+        '<leader>dvo',
+        '<cmd>DiffviewOpen<CR>',
+        desc = '(diffview.nvim) Open',
+        silent = true,
+      },
+      {
+        '<leader>dvc',
+        '<cmd>DiffviewClose<CR>',
+        desc = '(diffview.nvim) Close',
+        silent = true,
+      },
     },
     cmd = { 'DiffviewOpen', 'DiffviewClose' },
     config = function()
+      local actions = require 'diffview.actions'
+
       require('diffview').setup {
-        enhanced_diff_hl = true
+        enhanced_diff_hl = true,
+        keymaps = {
+          disable_defaults = false,
+          view = {
+            {
+              'n',
+              '<leader>cl',
+              actions.conflict_choose 'ours',
+              { desc = 'Choose the OURS (Left) version of a conflict' },
+            },
+            {
+              'n',
+              '<leader>cL',
+              actions.conflict_choose_all 'ours',
+              { desc = 'Choose ALL OURS (Left) version of a conflict' },
+            },
+            {
+              'n',
+              '<leader>cr',
+              actions.conflict_choose 'theirs',
+              { desc = 'Choose the THEIRS (Right) version of a conflict' },
+            },
+            {
+              'n',
+              '<leader>cR',
+              actions.conflict_choose_all 'theirs',
+              { desc = 'Choose ALL THEIRS (Right) version of a conflict' },
+            },
+          },
+        },
       }
-    end
-  }
+    end,
+  },
 }
