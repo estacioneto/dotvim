@@ -82,11 +82,8 @@ return {
   -- Not treesitter, but highlighting
   'RRethy/vim-illuminate',
 
-  -- Still not treesitter, but pretty-renders markdown.
-  -- See https://github.com/MeanderingProgrammer/render-markdown.nvim
   {
-    'MeanderingProgrammer/render-markdown.nvim',
+    'davidmh/mdx.nvim',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    opts = {},
   },
 }
