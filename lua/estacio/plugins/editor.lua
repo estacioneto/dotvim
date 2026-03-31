@@ -30,11 +30,14 @@ return {
 
   -- See colors on the editor
   {
-    'norcalli/nvim-colorizer.lua',
+    'uga-rosa/ccc.nvim',
     config = function()
-      require('colorizer').setup({
-        '*',
-      }, { names = false })
+      require('ccc').setup {
+        highlighter = {
+          auto_enable = true,
+          lsp = true,
+        },
+      }
     end,
   },
 

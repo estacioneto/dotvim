@@ -14,18 +14,6 @@ local disable_format_servers = { 'lua_ls', 'ts_ls' }
 local enable_format_servers =
   { 'luaformatter', 'prettier', 'erlangls', 'golines' }
 
-function _G.lsp_rename_apply(win)
-  local new_name = vim.trim(vim.fn.getline '.')
-  vim.api.nvim_win_close(win, true)
-  vim.cmd 'stopinsert|normal! l'
-
-  vim.lsp.buf.rename(new_name)
-end
-
-function _G.lsp_rename_abort(win)
-  vim.api.nvim_win_close(win, true)
-end
-
 local function lsp_rename()
   -- Move the cursor to the beginning of the word
   vim.cmd [[normal viwbv]]
@@ -43,7 +31,6 @@ local function lsp_rename()
     width = 30,
     height = 1,
     style = 'minimal',
-    border = 'rounded',
     title = 'Rename',
   }
 
@@ -51,20 +38,24 @@ local function lsp_rename()
   local buf = vim.api.nvim_create_buf(false, true)
   local win = vim.api.nvim_open_win(buf, true, window_opts)
 
+  local function apply()
+    local new_name = vim.trim(vim.fn.getline '.')
+
+    vim.api.nvim_win_close(win, true)
+    vim.cmd 'stopinsert|normal! l'
+    vim.lsp.buf.rename(new_name)
+  end
+
+  local function abort()
+    vim.api.nvim_win_close(win, true)
+  end
+
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, { cword })
+
   for _, mode in ipairs { 'n', 'i', 'v' } do
-    vim.keymap.set(
-      mode,
-      '<C-c>',
-      string.format('<cmd>lua lsp_rename_abort(%d)<CR>', win),
-      { silent = true, buffer = buf }
-    )
-    vim.keymap.set(
-      mode,
-      '<CR>',
-      string.format('<cmd>lua lsp_rename_apply(%d)<CR>', win),
-      { silent = true, buffer = buf }
-    )
+    vim.keymap.set(mode, '<C-c>', abort, { silent = true, buffer = buf })
+
+    vim.keymap.set(mode, '<CR>', apply, { silent = true, buffer = buf })
   end
 end
 
@@ -96,7 +87,7 @@ local function setup_mappings(client, opts)
       format_opts.range
       and client.server_capabilities.documentRangeFormattingProvider
     then
-      return vim.lsp.buf.range_formatting()
+      return vim.lsp.buf.format()
     end
 
     return vim.cmd.Format()
@@ -225,7 +216,6 @@ local ensure_installed = {
   'ts_ls',
   'eslint',
   'bashls',
-  'jdtls',
   -- 'java_language_server',
   -- 'cypher_ls',
   -- 'tailwindcss',
@@ -249,19 +239,19 @@ require('mason-lspconfig').setup {
   ensure_installed = ensure_installed,
 }
 
-if vim.fn.has 'nvim-0.11' == 1 then
-  vim.diagnostic.config {
-    virtual_lines = {
-      current_line = true,
+vim.lsp.enable(ensure_installed)
+
+vim.diagnostic.config {
+  virtual_lines = {
+    current_line = true,
+  },
+  virtual_text = true,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = '󰅚', -- x000f015a
+      [vim.diagnostic.severity.WARN] = '󰀪', -- x000f002a
+      [vim.diagnostic.severity.INFO] = '󰋽', -- x000f02fd
+      [vim.diagnostic.severity.HINT] = '󰌶', -- x000f0336
     },
-    virtual_text = true,
-    signs = {
-      text = {
-        [vim.diagnostic.severity.ERROR] = '󰅚', -- x000f015a
-        [vim.diagnostic.severity.WARN] = '󰀪', -- x000f002a
-        [vim.diagnostic.severity.INFO] = '󰋽', -- x000f02fd
-        [vim.diagnostic.severity.HINT] = '󰌶', -- x000f0336
-      },
-    },
-  }
-end
+  },
+}

@@ -21,7 +21,7 @@ return {
         },
         sections = {
           lualine_a = { ts_version, 'mode' },
-          lualine_c = { require('lsp-progress').progress },
+          lualine_c = { vim.lsp.status },
           lualine_x = {
             {
               'diagnostics',
@@ -51,19 +51,9 @@ return {
         },
       }
 
-      -- listen lsp-progress event and refresh lualine
-      vim.api.nvim_create_augroup('lualine_augroup', { clear = true })
-      vim.api.nvim_create_autocmd('User', {
-        group = 'lualine_augroup',
-        pattern = 'LspProgressStatusUpdated',
+      vim.api.nvim_create_autocmd('LspProgress', {
         callback = require('lualine').refresh,
       })
-    end,
-  },
-  {
-    'linrongbin16/lsp-progress.nvim',
-    config = function()
-      require('lsp-progress').setup()
     end,
   },
 }

@@ -65,6 +65,12 @@ vim.opt.grepprg = [[rg --vimgrep ]]
 
 vim.opt.termguicolors = true
 
+vim.opt.winborder = 'rounded'
+
+vim.opt.pumborder = 'rounded'
+
+vim.opt.pummaxwidth = 50
+
 -- https://vi.stackexchange.com/questions/31811/neovim-lua-config-how-to-append-to-listchars
 vim.opt.listchars:append({ eol = '↵' })
 vim.opt.list = false
