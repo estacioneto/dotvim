@@ -255,3 +255,6 @@ vim.diagnostic.config {
     },
   },
 }
+
+vim.lsp.document_color.enable(true, nil, { style = 'virtual' })
+vim.keymap.set('n', '<leader>cc', function() vim.lsp.document_color.color_presentation() end)

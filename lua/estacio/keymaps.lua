@@ -30,19 +30,23 @@ vim.keymap.set('n', '<c-k>', '<c-w>k', { silent = true })
 vim.keymap.set('n', '<c-l>', '<c-w>l', { silent = true })
 
 -- Window fixed height and width
-vim.keymap.set('n', '<c-w>fh', function () vim.cmd.set('wfh') end , { silent = true })
-vim.keymap.set('n', '<c-w>fw', function () vim.cmd.set('wfw') end , { silent = true })
-vim.keymap.set('n', '<c-w>x', function ()
-  vim.cmd.set('wfw')
-  vim.cmd.set('wfh')
-end , { silent = true })
+vim.keymap.set('n', '<c-w>fh', function()
+  vim.cmd.set 'wfh'
+end, { silent = true })
+vim.keymap.set('n', '<c-w>fw', function()
+  vim.cmd.set 'wfw'
+end, { silent = true })
+vim.keymap.set('n', '<c-w>x', function()
+  vim.cmd.set 'wfw'
+  vim.cmd.set 'wfh'
+end, { silent = true })
 
 -- Window wrap
-vim.keymap.set('n', '<c-w><c-w>', function ()
+vim.keymap.set('n', '<c-w><c-w>', function()
   if vim.o.wrap then
-    vim.cmd.set('nowrap')
+    vim.cmd.set 'nowrap'
   else
-    vim.cmd.set('wrap')
+    vim.cmd.set 'wrap'
   end
 end, { silent = true })
 
@@ -67,38 +71,52 @@ end, { silent = true })
 -- vim.keymap.set('n', '<s-h>', vim.cmd.bprevious, { silent = true })
 
 -- Close all buffers except current one
-vim.keymap.set('n', '<leader>qob', function() vim.cmd("execute '%bdelete|edit#|bdelete#'") end, { desc = 'Close all buffers except current one' })
+vim.keymap.set('n', '<leader>qob', function()
+  vim.cmd "execute '%bdelete|edit#|bdelete#'"
+end, { desc = 'Close all buffers except current one' })
 -- Close all windows except current one
-vim.keymap.set('n', '<leader>qow', function() vim.cmd("only") end, { desc = 'Close all windows except current one' })
+vim.keymap.set('n', '<leader>qow', function()
+  vim.cmd 'only'
+end, { desc = 'Close all windows except current one' })
 
 -- Copy file path
-vim.keymap.set('n', 'cpr', function() vim.fn.setreg('+', vim.fn.expand("%")) end, { silent = true, desc = 'Copy relative file path' })
-vim.keymap.set('n', 'cpf', function() vim.fn.setreg('+', vim.fn.expand("%:p")) end, { silent = true, desc = 'Copy full file path' })
+vim.keymap.set('n', 'cpr', function()
+  vim.fn.setreg('+', vim.fn.expand '%')
+end, { silent = true, desc = 'Copy relative file path' })
+vim.keymap.set('n', 'cpf', function()
+  vim.fn.setreg('+', vim.fn.expand '%:p')
+end, { silent = true, desc = 'Copy full file path' })
 -- Copy file directory
-vim.keymap.set('n', 'cpdr', function() vim.fn.setreg('+', vim.fn.expand("%:h")) end, { silent = true, desc = 'Copy relative file directory' })
-vim.keymap.set('n', 'cpdf', function() vim.fn.setreg('+', vim.fn.expand("%:p:h")) end, { silent = true, desc = 'Copy full file directory' })
+vim.keymap.set('n', 'cpdr', function()
+  vim.fn.setreg('+', vim.fn.expand '%:h')
+end, { silent = true, desc = 'Copy relative file directory' })
+vim.keymap.set('n', 'cpdf', function()
+  vim.fn.setreg('+', vim.fn.expand '%:p:h')
+end, { silent = true, desc = 'Copy full file directory' })
 
 -- Terminal
 vim.keymap.set('t', 'jk', '<c-\\><c-n>')
 
 -- Quickfix
-vim.keymap.set('n', '<leader>D', function () vim.cmd('copen') end, { silent = true })
+vim.keymap.set('n', '<leader>D', function()
+  vim.cmd 'copen'
+end, { silent = true })
 
 -- Open URL
 vim.keymap.set('n', 'gx', function()
-  local uri = vim.fn.expand('<cWORD>')
+  local uri = vim.fn.expand '<cWORD>'
   uri = vim.fn.substitute(uri, '?', '\\?', '')
   uri = vim.fn.shellescape(uri, true)
 
   if uri ~= '' then
-    os.execute('open '..uri)
+    os.execute('open ' .. uri)
     vim.cmd.redraw()
   end
 end)
 
 -- Netrw
 -- Avoid ctrl-l to refresh netrw
-if vim.fn.hasmapto('<Plug>NetrwRefresh') == 0 then
+if vim.fn.hasmapto '<Plug>NetrwRefresh' == 0 then
   vim.keymap.set('n', '<c-n>', '<Plug>NetrwRefresh', { unique = true })
 end
 
@@ -121,21 +139,22 @@ end
 
 -- New file
 -- Current directory
-vim.keymap.set('n', '<leader>nf', function () return ':e '..vim.fn.expand('%:p:h')..'/' end, { expr = true })
+vim.keymap.set('n', '<leader>nf', function()
+  return ':e ' .. vim.fn.expand '%:p:h' .. '/'
+end, { expr = true })
 
 -- Delete current file
 vim.keymap.set('n', '<leader>df', function()
-  local path = vim.fn.expand('%')
+  local path = vim.fn.expand '%'
 
   vim.ui.input({
-    prompt = 'Are you sure you want to delete '..path..'? [Y/n] ',
-  },
-  function(input)
+    prompt = 'Are you sure you want to delete ' .. path .. '? [Y/n] ',
+  }, function(input)
     if input == '' or input == 'y' or input == 'Y' then
       vim.cmd(string.format('call delete(%q)', path))
-      vim.print(path..' deleted!')
+      vim.print(path .. ' deleted!')
     else
-      vim.print('Delete canceled!')
+      vim.print 'Delete canceled!'
     end
   end)
 end)
@@ -144,19 +163,22 @@ end)
 vim.keymap.set('n', '<leader>sg', function()
   vim.ui.input({
     prompt = 'Pattern: ',
-    default = ''
-  },
-  function(pattern)
+    default = '',
+  }, function(pattern)
     if pattern == '' or pattern == nil then
       return
     end
 
-    vim.cmd('silent! grep! '..pattern)
-    vim.cmd[[copen]]
+    vim.cmd('silent! grep! ' .. pattern)
+    vim.cmd [[copen]]
   end)
 end)
 
 -- Show current pwd
 vim.keymap.set('n', '<leader>pwd', function()
-  vim.notify('Current pwd: '..vim.fn.getcwd())
+  vim.notify('Current pwd: ' .. vim.fn.getcwd())
+end)
+
+vim.keymap.set('n', '<leader>ot', function()
+  vim.api.nvim_open_term(0, {})
 end)

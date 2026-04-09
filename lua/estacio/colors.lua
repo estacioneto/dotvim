@@ -119,3 +119,5 @@ end
 vim.api.nvim_create_user_command('Colo', function(opts)
   RandomColorSchemeMyPicks(opts.args)
 end, { nargs = '?' })
+
+vim.cmd.colo('catppuccin')
