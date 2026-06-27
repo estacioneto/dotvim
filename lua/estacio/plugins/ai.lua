@@ -1,55 +1,6 @@
 -- See https://github.com/yetone/avante.nvim
 return {
   {
-    'zbirenbaum/copilot.lua',
-    enabled = not os.getenv 'COPILOT_DISABLED'
-      or os.getenv 'COPILOT_DISABLED' ~= '1',
-    cmd = 'Copilot',
-    event = 'InsertEnter',
-    config = function()
-      require('copilot').setup {
-        suggestion = {
-          enabled = false,
-          auto_trigger = true,
-          hide_during_completion = true,
-          keymap = {
-            accept = '<TAB>',
-            accept_word = false,
-            accept_line = false,
-            next = '<C-c><C-n>',
-            prev = '<C-c><C-p>',
-            dismiss = '<C-]>',
-          },
-        },
-        filetypes = {
-          typescript = true,
-          typescriptreact = true,
-          javascript = true,
-          css = true,
-          python = true,
-
-          lua = true,
-          markdown = true,
-
-          erlang = true,
-          go = true,
-          java = true,
-          sh = function()
-            return not string.match(
-              vim.fs.basename(vim.api.nvim_buf_get_name(0)),
-              '^%.env.*'
-            )
-          end,
-          ['.'] = false,
-          ['*'] = false,
-        },
-
-        copilot_node_command = vim.fn.system { 'which', 'node' },
-        copilot_model = 'gpt-4o-copilot',
-      }
-    end,
-  },
-  {
     'nickjvandyke/opencode.nvim',
     version = '*', -- Latest stable release
     enabled = not os.getenv 'OPENCODE_DISABLED'

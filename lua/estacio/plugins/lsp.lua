@@ -118,6 +118,8 @@ return {
           html = { 'prettier' },
           css = { 'prettier' },
           json = { 'prettier' },
+
+          http = { "kulala-fmt" },
         },
       }
 

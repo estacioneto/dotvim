@@ -1,3 +1,5 @@
+-- See https://github.com/mistweaverco/kulala.nvim/blob/main/lua/kulala/config/keymaps.lua
+
 vim.api.nvim_buf_set_keymap(0, 'n', '<CR>', '', {
   noremap = true,
   silent = true,
